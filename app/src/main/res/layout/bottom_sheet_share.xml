@@ -67,10 +67,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/select_friend_recyclerview"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="180dp"
         android:layout_marginVertical="10dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/send_button"
+        app:layout_constraintBottom_toTopOf="@id/bottom_sheet_send_button"
         app:layout_constraintEnd_toEndOf="@id/share_search_edittext"
         app:layout_constraintStart_toStartOf="@id/share_search_edittext"
         app:layout_constraintTop_toBottomOf="@id/categoryList"
@@ -83,13 +83,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_all_friend"
-        app:layout_constraintBottom_toBottomOf="@id/send_button"
-        app:layout_constraintEnd_toStartOf="@id/send_button"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_sheet_send_button"
+        app:layout_constraintEnd_toStartOf="@id/bottom_sheet_send_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/send_button" />
+        app:layout_constraintTop_toTopOf="@id/bottom_sheet_send_button" />
 
     <TextView
-        android:id="@+id/send_button"
+        android:id="@+id/bottom_sheet_send_button"
         android:layout_width="240dp"
         android:layout_height="40dp"
         android:layout_marginVertical="10dp"
