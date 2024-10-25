@@ -4,5 +4,5 @@ import com.team22.soundary.core.domain.model.Share
 import kotlinx.coroutines.flow.Flow
 
 interface ReceivedShareRepository {
-    suspend fun getShareList() : Flow<List<Share>>
+    suspend fun getShareList() : Flow<Result<List<Share>>>
 }

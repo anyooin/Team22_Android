@@ -17,22 +17,24 @@ import javax.inject.Inject
 class ReceivedShareRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val retrofitService: ShareService
-) : ReceivedShareRepository{
+) : ReceivedShareRepository {
+    override suspend fun getShareList(): Flow<Result<List<Share>>> = flow {
+        emit(
+            runCatching {
+                val response = withContext(dispatcher) {
+                    retrofitService.requestReceiveShare()
+                }
 
-    override suspend fun getShareList(): Flow<List<Share>> = flow {
-        val response = withContext(dispatcher) {
-            retrofitService.requestReceiveShare()
-        }
-
-        if(response.isSuccessful){
-            response.body()?.shareList?.map{
-                it.toVO()
-            }?.let{
-                emit(it)
+                if (response.isSuccessful) {
+                    response.body()?.shareList?.map {
+                        it.toVO()
+                    } ?: throw Exception("Empty share list")
+                } else {
+                    throw Exception("Error: ${response.message()}")
+                }
             }
-        } else {
-            Log.e("dd",response.message())
-        }
+        )
     }
+
 }
 

@@ -20,18 +20,20 @@ class SentShareRepositoryImpl @Inject constructor(
     private val retrofitService: ShareService
 ) : SentShareRepository{
 
-    override suspend fun getShareList(): Flow<List<Share>> = flow {
-
-        val response = withContext(dispatcher) {
-            retrofitService.requestSentShare()
-        }
-
-        if(response.isSuccessful){
-            response.body()?.shareList?.map{
-                it.toVO()
-            }?.let { emit(it) }
-        } else {
-            Log.e("dd",""+response.code()+response.message())
-        }
+    override suspend fun getShareList(): Flow<Result<List<Share>>> = flow {
+        emit(
+            runCatching {
+                val response = withContext(dispatcher) {
+                    retrofitService.requestSentShare()
+                }
+                if (response.isSuccessful) {
+                    response.body()?.shareList?.map {
+                        it.toVO()
+                    } ?: throw Exception("Empty share list")
+                } else {
+                    throw Exception("Error: ${response.message()}")
+                }
+            }
+        )
     }
 }
