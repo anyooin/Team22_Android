@@ -3,7 +3,7 @@ package com.team22.soundary.feature.share.data
 import android.net.Uri
 import com.team22.soundary.core.dto.TrackDto
 import com.team22.soundary.core.dto.TrackListDto
-import com.team22.soundary.core.model.Song
+import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.feature.share.domain.MusicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

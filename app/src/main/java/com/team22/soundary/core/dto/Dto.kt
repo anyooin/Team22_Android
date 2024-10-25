@@ -2,9 +2,10 @@ package com.team22.soundary.core.dto
 
 import android.net.Uri
 import com.google.gson.annotations.SerializedName
-import com.team22.soundary.core.model.Share
-import com.team22.soundary.core.model.Song
-import com.team22.soundary.core.model.User
+import com.team22.soundary.core.domain.model.Share
+import com.team22.soundary.core.domain.model.Song
+import com.team22.soundary.core.domain.model.Token
+import com.team22.soundary.core.domain.model.User
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -61,9 +62,23 @@ data class TrackDto(
 )
 
 @Serializable
+data class TokenDto(
+    @SerialName("role") val role: String?,
+    @SerialName("accessToken") val accessToken: String?,
+    @SerialName("refreshToken") val refreshToken: String?,
+    @SerialName("expiresIn") val expiresIn : Int?
+)
+
+@Serializable
 data class ErrorResponse(
     @SerialName("code") val code: String,
     @SerialName("message") val message: String
+)
+
+@Serializable
+data class LoginRequestDto(
+    @SerialName("platform") val platform: String = "KAKAO",
+    @SerialName("token") val token: String
 )
 
 fun SentShareDto.toVO(): Share {
@@ -97,6 +112,12 @@ fun FromUserResponse.toVO(): User =
     User(
         name = this.displayName ?: "",
         image = Uri.parse(this.profileImageUrl ?: "")
+    )
+
+fun TokenDto.toVO() : Token =
+    Token(
+        this.accessToken ?: "",
+        this.refreshToken ?: ""
     )
 
 
