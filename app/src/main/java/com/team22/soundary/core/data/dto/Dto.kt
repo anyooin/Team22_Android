@@ -1,12 +1,16 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
+import android.util.Log
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
 import com.team22.soundary.core.domain.model.User
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 @Serializable
 data class UserInfoDto(
@@ -65,6 +69,14 @@ data class TrackDto(
     @SerialName("title") val title: String?,
     @SerialName("artists") val artist: List<String>?,
     @SerialName("album_cover_url") val albumCoverUrl: String?,
+    @SerialName("preview_mp3_url") val previewMp3Url: String?,
+    @SerialName("duration_in_seconds") val duration: Int?
+)
+
+@Serializable
+data class TokenDto(
+    @SerialName("role") val role: String?,
+    @SerialName("accessToken") val accessToken: String?,
     @SerialName("refreshToken") val refreshToken: String?,
     @SerialName("expiresIn") val expiresIn : Int?
 )
@@ -83,19 +95,23 @@ data class LoginRequestDto(
 
 fun SentShareDto.toVO(): Share {
     return Share(
+        this.id ?: "",
         this.track?.toVO() ?: Song(),
         this.comment ?: "",
         User(),//me
-        false
+        false,
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(this.sharedAt ?: "1980-01-01 00:00:00") ?: Date()
     )
 }
 
 fun ReceivedShareDto.toVO(): Share {
     return Share(
+        this.id ?: "",
         this.track?.toVO() ?: Song(),
         this.comment ?: "",
         this.fromUser?.toVO() ?: User(),
-        false
+        false,
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(this.sharedAt ?: "1980-01-01 00:00:00") ?: Date()
     )
 }
 
@@ -122,6 +138,10 @@ fun UserInfoDto.toVO(): User =
         statusMessage = this.description ?: ""
     )
 
+fun TokenDto.toVO() : Token =
+    Token(
+        this.accessToken ?: "",
+        this.refreshToken ?: ""
     )
 
 
