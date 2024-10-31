@@ -1,15 +1,8 @@
 package com.team22.soundary.feature.main.domain
 
-import android.util.Log
 import com.team22.soundary.core.domain.model.Share
-import dagger.Component
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 
@@ -24,15 +17,19 @@ class GetShareUseCase @Inject constructor(
             receivedShareRepository.getShareList(),
             userRepository.getMyInfo()
         ) { sent, receive, me ->
-            sent.map {
-                it.copy(
-                    friend = me
+            val modifiedSent : MutableList<Share> = mutableListOf()
+            sent.forEach{
+                modifiedSent.add(
+                    it.copy(
+                        friend = me
+                    )
                 )
             }
 
-            val combinedShare = sent + receive
+            val combinedShare = modifiedSent + receive
             combinedShare.groupBy {
-                it.friend.id
+                it.friend.name
             }
         }
+
 }

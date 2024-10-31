@@ -1,5 +1,7 @@
 package com.team22.soundary.feature.main.data
 
+import android.util.Log
+import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
@@ -13,7 +15,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
-    private val dispatcher: CoroutineDispatcher,
+    @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val retrofitService: UserService
 ): UserRepository {
     override suspend fun getMyInfo(): Flow<User> = flow{
@@ -22,7 +24,7 @@ internal class UserRepositoryImpl @Inject constructor(
         }
 
         if(response.isSuccessful){
-            response.body()?.toVO() ?: throw Exception("Empty User")
+            emit(response.body()?.toVO() ?: throw Exception("Empty User"))
         } else {
             throw Exception("Error : ${response.message()}")
         }

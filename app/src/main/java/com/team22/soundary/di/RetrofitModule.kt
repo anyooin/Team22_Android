@@ -7,10 +7,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java.util.Date
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -28,6 +30,9 @@ object RetrofitModule {
     private val contentType = MediaType.parse("application/json")
     private val json = Json {
         encodeDefaults = true
+        serializersModule = SerializersModule {
+            contextual(Date::class, DateAsStringSerializer)
+        }
     }
     @OtherRetrofit
     @Provides
