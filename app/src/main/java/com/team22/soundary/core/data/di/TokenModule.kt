@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.team22.soundary.core.data.TokenDatasource
+import com.team22.soundary.core.data.TokenDatasourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TokenModule {
+internal object TokenModule {
     private const val TOKEN_PREFERENCES_NAME = "token"
 
     @Provides
@@ -28,6 +28,6 @@ object TokenModule {
 
     @Provides
     @Singleton
-    fun provideTokenDatasource(tokenDataStore: DataStore<Preferences>) : TokenDatasource = TokenDatasource(tokenDataStore)
+    fun provideTokenDatasource(tokenDataStore: DataStore<Preferences>) : TokenDatasourceImpl = TokenDatasourceImpl(tokenDataStore)
 
 }
