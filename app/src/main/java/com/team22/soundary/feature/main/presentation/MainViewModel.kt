@@ -26,16 +26,8 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getShareUseCase.invoke().collect { result ->
-                result.onSuccess {
-                    _groupedShares = it
-                    if (it.isNotEmpty()) updateUiState(it.entries.first().value.first(), 0)
-                }.onFailure {exception ->
-                    _uiState.update {
-                        UiState.Error(
-                            exception.message ?: UNKNOWN_ERROR
-                        )
-                    }
-                }
+                _groupedShares = result
+                if(result.isNotEmpty()) updateUiState(result.entries.first().value.first(),0)
             }
         }
     }

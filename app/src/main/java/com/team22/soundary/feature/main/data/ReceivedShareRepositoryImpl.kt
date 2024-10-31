@@ -18,24 +18,20 @@ internal class ReceivedShareRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val retrofitService: ShareService
 ) : ReceivedShareRepository {
-    override suspend fun getShareList(): Flow<Result<List<Share>>> = flow {
-        emit(
-            runCatching {
-                val response = withContext(dispatcher) {
-                    retrofitService.requestReceiveShare()
-                }
+    override suspend fun getShareList(): Flow<List<Share>> = flow {
+        val response = withContext(dispatcher) {
+            retrofitService.requestReceiveShare()
+        }
 
-                if (response.isSuccessful) {
-                    response.body()?.shareList?.map {
-                        it.toVO()
-                    } ?: throw Exception("Empty share list")
-                } else {
-                    throw Exception("Error: ${response.message()}")
-                }
-            }.onFailure {
+        if (response.isSuccessful) {
+            emit(
+                response.body()?.shareList?.map { it.toVO() } ?: emptyList()
+            )
+        } else {
+            throw Exception("Error: ${response.message()}")
+        }
 
-            }
-        )
+
     }
 
 }

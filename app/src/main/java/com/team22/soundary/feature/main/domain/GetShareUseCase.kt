@@ -18,32 +18,21 @@ class GetShareUseCase @Inject constructor(
     private val receivedShareRepository: ReceivedShareRepository,
     private val userRepository: UserRepository
 ) {
-    suspend fun invoke(): Flow<Result<Map<String, List<Share>>>> =
+    suspend fun invoke(): Flow<Map<String, List<Share>>> =
         combine(
             sentShareRepository.getShareList(),
             receivedShareRepository.getShareList(),
             userRepository.getMyInfo()
         ) { sent, receive, me ->
-            runCatching {
-                if (sent.isFailure || receive.isFailure || me.isFailure) {
-                    val errorMessages = mutableListOf<String>()
-                    sent.exceptionOrNull()?.let { errorMessages.add(it.message ?: "Unknown error") }
-                    receive.exceptionOrNull()?.let { errorMessages.add(it.message ?: "Unknown error") }
-                    me.exceptionOrNull()?.let { errorMessages.add(it.message ?: "Unknown error") }
+            sent.map {
+                it.copy(
+                    friend = me
+                )
+            }
 
-                    throw Exception("Errors occurred: ${errorMessages.joinToString(", ")}")
-                }
-
-                val sentShares = sent.getOrThrow()
-                val myInfo = me.getOrThrow().copy(name="나")
-                val updatedSentShares = sentShares.map {
-                    it.copy(friend = myInfo)
-                }
-                val combinedShares = updatedSentShares + receive.getOrThrow()
-
-                combinedShares.groupBy { it.friend.name }
+            val combinedShare = sent + receive
+            combinedShare.groupBy {
+                it.friend.id
             }
         }
-
-
 }

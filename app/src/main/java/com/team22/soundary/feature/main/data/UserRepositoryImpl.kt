@@ -16,20 +16,16 @@ internal class UserRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val retrofitService: UserService
 ): UserRepository {
-    override suspend fun getMyInfo(): Flow<Result<User>> = flow{
+    override suspend fun getMyInfo(): Flow<User> = flow{
         val response = withContext(dispatcher){
             retrofitService.requestMyInfo()
         }
 
-        emit(
-            runCatching {
-                if(response.isSuccessful){
-                    response.body()?.toVO() ?: throw Exception("Empty User")
-                } else {
-                    throw Exception("Error : ${response.message()}")
-                }
-            }
-        )
+        if(response.isSuccessful){
+            response.body()?.toVO() ?: throw Exception("Empty User")
+        } else {
+            throw Exception("Error : ${response.message()}")
+        }
     }
 
 }
