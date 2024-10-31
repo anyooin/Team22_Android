@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.profile.data
 
+import com.team22.soundary.di.OtherRetrofit
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 object ProfileServiceModule {
     @Provides
     @Singleton
-    fun provideProfileService(retrofit: Retrofit): ProfileApiService =
+    fun provideProfileService(@OtherRetrofit retrofit: Retrofit): ProfileApiService =
         retrofit.create(ProfileApiService::class.java)
 
 }

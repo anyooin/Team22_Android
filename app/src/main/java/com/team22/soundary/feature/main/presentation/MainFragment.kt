@@ -3,6 +3,7 @@ package com.team22.soundary.feature.main.presentation
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,8 +24,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.team22.soundary.R
+import com.team22.soundary.core.UiState
 import com.team22.soundary.databinding.FragmentMainBinding
 import com.team22.soundary.feature.share.ShareBottomSheet
+import com.team22.soundary.extensions.getDiff
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -39,9 +42,11 @@ class MainFragment : Fragment() {
     private lateinit var player: ExoPlayer
     private var shouldPreparePlayer: Boolean = true
     private var pausedPosition: Long = 0
+    private lateinit var spinnerAdapter : ArrayAdapter<String>
+
+    private var test = listOf<String>()
     private val ExoPlayer.isPaused: Boolean
         get() = !player.isPlaying && player.currentPosition != 0L
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,8 +100,8 @@ class MainFragment : Fragment() {
     }
 
     private fun setSpinner() {
-        binding.sortSpinner.adapter =
-            ArrayAdapter(requireContext(), R.layout.main_spinner_item, viewModel.friendNames)
+        spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, test)
+        binding.sortSpinner.adapter = spinnerAdapter
         binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -225,7 +230,7 @@ class MainFragment : Fragment() {
     private fun preparePlayer() {
         try {
             val uri = viewModel.getSongUri()
-            if (uri != Uri.EMPTY) {
+            if (uri != Uri.EMPTY && uri != null) {
                 player.setMediaItem(
                     MediaItem.fromUri(uri)
                 )
@@ -248,25 +253,40 @@ class MainFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collectLatest { uiState ->
-                    binding.friendNameTextView.text = uiState.friendName
-                    binding.musicNameTextView.text = uiState.musicName
-                    binding.singerTextView.text = uiState.singer
-                    binding.messageTextView.text = uiState.message
-                    binding.nextImageView.isGone = uiState.isLastSong
-                    binding.prevImageView.isGone = uiState.isFirstSong
-                    binding.likeButton.setImageResource(uiState.likeBackground)
-                    uiState.friendImage?.let {
-                        Glide.with(requireContext())
-                            .load(it)
-                            .circleCrop()
-                            .into(binding.friendPicImageView)
+                    when(uiState){
+                        is UiState.Success -> {
+                            binding.friendNameTextView.text = uiState.data.share.friend.name
+                            binding.musicNameTextView.text = uiState.data.share.song.title
+                            binding.singerTextView.text = uiState.data.share.song.artist.joinToString()
+                            binding.messageTextView.text = uiState.data.share.message
+                            binding.nextImageView.isGone = uiState.data.isLastSong
+                            binding.prevImageView.isGone = uiState.data.isFirstSong
+                            binding.likeButton.setImageResource(uiState.data.likeBackground)
+                            binding.dayTextView.text =
+                                uiState.data.share.sharedDate.getDiff()
+                            uiState.data.share.friend.image?.let {
+                                Glide.with(requireContext())
+                                    .load(it)
+                                    .circleCrop()
+                                    .into(binding.friendPicImageView)
+                            }
+                            uiState.data.share.song.coverImage?.let {
+                                Glide.with(requireContext())
+                                    .load(it)
+                                    .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
+                                    .into(binding.currentImageView)
+                            }
+                            spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, test)
+                        }
+                        is UiState.Loading -> {
+
+                        }
+                        is UiState.Error -> {
+                            Snackbar.make(requireContext(), binding.main, "에러 발생 : " + uiState.message, Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                     }
-                    uiState.songImage?.let {
-                        Glide.with(requireContext())
-                            .load(it)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
-                            .into(binding.currentImageView)
-                    }
+
                 }
             }
         }

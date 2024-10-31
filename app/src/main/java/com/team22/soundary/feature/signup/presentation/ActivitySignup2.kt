@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.signup
+package com.team22.soundary.feature.signup.presentation
 
 import android.Manifest
 import android.content.Intent
