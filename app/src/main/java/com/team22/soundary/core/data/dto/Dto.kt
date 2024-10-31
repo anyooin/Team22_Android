@@ -4,10 +4,14 @@ import android.net.Uri
 import android.util.Log
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
-import com.team22.soundary.core.domain.model.Token
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.extensions.DateAsStringSerializer
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -39,7 +43,7 @@ data class ReceivedShareDto(
     @SerialName("from_user") val fromUser: FromUserResponse?,
     @SerialName("track") val track: TrackDto?,
     @SerialName("comment") val comment: String?,
-    @SerialName("shared_at") val sharedAt: String?
+    @Contextual @SerialName("shared_at") val sharedAt: Date?
 )
 
 @Serializable
@@ -47,7 +51,7 @@ data class SentShareDto(
     @SerialName("id") val id: String?,
     @SerialName("track") val track: TrackDto?,
     @SerialName("comment") val comment: String?,
-    @SerialName("shared_at") val sharedAt: String?
+    @Contextual @SerialName("shared_at") val sharedAt: Date?
 )
 
 @Serializable
@@ -100,7 +104,7 @@ fun SentShareDto.toVO(): Share {
         this.comment ?: "",
         User(),//me
         false,
-        SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(this.sharedAt ?: "1980-01-01 00:00:00") ?: Date()
+        this.sharedAt ?: Date()
     )
 }
 
@@ -111,7 +115,7 @@ fun ReceivedShareDto.toVO(): Share {
         this.comment ?: "",
         this.fromUser?.toVO() ?: User(),
         false,
-        SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(this.sharedAt ?: "1980-01-01 00:00:00") ?: Date()
+        this.sharedAt ?: Date()
     )
 }
 
