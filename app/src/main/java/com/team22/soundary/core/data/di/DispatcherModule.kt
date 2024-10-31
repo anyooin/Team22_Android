@@ -1,5 +1,6 @@
 package com.team22.soundary.core.data.di
 
+import com.team22.soundary.core.IODispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +13,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DispatcherModule {
 
+    @IODispatcher
     @Provides
     @Singleton
     fun provideDispatcher() : CoroutineDispatcher = Dispatchers.IO

@@ -1,5 +1,6 @@
 package com.team22.soundary.core.data
 
+import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.dto.LoginRequestDto
 import com.team22.soundary.core.domain.model.Token
@@ -12,7 +13,7 @@ import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
-    private val dispatcher: CoroutineDispatcher,
+    @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val tokenDataStore: TokenDatasource,
     private val loginService: LoginService
 ) : TokenRepository {
