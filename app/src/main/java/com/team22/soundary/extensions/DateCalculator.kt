@@ -1,13 +1,14 @@
 package com.team22.soundary.extensions
 
-import android.util.Log
 import java.util.Calendar
 import java.util.Date
+import kotlin.math.abs
 
 
-fun Date.getDiff() : String {
+fun Date.getDiff() : String{
     val cur = Calendar.getInstance().time
-    val diff = cur.time - this.time
+    val diff = abs(cur.time - this.time)
+    val suffix = if(cur.time >= this.time) "전" else "후"
 
     val second = (diff / 1000).toInt()
     val minute = second / 60
@@ -15,8 +16,9 @@ fun Date.getDiff() : String {
     val day = hour / 24
     val month = day / 30
 
+
     return if(month > 0){
-        "${month}월"
+        "${month}개월"
     } else if(day > 0){
        "${day}일"
     } else if(hour > 0){
@@ -25,5 +27,7 @@ fun Date.getDiff() : String {
         "${minute}분"
     } else{
         "${second}초"
-    }
+    } + suffix
+
 }
+
