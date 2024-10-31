@@ -1,7 +1,6 @@
 package com.team22.soundary.feature.main.presentation
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.R
@@ -75,9 +74,9 @@ class MainViewModel @Inject constructor(
         _groupedShares[(_uiState.value as? UiState.Success)?.data?.share?.friend?.name]
 
     private fun getCurrentShareIndex(): Int {
-        val a = _uiState.value as? UiState.Success
+        val currentState = _uiState.value as? UiState.Success
         val shares = getCurrentShares()
-        return shares?.indexOfFirst { it.id == a?.data?.share?.id } ?: EMPTY_SHARE
+        return shares?.indexOfFirst { it.id == currentState?.data?.share?.id } ?: EMPTY_SHARE
     }
 
     private fun updateUiState(targetShare: Share, shareIndex: Int) {
