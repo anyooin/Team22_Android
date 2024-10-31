@@ -4,8 +4,8 @@ import android.net.Uri
 import android.util.Log
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
+import com.team22.soundary.core.domain.model.Token
 import com.team22.soundary.core.domain.model.User
-import com.team22.soundary.extensions.DateAsStringSerializer
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName

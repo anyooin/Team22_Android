@@ -2,6 +2,7 @@ package com.team22.soundary.feature.main.data
 
 import android.net.Uri
 import android.util.Log
+import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
@@ -15,7 +16,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class ReceivedShareRepositoryImpl @Inject constructor(
-    private val dispatcher: CoroutineDispatcher,
+    @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val retrofitService: ShareService
 ) : ReceivedShareRepository {
     override suspend fun getShareList(): Flow<List<Share>> = flow {
