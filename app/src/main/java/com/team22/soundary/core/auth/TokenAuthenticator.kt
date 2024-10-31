@@ -16,9 +16,9 @@ class TokenAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val token : String = runBlocking {
             tokenRepository.getRefreshToken().first().getOrNull()
-        } ?: ""
+        } ?: return null
 
-        return Request.Builder().addHeader(AUTH, TOKEN_PREFIX+token).build()
+        return Request.Builder().addHeader(AUTH, "$TOKEN_PREFIX$token").build()
     }
 
     companion object{
