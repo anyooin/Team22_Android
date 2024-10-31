@@ -29,15 +29,12 @@ object RetrofitModule {
     private val json = Json {
         encodeDefaults = true
     }
-    val b = "192.168.1.37"
-    val a = "192.168.45.137"
-
     @OtherRetrofit
     @Provides
     @Singleton
-    fun provideRetrofit(tokenRepository : TokenRepository): Retrofit =
+    fun provideOtherRetrofit(tokenRepository: TokenRepository): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://${a}:8080/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType!!))
             .client(
                 OkHttpClient.Builder().apply {
@@ -54,7 +51,7 @@ object RetrofitModule {
     @Singleton
     fun provideAuthRetrofit() : Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://${a}:8080/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType!!))
             .build()
     }
