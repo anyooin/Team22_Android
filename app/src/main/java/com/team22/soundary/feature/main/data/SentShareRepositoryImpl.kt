@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SentShareRepositoryImpl @Inject constructor(
+internal class SentShareRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val retrofitService: ShareService
 ) : SentShareRepository{

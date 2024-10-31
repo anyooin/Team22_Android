@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ReceivedShareRepositoryImpl @Inject constructor(
+internal class ReceivedShareRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val retrofitService: ShareService
 ) : ReceivedShareRepository {
@@ -32,6 +32,8 @@ class ReceivedShareRepositoryImpl @Inject constructor(
                 } else {
                     throw Exception("Error: ${response.message()}")
                 }
+            }.onFailure {
+
             }
         )
     }

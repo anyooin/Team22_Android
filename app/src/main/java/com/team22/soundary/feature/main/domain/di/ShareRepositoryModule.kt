@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class ShareRepositoryModule {
+internal abstract class ShareRepositoryModule {
 
     @Binds
     @ViewModelScoped
