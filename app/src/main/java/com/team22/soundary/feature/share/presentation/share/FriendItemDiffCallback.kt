@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.share
 
 import androidx.recyclerview.widget.DiffUtil
 import com.team22.soundary.core.domain.model.User

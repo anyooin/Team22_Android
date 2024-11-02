@@ -3,7 +3,6 @@ package com.team22.soundary.feature.main.presentation
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.team22.soundary.R
 import com.team22.soundary.core.UiState
 import com.team22.soundary.databinding.FragmentMainBinding
-import com.team22.soundary.feature.share.ShareBottomSheet
+import com.team22.soundary.feature.share.presentation.share.ShareBottomSheet
 import com.team22.soundary.extensions.getDiff
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay

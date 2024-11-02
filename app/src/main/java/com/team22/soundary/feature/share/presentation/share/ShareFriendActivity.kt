@@ -1,7 +1,6 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.share
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope

@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.music
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.databinding.FragmentShareMusicBinding
+import com.team22.soundary.feature.share.presentation.share.ShareFriendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

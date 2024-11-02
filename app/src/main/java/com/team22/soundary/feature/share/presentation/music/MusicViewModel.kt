@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.music
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ class MusicViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getMusicList().collect {
+            repository.getMusicList("happy").collect {
                 _songList.value = it
             }
         }

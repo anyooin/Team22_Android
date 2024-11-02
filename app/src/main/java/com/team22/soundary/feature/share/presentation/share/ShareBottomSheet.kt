@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.share
 
 import android.app.Dialog
 import android.os.Bundle

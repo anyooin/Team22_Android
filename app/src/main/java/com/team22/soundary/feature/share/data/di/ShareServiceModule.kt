@@ -1,6 +1,7 @@
-package com.team22.soundary.feature.share.data
+package com.team22.soundary.feature.share.data.di
 
 import com.team22.soundary.di.OtherRetrofit
+import com.team22.soundary.feature.share.data.remote.ShareService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

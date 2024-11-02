@@ -1,18 +1,21 @@
 package com.team22.soundary.feature.share.data
 
-import android.net.Uri
+import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.TrackDto
 import com.team22.soundary.core.data.dto.TrackListDto
+import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.Song
+import com.team22.soundary.feature.share.data.remote.ShareService
 import com.team22.soundary.feature.share.domain.MusicRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MusicRepositoryImpl @Inject constructor(
-    private val shareApiService: ShareService
+    @IODispatcher private val dispatcher: CoroutineDispatcher,
+    private val retrofitService: ShareService
 ) : MusicRepository {
     lateinit var musicList: TrackListDto
 
@@ -24,27 +27,31 @@ class MusicRepositoryImpl @Inject constructor(
         TrackDto("5", "제목", listOf("가수"), null, "mp3",1)
     )
 
-    suspend fun searchMusicItem(query: String) {
-        val response = withContext(Dispatchers.IO) {
-            shareApiService.requestMusicList(query = query).execute()
+    override suspend fun getMusicList(query: String): Flow<List<Song>> = flow {
+        val response = withContext(dispatcher) {
+            retrofitService.requestMusicList(query = query)
         }
-        if (response.isSuccessful) {
-            musicList = response.body() ?: TrackListDto(emptyList())
+
+        if(response.isSuccessful) {
+            emit(
+                response.body()?.trackList?.map { it.toVO()} ?: emptyList()
+            )
+        } else {
+            throw Exception("Error: ${response.message()}")
         }
     }
 
-    //override fun getMusicList(): Flow<List<Music>?> = flowOf(musicList?.tracks?.map{it.toVO()})
 
-    override fun getMusicList(): Flow<List<Song>> = flowOf(musicListTemp.map {
-        it.toVO()
-    })
+//    override fun getMusicList(query: String): Flow<List<Song>> = flowOf(musicListTemp.map {
+//        it.toVO()
+//    })
 }
 
-fun TrackDto.toVO(): Song {
-    return Song(
-        this.platformTrackId ?: "",
-        this.title ?: "",
-        this.artist ?: emptyList(),
-        Uri.parse("")
-    )
-}
+//fun TrackDto.toVO(): Song {
+//    return Song(
+//        this.platformTrackId ?: "",
+//        this.title ?: "",
+//        this.artist ?: emptyList(),
+//        Uri.parse("")
+//    )
+//}
