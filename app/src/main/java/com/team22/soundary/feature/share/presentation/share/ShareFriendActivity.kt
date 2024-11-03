@@ -1,10 +1,13 @@
 package com.team22.soundary.feature.share.presentation.share
 
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.team22.soundary.databinding.ActivityShareFriendBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -36,8 +39,18 @@ class ShareFriendActivity : AppCompatActivity() {
     }
 
     private fun setMusicInfoText() {
+        val image: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_IMAGE, Uri::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(KEY_IMAGE)
+        }
         val music: String? = intent.extras?.getString(KEY_MUSIC)
         val singer: String? = intent.extras?.getString(KEY_SINGER)
+
+        Glide.with(applicationContext)
+            .load(image)
+            .into(binding.shareMusicImageview)
         binding.shareMusicTextview.text = music
         binding.shareSingerTextview.text = singer
     }
@@ -82,6 +95,8 @@ class ShareFriendActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val KEY_ID = "id"
+        const val KEY_IMAGE = "image"
         const val KEY_MUSIC = "music"
         const val KEY_SINGER = "singer"
     }

@@ -1,17 +1,22 @@
 package com.team22.soundary.feature.share.presentation.music
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.databinding.ShareMusicItemBinding
 
 class MusicListAdapter(
+    private val context: Context,
     private val listener: MusicItemClickListener
 ) : ListAdapter<Song, MusicListAdapter.ViewHolder>(MusicItemDiffCallback()) {
     class ViewHolder(
+        private val context: Context,
         private val binding: ShareMusicItemBinding,
         private val listener: MusicItemClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -24,9 +29,12 @@ class MusicListAdapter(
         }
 
         fun bind(songItem: Song) {
+            Glide.with(context)
+                .load(songItem.coverImage)
+                .into(binding.shareMusicImageview)
+            binding.shareMusicTextview.text = songItem.title
             binding.shareMusicTextview.text = songItem.title
             binding.shareSingerTextview.text = songItem.artist.joinToString(", ")
-            binding.shareSortTextview.text = "musicItem.sortValue"
             item = songItem
         }
     }
@@ -37,7 +45,7 @@ class MusicListAdapter(
             parent,
             false
         )
-        return ViewHolder(binding, listener)
+        return ViewHolder(context, binding, listener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

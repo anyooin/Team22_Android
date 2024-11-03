@@ -51,11 +51,13 @@ class ShareMusicFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
-        adapter = MusicListAdapter(object : MusicItemClickListener {
+        adapter = MusicListAdapter(requireContext(), object : MusicItemClickListener {
             override fun onClick(v: View, selectItem: Song) {
                 val intent = Intent(requireContext(), ShareFriendActivity::class.java)
+                intent.putExtra(ShareFriendActivity.KEY_ID, selectItem.id)
+                intent.putExtra(ShareFriendActivity.KEY_IMAGE, selectItem.coverImage)
                 intent.putExtra(ShareFriendActivity.KEY_MUSIC, selectItem.title)
-                intent.putExtra(ShareFriendActivity.KEY_SINGER, selectItem.artist[0]) // 추후 수정
+                intent.putExtra(ShareFriendActivity.KEY_SINGER, selectItem.artist.joinToString(", "))
                 startActivity(intent)
             }
         })
