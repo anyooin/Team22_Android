@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.share.data
 
+import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.TrackDto
 import com.team22.soundary.core.data.dto.TrackListDto
@@ -20,11 +21,11 @@ class MusicRepositoryImpl @Inject constructor(
     lateinit var musicList: TrackListDto
 
     private var musicListTemp: List<TrackDto> = mutableListOf(
-        TrackDto("1", "제목", listOf("가수"),  null, "mp3",1),
-        TrackDto( "2", "제목", listOf("가수"), null, "mp3",1),
-        TrackDto("3", "제목", listOf("가수1", "가수2"),  null, "mp3",1),
-        TrackDto("4", "제목", listOf("가수"), null, "mp3",1),
-        TrackDto("5", "제목", listOf("가수"), null, "mp3",1)
+        TrackDto("SPOTIFY", "1", "제목", listOf("가수"), 1, null, "mp3"),
+        TrackDto("SPOTIFY", "2", "제목", listOf("가수"), 1, null, "mp3"),
+        TrackDto("SPOTIFY", "3", "제목", listOf("가수1", "가수2"), 1, null, "mp3"),
+        TrackDto("SPOTIFY", "4", "제목", listOf("가수"), 1, null, "mp3"),
+        TrackDto("SPOTIFY", "5", "제목", listOf("가수"), 1, null, "mp3")
     )
 
     override suspend fun getMusicList(query: String): Flow<List<Song>> = flow {
@@ -32,9 +33,37 @@ class MusicRepositoryImpl @Inject constructor(
             retrofitService.requestMusicList(query = query)
         }
 
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             emit(
-                response.body()?.trackList?.map { it.toVO()} ?: emptyList()
+                response.body()?.trackList?.map { it.toVO() } ?: emptyList()
+            )
+        } else {
+            throw Exception("Error: ${response.message()}")
+        }
+    }
+
+    override suspend fun getMostSharedMusicList(): Flow<List<Song>> = flow {
+        val response = withContext(dispatcher) {
+            retrofitService.requestMostSharedMusicList()
+        }
+
+        if (response.isSuccessful) {
+            emit(
+                response.body()?.trackList?.map { it.toVO() } ?: emptyList()
+            )
+        } else {
+            throw Exception("Error: ${response.message()}")
+        }
+    }
+
+    override suspend fun getMostLikedMusicList(): Flow<List<Song>> = flow {
+        val response = withContext(dispatcher) {
+            retrofitService.requestMostLikedMusicList()
+        }
+
+        if (response.isSuccessful) {
+            emit(
+                response.body()?.trackList?.map { it.toVO() } ?: emptyList()
             )
         } else {
             throw Exception("Error: ${response.message()}")
@@ -46,12 +75,3 @@ class MusicRepositoryImpl @Inject constructor(
 //        it.toVO()
 //    })
 }
-
-//fun TrackDto.toVO(): Song {
-//    return Song(
-//        this.platformTrackId ?: "",
-//        this.title ?: "",
-//        this.artist ?: emptyList(),
-//        Uri.parse("")
-//    )
-//}

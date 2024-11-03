@@ -69,12 +69,13 @@ data class TrackListDto(
 
 @Serializable
 data class TrackDto(
-    @SerialName("track_id") val platformTrackId: String?,
+    @SerialName("platform") val platform: String?,
+    @SerialName("platform_track_id") val platformTrackId: String?,
     @SerialName("title") val title: String?,
     @SerialName("artists") val artist: List<String>?,
+    @SerialName("duration") val duration: Int?,
     @SerialName("album_cover_url") val albumCoverUrl: String?,
-    @SerialName("preview_mp3_url") val previewMp3Url: String?,
-    @SerialName("duration_in_seconds") val duration: Int?
+    @SerialName("preview_mp3_url") val previewMp3Url: String?
 )
 
 @Serializable

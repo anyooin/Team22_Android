@@ -5,4 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface MusicRepository {
     suspend fun getMusicList(query: String): Flow<List<Song>>
+
+    suspend fun getMostSharedMusicList(): Flow<List<Song>>
+
+    suspend fun getMostLikedMusicList(): Flow<List<Song>>
 }
