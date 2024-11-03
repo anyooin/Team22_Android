@@ -34,7 +34,6 @@ class ShareMusicFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentShareMusicBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -74,7 +73,7 @@ class ShareMusicFragment : Fragment() {
                 val intent = Intent(requireContext(), ShareFriendActivity::class.java)
                 intent.putExtra(ShareFriendActivity.KEY_ID, selectItem.id)
                 intent.putExtra(ShareFriendActivity.KEY_IMAGE, selectItem.coverImage)
-                intent.putExtra(ShareFriendActivity.KEY_MUSIC, selectItem.title)
+                intent.putExtra(ShareFriendActivity.KEY_TITLE, selectItem.title)
                 intent.putExtra(
                     ShareFriendActivity.KEY_SINGER,
                     selectItem.artist.joinToString(", ")

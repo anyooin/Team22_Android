@@ -1,6 +1,7 @@
 package com.team22.soundary.feature.share.presentation.share
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
@@ -27,6 +28,8 @@ class ShareViewModel @Inject constructor(
     val comment: StateFlow<String> = _comment.asStateFlow()
 
     private val _category = MutableStateFlow<Category?>(null)
+
+    private val _songId : String = ""
 
     init {
         initFriendList()
@@ -88,5 +91,9 @@ class ShareViewModel @Inject constructor(
 
     fun getSelectedFriends(): List<User> {
         return _userList.value.filter { _selectedFriendIds.value.contains(it.id) }
+    }
+
+    fun shareSongToFriends(songId : String) {
+        Log.d("uin", songId)
     }
 }

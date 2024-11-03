@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.share.presentation.share
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.team22.soundary.MainActivity
 import com.team22.soundary.databinding.ActivityShareFriendBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -45,7 +47,7 @@ class ShareFriendActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(KEY_IMAGE)
         }
-        val music: String? = intent.extras?.getString(KEY_MUSIC)
+        val music: String? = intent.extras?.getString(KEY_TITLE)
         val singer: String? = intent.extras?.getString(KEY_SINGER)
 
         Glide.with(applicationContext)
@@ -81,23 +83,26 @@ class ShareFriendActivity : AppCompatActivity() {
         binding.shareAddFriend.setOnClickListener {
             viewModel.setComment(binding.shareCommentEdittext.text.toString())
             val modal = ShareBottomSheet()
-            modal.show(supportFragmentManager, ShareBottomSheet.TAG)
+            modal.show(supportFragmentManager, ShareBottomSheet.SHARE_BOTTOM_SHEET)
         }
     }
 
     private fun setSendButton() {
+        val songId: String = intent.extras?.getString(KEY_ID) ?: ""
         binding.shareSendButton.text = viewModel.getButtonText()
         binding.shareSendButton.setOnClickListener {
             viewModel.setComment(binding.shareCommentEdittext.text.toString())
-            // viewModel의 데이터들 백으로 넘겨주고
-            // 메인으로 인텐트 넘겨주기
+            viewModel.shareSongToFriends(songId)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
     companion object {
         const val KEY_ID = "id"
         const val KEY_IMAGE = "image"
-        const val KEY_MUSIC = "music"
+        const val KEY_TITLE = "title"
         const val KEY_SINGER = "singer"
     }
 }

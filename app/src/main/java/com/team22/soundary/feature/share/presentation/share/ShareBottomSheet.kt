@@ -30,8 +30,16 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
 
         _binding = BottomSheetBinding.bind(view)
 
-        setSendButton()
-        setComment()
+        when (this.tag) {
+            MAIN_BOTTOM_SHEET -> {
+                setMainSendButton(arguments?.getString(KEY_ID) ?: "")
+            }
+            SHARE_BOTTOM_SHEET -> {
+                setShareSendButton()
+                setComment()
+            }
+        }
+
         setRecyclerView(view)
         setSelectAllButton()
         setCategoryRadioButton()
@@ -42,8 +50,15 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
         return BottomSheetDialog(requireActivity(), R.style.bottomSheetBackground)
     }
 
-    private fun setSendButton() {
-        updateSendButtonText()
+    private fun setMainSendButton(songId: String) {
+        binding.bottomSheetSendButton.setOnClickListener {
+            viewModel.setComment(binding.shareCommentEdittext.text.toString())
+            viewModel.shareSongToFriends(songId)
+            dismiss()
+        }
+    }
+
+    private fun setShareSendButton() {
         binding.bottomSheetSendButton.setOnClickListener {
             viewModel.setComment(binding.shareCommentEdittext.text.toString())
             viewModel.getFilteredFriendList(null)
@@ -118,12 +133,25 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
         binding.bottomSheetSendButton.text = viewModel.getButtonText()
     }
 
-    companion object {
-        const val TAG = "ShareBottomModalSheet"
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val TAG = "TempTag" // Main에서 호출할때 MAIN_BOTTOM_SHEET로 바꾸고 없애야함
+        const val MAIN_BOTTOM_SHEET = "MainBottomSheet"
+        const val SHARE_BOTTOM_SHEET = "ShareBottomSheet"
+
+        private const val KEY_ID = "id"
+
+        // Main에서 val modal = ShareBottomSheet.newInstance(songId값) 으로 생성하고 show해주면 됨
+        fun newInstance(songId: String): ShareBottomSheet {
+            val fragment = ShareBottomSheet()
+            val args = Bundle()
+            args.putString(KEY_ID, songId)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
