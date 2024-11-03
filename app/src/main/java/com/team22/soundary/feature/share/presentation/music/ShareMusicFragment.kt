@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +17,8 @@ import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.databinding.FragmentShareMusicBinding
 import com.team22.soundary.feature.share.presentation.share.ShareFriendActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,6 +44,7 @@ class ShareMusicFragment : Fragment() {
 
         setSpinner()
         setRecyclerView()
+        setEditText()
     }
 
     private fun setSpinner() {
@@ -48,6 +53,19 @@ class ShareMusicFragment : Fragment() {
             R.layout.share_spinner_item,
             resources.getStringArray(R.array.share_sort_array)
         )
+        binding.shareSortSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.changeSongListBySort(position)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
     }
 
     private fun setRecyclerView() {
@@ -57,7 +75,10 @@ class ShareMusicFragment : Fragment() {
                 intent.putExtra(ShareFriendActivity.KEY_ID, selectItem.id)
                 intent.putExtra(ShareFriendActivity.KEY_IMAGE, selectItem.coverImage)
                 intent.putExtra(ShareFriendActivity.KEY_MUSIC, selectItem.title)
-                intent.putExtra(ShareFriendActivity.KEY_SINGER, selectItem.artist.joinToString(", "))
+                intent.putExtra(
+                    ShareFriendActivity.KEY_SINGER,
+                    selectItem.artist.joinToString(", ")
+                )
                 startActivity(intent)
             }
         })
@@ -68,6 +89,15 @@ class ShareMusicFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.songList.collect {
                 adapter.submitList(it)
+            }
+        }
+    }
+
+    private fun setEditText() {
+        binding.shareSearchEdittext.addTextChangedListener {
+            val text: String = binding.shareSearchEdittext.text.toString()
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.changeSongListBySearch(text)
             }
         }
     }

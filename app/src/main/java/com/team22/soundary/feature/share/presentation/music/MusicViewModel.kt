@@ -18,12 +18,38 @@ class MusicViewModel @Inject constructor(
     private val _songList = MutableStateFlow<List<Song>>(emptyList())
     val songList: StateFlow<List<Song>> = _songList.asStateFlow()
 
-    init {
+    private var sortIndex: Int = 0
+
+    // 공유한 노래 없으면 emptylist로 떠서 일단 getMusicList로 해놨음
+    fun changeSongListBySort(index: Int) {
+        sortIndex = index
         viewModelScope.launch {
-            repository.getMusicList("happy").collect {
-                _songList.value = it
+            when (sortIndex) {
+                MOST_SHARED -> repository.getMusicList("hi").collect {
+                    _songList.value = it
+                }
+
+                MOST_LIKED -> repository.getMusicList("hello").collect {
+                    _songList.value = it
+                }
             }
         }
     }
 
+    fun changeSongListBySearch(query: String) {
+        viewModelScope.launch {
+            if (query == "") {
+                changeSongListBySort(sortIndex)
+            } else {
+                repository.getMusicList(query).collect {
+                    _songList.value = it
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val MOST_SHARED = 0
+        const val MOST_LIKED = 1
+    }
 }
