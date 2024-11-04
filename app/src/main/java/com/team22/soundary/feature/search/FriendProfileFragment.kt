@@ -20,6 +20,7 @@ class FriendProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FriendProfileViewModel by viewModels()
     private lateinit var friendId: String
+    private val userId: String = "user" //  나중에 수정하기
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,15 +60,19 @@ class FriendProfileFragment : Fragment() {
                             binding.addFriendButton.isEnabled = true
                             binding.addFriendButton.text = "친구 요청 수락"
                             binding.addFriendButton.setOnClickListener {
-                                viewModel.acceptFriend(friendId)
-                                Toast.makeText(requireContext(), "친구 요청을 수락했습니다.", Toast.LENGTH_SHORT).show()
+                                viewModel.acceptFriend(userId, friendId) // 로그인에서 받아오고 수정하기
+                                Toast.makeText(
+                                    requireContext(),
+                                    "친구 요청을 수락했습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                         else -> {
                             binding.addFriendButton.isEnabled = true
                             binding.addFriendButton.text = "친구 추가"
                             binding.addFriendButton.setOnClickListener {
-                                viewModel.addFriend(friendId)
+                                viewModel.addFriend(userId, friendId)
                             }
                         }
                     }

@@ -16,6 +16,24 @@ import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
+// 친구 목록 응답 DTO
+@Serializable
+data class FriendsResponse(
+    @SerialName("friends") val friends: List<UserInfoDto>?
+)
+
+// 받은 친구 요청 목록 응답 DTO
+@Serializable
+data class ReceivedRequestsResponse(
+    @SerialName("received_requests") val receivedRequests: List<UserInfoDto>?
+)
+
+// 보낸 친구 요청 목록 응답 DTO
+@Serializable
+data class SentRequestsResponse(
+    @SerialName("sent_requests") val sentRequests: List<UserInfoDto>?
+)
+
 @Serializable
 data class UserInfoDto(
     @SerialName("displayId") val id : String?,
@@ -134,6 +152,7 @@ fun FromUserResponse.toVO(): User =
         image = Uri.parse(this.profileImageUrl ?: "")
     )
 
+
 fun UserInfoDto.toVO(): User =
     User(
         id = this.id ?: "",
@@ -147,6 +166,4 @@ fun TokenDto.toVO() : Token =
         this.accessToken ?: "",
         this.refreshToken ?: ""
     )
-
-
 

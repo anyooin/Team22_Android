@@ -24,6 +24,7 @@ class FriendSearchFragment : Fragment() {
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
     private var _binding: FragmentFriendSearchBinding? = null
     private val binding get() = _binding!!
+    private val user: String = "user"
 
     private val friendSearchViewModel: FriendSearchViewModel by viewModels()
 
@@ -53,10 +54,10 @@ class FriendSearchFragment : Fragment() {
                     .commit()
             },
             onAcceptClick = { friend ->
-                friendSearchViewModel.acceptFriend(friend)
+                friendSearchViewModel.acceptFriend(user, friend)
             },
             onDeclineClick = { friend ->
-                friendSearchViewModel.declineFriend(friend)
+                friendSearchViewModel.declineFriend(user, friend)
             }
         )
 
@@ -75,7 +76,7 @@ class FriendSearchFragment : Fragment() {
                     .commit()
             },
             onDeleteClick = { friend ->
-                friendSearchViewModel.deleteFriend(friend)
+                friendSearchViewModel.deleteFriend(user, friend)
             }
         )
 
@@ -122,9 +123,9 @@ class FriendSearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
                 if (query.isEmpty()) {
-                    friendSearchViewModel.resetFilters()
+                    friendSearchViewModel.resetFilters(user)
                 } else {
-                    friendSearchViewModel.filterFriends(query)
+                    friendSearchViewModel.filterFriends(user, query)
                 }
             }
 
