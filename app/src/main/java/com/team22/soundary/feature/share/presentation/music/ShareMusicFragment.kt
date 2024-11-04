@@ -79,6 +79,7 @@ class ShareMusicFragment : Fragment() {
                     selectItem.artist.joinToString(", ")
                 )
                 startActivity(intent)
+                //requireActivity().finish()
             }
         })
         binding.shareMusicRecyclerview.adapter = adapter

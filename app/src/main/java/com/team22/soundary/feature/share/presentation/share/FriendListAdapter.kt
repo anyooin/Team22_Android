@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.share.presentation.share
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +67,7 @@ class FriendListAdapter :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).image == null) {
+        return if (getItem(position).image == Uri.EMPTY) {
             NO_IMAGE
         } else {
             WITH_IMAGE

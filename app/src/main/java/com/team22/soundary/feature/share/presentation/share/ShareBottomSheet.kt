@@ -44,6 +44,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
         setSelectAllButton()
         setCategoryRadioButton()
         observeSelectedFriends()
+        observeFilteredFriends()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -125,6 +126,14 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
                 updateSendButtonText()
                 binding.shareSelectAllButton.isChecked = viewModel.isAllFriendsSelected()
                 adapter.setSelectedIds(selectedIds)
+            }
+        }
+    }
+
+    private fun observeFilteredFriends() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filteredUserList.collectLatest {
+                binding.shareSelectAllButton.isChecked = viewModel.isAllFriendsSelected()
             }
         }
     }
