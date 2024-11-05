@@ -20,7 +20,7 @@ class FriendProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FriendProfileViewModel by viewModels()
     private lateinit var friendId: String
-    private val userId: String = "user" //  나중에 수정하기
+    private val userId: String = "user" //  TODO: 나중에 수정하기
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +37,6 @@ class FriendProfileFragment : Fragment() {
         friendId = arguments?.getString("FRIEND_ID") ?: return
         viewModel.loadFriendProfile(friendId)
 
-        // 프로필 정보 관찰 및 UI 업데이트
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.friendProfile.collectLatest { profile ->
                 profile?.let {
@@ -46,33 +45,32 @@ class FriendProfileFragment : Fragment() {
                     binding.statusMessageTextview.text = it.statusMessage
                     updateFavoriteGenres(it.category)
 
-                    // 친구 상태에 따라 버튼 업데이트
-                    when (it.status) {
-                        "accepted" -> {
-                            binding.addFriendButton.isEnabled = false
-                            binding.addFriendButton.text = "이미 친구입니다"
-                        }
-                        "pending" -> {
-                            binding.addFriendButton.isEnabled = false
-                            binding.addFriendButton.text = "친구 요청 중"
-                        }
-                        "requested" -> {
-                            binding.addFriendButton.isEnabled = true
-                            binding.addFriendButton.text = "친구 요청 수락"
-                            binding.addFriendButton.setOnClickListener {
-                                viewModel.acceptFriend(userId, friendId) // 로그인에서 받아오고 수정하기
-                                Toast.makeText(
-                                    requireContext(),
-                                    "친구 요청을 수락했습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                    binding.addFriendButton.apply {
+                        isEnabled = true
+                        when (it.status) {
+                            "accepted" -> {
+                                text = "이미 친구입니다"
+                                isEnabled = false
                             }
-                        }
-                        else -> {
-                            binding.addFriendButton.isEnabled = true
-                            binding.addFriendButton.text = "친구 추가"
-                            binding.addFriendButton.setOnClickListener {
-                                viewModel.addFriend(userId, friendId)
+                            "pending" -> {
+                                text = "친구 요청 중"
+                                isEnabled = false
+                            }
+                            "requested" -> {
+                                text = "친구 요청 수락"
+                                setOnClickListener {
+                                    viewModel.acceptFriendRequest(userId, friendId)
+                                    text = "친구 요청 수락 중..."
+                                    isEnabled = false
+                                }
+                            }
+                            else -> {
+                                text = "친구 추가"
+                                setOnClickListener {
+                                    viewModel.addFriend(userId, friendId)
+                                    text = "친구 추가 중..."
+                                    isEnabled = false
+                                }
                             }
                         }
                     }
@@ -80,20 +78,19 @@ class FriendProfileFragment : Fragment() {
             }
         }
 
-        // 친구 추가 결과 관찰
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isFriendAdded.collectLatest { isAdded ->
                 if (isAdded) {
-                    // 친구 프로필을 다시 로드하여 상태 업데이트
                     viewModel.loadFriendProfile(friendId)
                 }
             }
         }
 
         binding.backIcon.setOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
+
 
     private fun updateFavoriteGenres(genres: List<Category>) {
         val genreTextViews = listOf(

@@ -22,6 +22,7 @@ class FriendProfileViewModel @Inject constructor(
     private val _isFriendAdded = MutableStateFlow<Boolean>(false)
     val isFriendAdded: StateFlow<Boolean> get() = _isFriendAdded.asStateFlow()
 
+    // 친구 프로필 로드
     fun loadFriendProfile(friendId: String) {
         viewModelScope.launch {
             val profile = friendRepository.getFriendById(friendId)
@@ -29,20 +30,22 @@ class FriendProfileViewModel @Inject constructor(
         }
     }
 
+    // 친구 추가
     fun addFriend(userId: String, friendId: String) {
         viewModelScope.launch {
             val result = friendRepository.addFriend(userId, friendId)
             _isFriendAdded.value = result
             loadFriendProfile(friendId)
+            _isFriendAdded.value = false // 상태 초기화
         }
     }
 
-
-    fun acceptFriend(userId: String, friendId: String) {
+    // 친구 요청 수락
+    fun acceptFriendRequest(userId: String, friendId: String) {
         viewModelScope.launch {
             friendRepository.updateFriendStatus(userId, friendId, "accepted")
             loadFriendProfile(friendId)
         }
     }
-
 }
+
