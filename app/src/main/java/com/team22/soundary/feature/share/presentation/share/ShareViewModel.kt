@@ -105,7 +105,7 @@ class ShareViewModel @Inject constructor(
     }
 
     fun isAllFriendsSelected(): Boolean {
-        return _selectedFriendIds.value.size == _filteredUserList.value.size
+        return _selectedFriendIds.value.isNotEmpty() && _selectedFriendIds.value.size == _filteredUserList.value.size
     }
 
     fun getButtonText(): String {
