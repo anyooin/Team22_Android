@@ -98,6 +98,24 @@ data class LoginRequestDto(
     @SerialName("token") val token: String
 )
 
+@Serializable
+data class ShareMusicRequest(
+    @SerialName("track") val track: TrackIdentifierDto,
+    @SerialName("comment") val comment: String,
+    @SerialName("target_user_ids") val userList: List<String>
+)
+
+@Serializable
+data class TrackIdentifierDto(
+    @SerialName("platform") val platform: String = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String
+)
+
+@Serializable
+data class ShareMusicResponse(
+    @SerialName("shared_music_id") val platformTrackId: String?
+)
+
 fun SentShareDto.toVO(): Share {
     return Share(
         this.id ?: "",

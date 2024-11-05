@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -91,11 +92,15 @@ class ShareFriendActivity : AppCompatActivity() {
         val songId: String = intent.extras?.getString(KEY_ID) ?: ""
         binding.shareSendButton.text = viewModel.getButtonText()
         binding.shareSendButton.setOnClickListener {
-            viewModel.setComment(binding.shareCommentEdittext.text.toString())
-            viewModel.shareSongToFriends(songId)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            if(viewModel.isAnyFriendSelected()) {
+                viewModel.setComment(binding.shareCommentEdittext.text.toString())
+                viewModel.shareSongToFriends(songId)
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish() // FLAG_ACTIVITY_CLEAR_TOP 사용?
+            } else {
+                Toast.makeText(this, "친구를 1명 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

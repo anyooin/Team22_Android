@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -53,9 +54,13 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
 
     private fun setMainSendButton(songId: String) {
         binding.bottomSheetSendButton.setOnClickListener {
-            viewModel.setComment(binding.shareCommentEdittext.text.toString())
-            viewModel.shareSongToFriends(songId)
-            dismiss()
+            if(viewModel.isAnyFriendSelected()) {
+                viewModel.setComment(binding.shareCommentEdittext.text.toString())
+                viewModel.shareSongToFriends(songId)
+                dismiss()
+            } else {
+                Toast.makeText(requireContext(), "친구를 1명 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
