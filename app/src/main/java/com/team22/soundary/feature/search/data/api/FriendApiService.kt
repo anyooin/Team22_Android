@@ -56,4 +56,10 @@ interface FriendApiService {
     suspend fun getFriendProfile(
         @Path("friendId") friendId: String
     ): Response<UserInfoDto>
+
+    // 사용자 검색
+    @GET("/api/v1/users")
+    suspend fun searchUser(
+        @Query("display-id") displayId: String
+    ): Response<UserInfoDto>
 }

@@ -99,17 +99,6 @@ class FriendRepository @Inject constructor(
         }
     }
 
-    // 친구 프로필 가져오기
-    /*suspend fun getFriendProfile(friendId: String): User? {
-        return try {
-            val response = friendApiService.getFriendProfile(friendId)
-            if (response.isSuccessful) response.body() else null
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }*/
-
     // 받은 친구 요청 거절 메서드
     suspend fun rejectReceivedRequest(targetUserId: String): Boolean {
         return try {
@@ -132,6 +121,20 @@ class FriendRepository @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             false
+        }
+    }
+    // 사용자 검색
+    suspend fun searchUserByDisplayId(displayId: String): User? {
+        return try {
+            val response = friendApiService.searchUser(displayId)
+            if (response.isSuccessful) {
+                response.body()?.toVO()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
