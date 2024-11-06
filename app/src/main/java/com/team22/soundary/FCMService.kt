@@ -29,7 +29,6 @@ class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         // notification 대신 data에서 메시지 가져오기
         super.onMessageReceived(message)
-        Log.d("widgetkk", "message data: ${message.data}")
 
         // 알림을 클릭했을 때 열릴 Activity 설정
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
@@ -53,11 +52,10 @@ class FCMService : FirebaseMessagingService() {
         }
 
         val code = message.data["code"]
-        if(code == "N0001"){
+        if(code == MUSIC_SENT_CODE){
             updateWidget(message.data["body"] ?: "Error")
         }
     }
-
 
     private fun updateWidget(msg: String){
         val appWidgetManager = AppWidgetManager.getInstance(this)
@@ -73,19 +71,8 @@ class FCMService : FirebaseMessagingService() {
         sendBroadcast(intent)
     }
 
-//    override fun handleIntent(intent: Intent?) {
-//        try {
-//            // notification 관련 키만 제거하고 data는 유지
-//            intent?.extras?.keySet()?.forEach { key ->
-//                if (key.startsWith("google.c.n.")) {
-//                    intent.removeExtra(key)
-//                }
-//            }
-//        } catch (e: Exception) {
-//            Log.e("FCM", "Error cleaning notification data", e)
-//        }
-//
-//        super.handleIntent(intent)
-//    }
+    companion object{
+        private const val MUSIC_SENT_CODE = "N0001"
+    }
 
 }
