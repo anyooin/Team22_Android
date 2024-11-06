@@ -37,10 +37,10 @@ data class SentRequestsResponse(
 
 @Serializable
 data class UserInfoDto(
-    @SerialName("displayId") val id : String?,
+    @SerialName("display_id") val id : String?,
     @SerialName("nickname") val name : String?,
     @SerialName("description") val description : String?,
-    @SerialName("profileImageUrl") val profile : String?,
+    @SerialName("profile_image_url") val profile : String?,
     @SerialName("roles") val roles : List<String>?
 )
 
@@ -64,7 +64,8 @@ data class ReceivedShareDto(
     @SerialName("from_user") val fromUser: FromUserResponse?,
     @SerialName("track") val track: TrackDto?,
     @SerialName("comment") val comment: String?,
-    @Contextual @SerialName("shared_at") val sharedAt: Date?
+    @Contextual @SerialName("shared_at") val sharedAt: Date?,
+    @SerialName("is_liked") val isLiked : Boolean? = false
 )
 
 @Serializable
@@ -91,7 +92,7 @@ data class TrackListDto(
 @Serializable
 data class TrackDto(
     @SerialName("platform") val platform: String? = null,
-    @SerialName("platform_track_id") val platformTrackId: String? = null,
+    @SerialName("track_id") val platformTrackId: String? = null,
     @SerialName("title") val title: String? = null,
     @SerialName("artists") val artist: List<String>? = null,
     @SerialName("duration") val duration: Int? = null,
@@ -168,7 +169,7 @@ fun ReceivedShareDto.toVO(): Share {
         this.track?.toVO() ?: Song(),
         this.comment ?: "",
         this.fromUser?.toVO() ?: User(),
-        false,
+        this.isLiked ?: false,
         this.sharedAt ?: Date()
     )
 }

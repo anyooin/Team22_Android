@@ -31,8 +31,12 @@ class MainViewModel @Inject constructor(
             try{
                 getShareUseCase.invoke().collect { result ->
                     _groupedShares = result
+                    Log.d("akuby21","vm : "+result)
                     _uiState.value = UiState.Success(MainUiState())
-                    if (result.isNotEmpty()) updateUiState(result.entries.first().value.first(), 0)
+                    if (result.isNotEmpty()){
+                        updateUiState(result.entries.first().value.first(), 0)
+                        lastFriendNameList = result.keys.toList()
+                    }
                     else _uiState.value = UiState.Empty
                 }
             } catch(e : Exception){
@@ -41,10 +45,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
     fun onFriendChanged(index: Int) {
         val targetFriendName = _groupedShares.keys.toList()[index]
-        _groupedShares[targetFriendName]?.first()?.let { updateUiState(it, 0) }
+        _groupedShares[targetFriendName]?.first()?.let {
+            Log.d("Sibal",""+it)
+            updateUiState(it, 0)
+        }
     }
 
     fun onNextClicked() {
@@ -74,10 +80,22 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             data?.let{
                 try {
-                    if(data.data.share.isLike) likeSongUseCase.dislike(data.data.share.song.id)
-                    else likeSongUseCase.like(data.data.share.song.id)
+                    if(data.data.share.isLike){
+                        likeSongUseCase.dislike(data.data.share.id)
+                        updateUiState(data.data.share.copy(
+                            isLike = false
+                        ),getCurrentShareIndex())
+                        Log.d("akuby21","좋아요 취소"+uiState.value as? UiState.Success)
+                    }
+                    else{
+                        likeSongUseCase.like(data.data.share.id)
+                        updateUiState(data.data.share.copy(
+                            isLike = true
+                        ),getCurrentShareIndex())
+                        Log.d("akuby21","좋아요"+uiState.value as? UiState.Success)
+                    }
                 } catch (e: Exception) {
-                    Log.e("akuby21", "좋아요 실패 : ${e.message}")
+                    Log.e("akuby21", "좋아요 실패 : ${e.message} ${e.cause}")
                 }
             }
         }
