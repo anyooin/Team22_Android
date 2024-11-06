@@ -104,6 +104,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getSongId(): String {
+        val data = _uiState as UiState.Success<MainUiState>
+        return data.data.share.song.id
+    }
+
     companion object {
         const val EMPTY_SHARE = -1
         const val UNKNOWN_ERROR = "unknown error"

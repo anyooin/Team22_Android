@@ -81,8 +81,8 @@ class MainFragment : Fragment() {
 
     private fun setShareButton(){
         binding.shareImageButton.setOnClickListener {
-            val modal = ShareBottomSheet()
-            modal.show(parentFragmentManager, ShareBottomSheet.TAG)
+            val modal = ShareBottomSheet.newInstance(viewModel.getSongId())
+            modal.show(parentFragmentManager, ShareBottomSheet.MAIN_BOTTOM_SHEET)
         }
     }
 
