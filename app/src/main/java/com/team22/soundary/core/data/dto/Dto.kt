@@ -2,6 +2,7 @@ package com.team22.soundary.core.data.dto
 
 import android.net.Uri
 import android.util.Log
+import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
@@ -27,6 +28,8 @@ data class UserInfoDto(
 
 @Serializable
 data class ReceivedShareListDto(
+    @SerialName("total") val total: Int?,
+    @SerialName("total_pages") val totalPage : Int?,
     @SerialName("shared_musics") val shareList: List<ReceivedShareDto>?
 )
 
@@ -99,6 +102,20 @@ data class LoginRequestDto(
 )
 
 @Serializable
+data class RefreshRequestDto(
+    @SerialName("refresh_token") val refreshToken: String
+)
+
+@Serializable
+data class UserInfoInitRequestDto(
+    @SerialName("labels") val category : List<Category>,
+    @SerialName("device_token") val deviceToken : String,
+    @SerialName("display_id") val displayId : String,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("profile_image_url") val profileImage : String? = null
+)
+
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,
@@ -153,14 +170,15 @@ fun FromUserResponse.toVO(): User =
         image = Uri.parse(this.profileImageUrl ?: "")
     )
 
-fun UserInfoDto.toVO(): User =
-    User(
+fun UserInfoDto.toVO(): User {
+    return User(
         id = this.id ?: "",
         name = this.name ?: "",
         image = Uri.parse(this.profile),
-        statusMessage = this.description ?: ""
+        statusMessage = this.description ?: "",
+        role = this.roles ?: emptyList()
     )
-
+}
 fun TokenDto.toVO() : Token =
     Token(
         this.accessToken ?: "",

@@ -111,12 +111,12 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
                     } else {
                         lastCheckedRadioButtonId = checkedId
                         val category = when (checkedId) {
-                            R.id.category_rnb -> Category.RnB
-                            R.id.category_hiphop -> Category.Hiphop
-                            R.id.category_pop -> Category.Pop
-                            R.id.category_rock -> Category.Rock
-                            R.id.category_jpop -> Category.Jpop
-                            R.id.category_dance -> Category.Dance
+                            R.id.category_rnb -> Category.RNB
+                            R.id.category_hiphop -> Category.HIPHOP
+                            R.id.category_pop -> Category.POP
+                            R.id.category_rock -> Category.ROCK
+                            R.id.category_jpop -> Category.JPOP
+                            R.id.category_dance -> Category.DANCE
                             else -> null
                         }
                         viewModel.getFilteredFriendList(category)
