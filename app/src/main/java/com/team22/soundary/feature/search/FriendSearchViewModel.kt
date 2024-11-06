@@ -109,7 +109,7 @@ class FriendSearchViewModel @Inject constructor(
     // 친구 수락 메서드
     fun acceptFriend(friend: User) {
         viewModelScope.launch {
-            friendRepository.updateFriendStatus(friend.id, "accepted")
+            friendRepository.updateFriendStatus(friend.displayId, "accepted")
             _newFriends.value = _newFriends.value.filter { it.id != friend.id }
             _myFriends.value = _myFriends.value + friend.copy(status = "accepted")
         }
