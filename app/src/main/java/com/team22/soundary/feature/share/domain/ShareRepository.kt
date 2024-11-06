@@ -8,5 +8,5 @@ interface ShareRepository {
         platformTrackId: String,
         comment: String,
         userList: List<String>
-    ) : Flow<Result<ShareMusicResponse>>
+    )
 }

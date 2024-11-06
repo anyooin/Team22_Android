@@ -46,38 +46,6 @@ class ShareViewModel @Inject constructor(
     }
 
     private suspend fun initFriendList() {
-//        val initList = mutableListOf<User>()
-//        for (i in 0..5) {
-//            initList.add(
-//                User(
-//                    id = "$i",
-//                    name = "댄스",
-//                    image = Uri.EMPTY,
-//                    category = listOf(Category.DANCE)
-//                )
-//            )
-//        }
-//        for (i in 6..10) {
-//            initList.add(
-//                User(
-//                    id = "$i",
-//                    name = "힙합",
-//                    image = Uri.EMPTY,
-//                    category = listOf(Category.HIPHOP)
-//                )
-//            )
-//        }
-//        for (i in 11..19) {
-//            initList.add(
-//                User(
-//                    id = "$i",
-//                    name = "쿠키즈",
-//                    image = Uri.EMPTY,
-//                    category = listOf(Category.RNB)
-//                )
-//            )
-//        }
-//        _userList.value = initList
         _userList.value  = friendRepository.getFriends()
         getFilteredFriendList(_category.value)
     }
@@ -126,9 +94,9 @@ class ShareViewModel @Inject constructor(
     }
 
     fun shareSongToFriends(songId: String) {
-//        viewModelScope.launch {
-//            shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
-//        }
+        viewModelScope.launch {
+            shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
+        }
         Log.d("uin", songId)
     }
 }
