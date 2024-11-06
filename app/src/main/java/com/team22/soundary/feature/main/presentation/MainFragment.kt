@@ -3,6 +3,7 @@ package com.team22.soundary.feature.main.presentation
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -75,7 +76,13 @@ class MainFragment : Fragment() {
         setMediaPlayer()
         setShareButton()
         binding.likeButton.setOnClickListener {
-            viewModel.likeMusic()
+            if(viewModel.isReceivedShare()){
+                viewModel.likeMusic()
+            } else{
+                Snackbar.make(requireContext(), binding.main, "내가 공유한 노래는 좋아요를 누를 수 없습니다.", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+
         }
     }
 
@@ -257,6 +264,7 @@ class MainFragment : Fragment() {
                 viewModel.uiState.collectLatest { uiState ->
                     when(uiState){
                         is UiState.Success -> {
+                            setSpinner(uiState.data.friendNameList)
                             binding.friendNameTextView.text = uiState.data.share.friend.name
                             binding.musicNameTextView.text = uiState.data.share.song.title
                             binding.singerTextView.text = uiState.data.share.song.artist.joinToString()
