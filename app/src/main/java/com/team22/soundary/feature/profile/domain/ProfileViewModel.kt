@@ -37,6 +37,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getProfile()
+        Log.d("uin","vm init")
     }
     fun getProfile() {
         viewModelScope.launch {

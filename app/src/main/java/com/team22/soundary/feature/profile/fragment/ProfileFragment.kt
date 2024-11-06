@@ -15,6 +15,7 @@ import com.team22.soundary.feature.profile.domain.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -23,7 +24,6 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val profileViewModel: ProfileViewModel by viewModels()
-
 
 
     override fun onCreateView(
@@ -42,7 +42,10 @@ class ProfileFragment : Fragment() {
         binding.editButton.setOnClickListener {
             // ProfileEditedFragment로 이동
             parentFragmentManager.beginTransaction()
-                .replace(R.id.frame, ProfileEditedFragment()) // R.id.frame은 MainActivity의 frame 컨테이너
+                .replace(
+                    R.id.frame,
+                    ProfileEditedFragment()
+                ) // R.id.frame은 MainActivity의 frame 컨테이너
                 .addToBackStack(null) // 백스택에 추가하여 뒤로 가기 버튼을 사용할 수 있게 함
                 .commit()
         }
@@ -51,6 +54,7 @@ class ProfileFragment : Fragment() {
                 binding.categoryLabel.text = categories.joinToString(", ")
             }
         }
+        observeState()
     }
 
     override fun onDestroyView() {
@@ -58,11 +62,32 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
-    fun setProfileInfo (){
+    fun setProfileInfo() {
         lifecycleScope.launch {
-            profileViewModel.userInfo.collect{
+            profileViewModel.userInfo.collect {
                 binding.profileTextviewName.text = it.name
                 binding.profileTextviewIntro.text = it.statusMessage
+                Glide.with(requireContext())
+                    .load(it.image)
+                    .into(binding.profileImageview)
+
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            profileViewModel.getProfile()
+        }
+    }
+
+    private fun observeState() {
+        lifecycleScope.launch {
+            profileViewModel.userInfo.collectLatest {
+                binding.profileTextviewName.setText(it.name)
+                binding.profileTextviewIntro.setText(it.statusMessage)
+
                 Glide.with(requireContext())
                     .load(it.image)
                     .into(binding.profileImageview)
