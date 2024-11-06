@@ -37,9 +37,11 @@
 
     <!--sign intro-->
     <string name="sign_intro_start">카카오톡으로 시작하기</string>
+    <string name="sign_loading">로딩중...</string>
 
     <!-- signup -->
     <string name="signup_necessary_info">필수 정보를 입력해주세요.</string>
+    <string name="signup_optional_info">선택 정보를 입력해주세요.</string>
     <string name="signup_nick_intro_info">앱의 고유 아이디는 카카오 아이디의 앞 부분입니다.</string>
     <string name="signup_ID_hint">아이디를 입력하세요</string>
     <string name="signup_nickname_hint">앱에서 사용할 닉네임 (최대 8자)</string>  <!-- 닉네임 입력 힌트 -->

@@ -72,12 +72,13 @@ data class TrackListDto(
 
 @Serializable
 data class TrackDto(
-    @SerialName("track_id") val platformTrackId: String?,
+    @SerialName("platform") val platform: String?,
+    @SerialName("platform_track_id") val platformTrackId: String?,
     @SerialName("title") val title: String?,
     @SerialName("artists") val artist: List<String>?,
+    @SerialName("duration") val duration: Int?,
     @SerialName("album_cover_url") val albumCoverUrl: String?,
-    @SerialName("preview_mp3_url") val previewMp3Url: String?,
-    @SerialName("duration_in_seconds") val duration: Int?
+    @SerialName("preview_mp3_url") val previewMp3Url: String?
 )
 
 @Serializable
@@ -113,6 +114,23 @@ data class UserInfoInitRequestDto(
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = null,
     @SerialName("profile_image_url") val profileImage : String? = null
+)
+
+data class ShareMusicRequest(
+    @SerialName("track") val track: TrackIdentifierDto,
+    @SerialName("comment") val comment: String,
+    @SerialName("target_user_ids") val userList: List<String>
+)
+
+@Serializable
+data class TrackIdentifierDto(
+    @SerialName("platform") val platform: String = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String
+)
+
+@Serializable
+data class ShareMusicResponse(
+    @SerialName("shared_music_id") val platformTrackId: String?
 )
 
 fun SentShareDto.toVO(): Share {
