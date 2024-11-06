@@ -25,17 +25,14 @@ class MainViewModel @Inject constructor(
     private var _groupedShares: Map<String, List<Share>> = emptyMap()
     private val _uiState = MutableStateFlow<UiState<MainUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<MainUiState>> = _uiState.asStateFlow()
-
     init {
         viewModelScope.launch {
             try{
                 getShareUseCase.invoke().collect { result ->
                     _groupedShares = result
-                    Log.d("akuby21","vm : "+result)
                     _uiState.value = UiState.Success(MainUiState())
                     if (result.isNotEmpty()){
                         updateUiState(result.entries.first().value.first(), 0)
-                        lastFriendNameList = result.keys.toList()
                     }
                     else _uiState.value = UiState.Empty
                 }
@@ -48,7 +45,6 @@ class MainViewModel @Inject constructor(
     fun onFriendChanged(index: Int) {
         val targetFriendName = _groupedShares.keys.toList()[index]
         _groupedShares[targetFriendName]?.first()?.let {
-            Log.d("Sibal",""+it)
             updateUiState(it, 0)
         }
     }
@@ -85,14 +81,12 @@ class MainViewModel @Inject constructor(
                         updateUiState(data.data.share.copy(
                             isLike = false
                         ),getCurrentShareIndex())
-                        Log.d("akuby21","좋아요 취소"+uiState.value as? UiState.Success)
                     }
                     else{
                         likeSongUseCase.like(data.data.share.id)
                         updateUiState(data.data.share.copy(
                             isLike = true
                         ),getCurrentShareIndex())
-                        Log.d("akuby21","좋아요"+uiState.value as? UiState.Success)
                     }
                 } catch (e: Exception) {
                     Log.e("akuby21", "좋아요 실패 : ${e.message} ${e.cause}")
