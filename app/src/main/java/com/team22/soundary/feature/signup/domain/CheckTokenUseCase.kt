@@ -13,9 +13,7 @@ import java.util.Base64
 import javax.inject.Inject
 
 class CheckTokenUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
-    private val userRepository: UserRepository,
-    private val dispatcher: CoroutineDispatcher
+    private val tokenRepository: TokenRepository
 ) {
     suspend fun invoke(): Boolean =
         try {

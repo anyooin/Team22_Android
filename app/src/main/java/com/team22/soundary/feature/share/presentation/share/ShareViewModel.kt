@@ -46,7 +46,9 @@ class ShareViewModel @Inject constructor(
     }
 
     private suspend fun initFriendList() {
-        _userList.value  = friendRepository.getFriends()
+        friendRepository.getFriends().collect{
+            _userList.value = it
+        }
         getFilteredFriendList(_category.value)
     }
 
