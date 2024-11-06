@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
+import com.team22.soundary.BuildConfig.NATIVE_KEY
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

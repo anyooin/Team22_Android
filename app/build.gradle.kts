@@ -1,3 +1,5 @@
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -6,6 +8,13 @@ plugins {
     alias(libs.plugins.hilt)
     kotlin("plugin.serialization") version "2.0.21"
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val kakaoNativeKey: String = localProperties.getProperty("NATIVE_KEY") ?: ""
 
 android {
     namespace = "com.team22.soundary"
@@ -19,6 +28,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "NATIVE_KEY", "\"$kakaoNativeKey\"")
+
+        manifestPlaceholders["NATIVE_KEY"] = kakaoNativeKey
     }
 
 

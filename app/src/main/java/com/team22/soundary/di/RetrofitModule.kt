@@ -2,6 +2,7 @@ package com.team22.soundary.di
 
 import com.team22.soundary.core.auth.TokenInterceptor
 import com.team22.soundary.core.domain.TokenRepository
+import com.team22.soundary.util.DateAsStringSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,7 @@ annotation class OtherRetrofit
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     private val contentType = MediaType.parse("application/json")
+    private const val BASE_URL = "http://103.124.101.43:8080"
     private val json = Json {
         encodeDefaults = true
         serializersModule = SerializersModule {
