@@ -35,7 +35,7 @@ class FriendSearchViewModel @Inject constructor(
     init {
         loadFriends()
         loadPendingFriends()
-        startPeriodicFriendsUpdate()
+        //startPeriodicFriendsUpdate()
     }
 
     // 친구 신청 메서드
@@ -51,34 +51,28 @@ class FriendSearchViewModel @Inject constructor(
         }
     }
 
-    // 친구 목록을 주기적으로 갱신하는 함수
-    private fun startPeriodicFriendsUpdate() {
-        viewModelScope.launch {
-            while (true) {
-                loadFriends()
-                loadPendingFriends()
-                delay(10000) // 10초마다 갱신 (필요에 따라 조정)
-            }
-        }
-    }
-
     // 친구 목록 로드
-    private fun loadFriends() {
+    fun loadFriends() {
         viewModelScope.launch {
             friendRepository.getFriends().collectLatest {
                 _myFriends.value = it
             }
-            _newFriends.value = friendRepository.getReceivedRequests()
-            _pendingFriends.value = friendRepository.getSentRequests()
+            friendRepository.getReceivedRequests().collectLatest {
+                _newFriends.value = it
+            }
+            friendRepository.getSentRequests().collectLatest {
+                _pendingFriends.value = it
+                Log.d("akuby21",""+it)
+            }
         }
     }
 
     // 서버에서 PendingFriends 목록을 다시 불러오는 메서드
     private fun loadPendingFriends() {
         viewModelScope.launch {
-            val sentRequests = friendRepository.getSentRequests()
-            _pendingFriends.value = sentRequests
-            Log.d("testt", ""+_pendingFriends.value.size)
+            friendRepository.getSentRequests().collectLatest {
+                _pendingFriends.value = it
+            }
         }
     }
 
@@ -129,29 +123,5 @@ class FriendSearchViewModel @Inject constructor(
             friendRepository.removeFriend(friend.id)
             _myFriends.value = _myFriends.value.filter { it.id != friend.id }
         }
-    }
-
-    // 검색어에 따라 친구 목록 필터링
-    fun filterFriends(query: String) {
-        viewModelScope.launch {
-            val filteredNewFriends = friendRepository.getReceivedRequests().filter {
-                it.name.contains(query, ignoreCase = true)
-            }
-            val filteredMyFriends = _myFriends.value.filter {
-                it.status == "accepted" && it.name.contains(query, ignoreCase = true)
-            }
-            val filteredPendingFriends = friendRepository.getSentRequests().filter {
-                it.name.contains(query, ignoreCase = true)
-            }
-
-            _newFriends.value = filteredNewFriends
-            _myFriends.value = filteredMyFriends
-            _pendingFriends.value = filteredPendingFriends
-        }
-    }
-
-    // 필터 초기화
-    fun resetFilters() {
-        loadFriends()
     }
 }

@@ -18,15 +18,22 @@ class FriendRepository @Inject constructor(
 ) {
 
     // 친구 목록 가져오기
-    suspend fun getFriends(): Flow<List<User>> = flow {
-        val response = friendApiService.getFriends()
-        if (response.isSuccessful) {
-            emit(response.body()?.friends?.map { it.toVO() } ?: emptyList())
-        } else {
-            Log.d("testt", "response fail")
+    suspend fun getFriends(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getFriends()
+                if (response.isSuccessful) {
+                    Log.d("testt", "response.body()" + response.body()?.friends?.size)
+                    emit(response.body()?.friends?.map { it.toVO() } ?: emptyList())
+                } else {
+                    Log.d("testt", "response fail")
+                }
+            } catch (e: Exception) {
+                Log.d("testt", "response fail")
+                e.printStackTrace()
+            }
         }
     }
-
 
     // 친구 추가 요청 보내기
     suspend fun addFriend(targetDisplayId: FriendRequestDto): Boolean {
@@ -51,34 +58,32 @@ class FriendRepository @Inject constructor(
 
 
     // 보낸 친구 요청 목록 가져오기
-    suspend fun getSentRequests(): List<User> {
-        return try {
-            val response = friendApiService.getSentRequests()
-            //Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
-            //Log.d("testt","getSent2" + response.body()?.sentRequests)
-            if (response.isSuccessful) {
-                response.body()?.sentRequests?.map { it.toVO() } ?: emptyList()
-            } else {
-                emptyList()
+    suspend fun getSentRequests(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getSentRequests()
+                Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
+                Log.d("testt","getSent2" + response.body()?.sentRequests)
+                if (response.isSuccessful) {
+                    emit(response.body()?.sentRequests?.map { it.toVO() }?: emptyList())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
         }
     }
 
     // 받은 친구 요청 목록 가져오기
-    suspend fun getReceivedRequests(): List<User> {
-        return try {
-            val response = friendApiService.getReceivedRequests()
-            if (response.isSuccessful) {
-                response.body()?.receivedRequests?.map { it.toVO() } ?: emptyList()
-            } else {
-                emptyList()
+    suspend fun getReceivedRequests(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getReceivedRequests()
+                if (response.isSuccessful) {
+                    emit(response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
         }
     }
 
@@ -117,12 +122,14 @@ class FriendRepository @Inject constructor(
             false
         }
     }
-
     // 친구 상태 업데이트 메서드 (친구 수락 시에만 적용)
     suspend fun updateFriendStatus(friendId: String, newStatus: String): Boolean {
         return try {
             if (newStatus == "accepted") {
-                friendApiService.addFriend(FriendRequestDto(friendId)).isSuccessful
+                Log.d("aaaaa","invoke")
+                val res = friendApiService.addFriend(FriendRequestDto(friendId))
+                Log.d("aaaaa",""+res.errorBody())
+                res.isSuccessful
             } else {
                 false
             }
@@ -131,7 +138,6 @@ class FriendRepository @Inject constructor(
             false
         }
     }
-
     // 사용자 검색
     suspend fun searchUserByDisplayId(displayId: String): User? {
         return try {
@@ -157,4 +163,6 @@ class FriendRepository @Inject constructor(
         _dataChanged.emit(Unit)
     }
 }
+
+
 

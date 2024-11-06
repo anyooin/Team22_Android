@@ -1,8 +1,8 @@
 package com.team22.soundary.feature.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.Log
 import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
@@ -29,9 +29,10 @@ class FriendProfileViewModel @Inject constructor(
             try {
                 val profile = friendRepository.getFriendById(friendId)
                 _friendProfile.value = profile
+                Log.d("testt", "FriendProfile eee"+_friendProfile.value!!.displayId)
             } catch (e: Exception) {
                 Log.e("FriendProfileViewModel", "Error loading friend profile", e)
-                _friendProfile.value = null // 실패 시 null 설정
+                _friendProfile.value = null
             }
         }
     }
@@ -42,7 +43,7 @@ class FriendProfileViewModel @Inject constructor(
                 val isAdded = friendRepository.addFriend(FriendRequestDto(friendId))
                 _isFriendAdded.value = isAdded
             } catch (e: Exception) {
-                Log.e("FriendProfileViewModel", "Error adding friend", e)
+                Log.d("FriendProfileViewModel", "Error adding friend")
                 _isFriendAdded.value = false
             }
         }
@@ -54,7 +55,7 @@ class FriendProfileViewModel @Inject constructor(
                 friendRepository.updateFriendStatus(friendId, "accepted")
                 _isFriendAdded.value = true
             } catch (e: Exception) {
-                Log.e("FriendProfileViewModel", "Error accepting friend request", e)
+                Log.d("FriendProfileViewModel", "Error accepting friend request")
                 _isFriendAdded.value = false
             }
         }

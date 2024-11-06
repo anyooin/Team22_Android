@@ -24,12 +24,21 @@ class MusicViewModel @Inject constructor(
     fun changeSongListBySort(index: Int) {
         sortIndex = index
         viewModelScope.launch {
+//            when (sortIndex) {
+//                MOST_SHARED -> repository.getMusicList("hi").collect {
+//                    _songList.value = it
+//                }
+//
+//                MOST_LIKED -> repository.getMusicList("hello").collect {
+//                    _songList.value = it
+//                }
+//            }
             when (sortIndex) {
-                MOST_SHARED -> repository.getMusicList("hi").collect {
+                MOST_SHARED -> repository.getMostSharedMusicList().collect {
                     _songList.value = it
                 }
 
-                MOST_LIKED -> repository.getMusicList("hello").collect {
+                MOST_LIKED -> repository.getMostLikedMusicList().collect {
                     _songList.value = it
                 }
             }

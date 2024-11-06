@@ -46,12 +46,6 @@ interface FriendApiService {
         @Path("target-user-id") targetUserId: String
     ): Response<Void>
 
-    // 친구 프로필 가져오기
-//    @GET("/api/v1/friends/{friendId}")
-//    suspend fun getFriendProfile(
-//        @Path("friendId") friendId: String
-//    ): Response<FriendInfoDto>
-
     // 사용자 검색
     @GET("/api/v1/users")
     suspend fun searchUser(

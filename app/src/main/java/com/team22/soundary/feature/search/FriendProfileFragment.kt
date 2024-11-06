@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.databinding.FragmentFriendProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,7 @@ class FriendProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFriendProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,79 +34,27 @@ class FriendProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 친구 ID 가져오기
         friendId = arguments?.getString("FRIEND_ID") ?: return
         viewModel.loadFriendProfile(friendId)
 
+        // 친구 프로필 정보 수신 및 UI 업데이트
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.friendProfile.collectLatest { profile ->
                 profile?.let {
                     binding.userNameTextview.text = it.name
-                    binding.userEmailTextview.text = it.email
-                    binding.statusMessageTextview.text = it.statusMessage
-                    updateFavoriteGenres(it.category)
-
-                    binding.addFriendButton.apply {
-                        isEnabled = true
-                        when (it.status) {
-                            "accepted" -> {
-                                text = "이미 친구입니다"
-                                isEnabled = false
-                            }
-                            "pending" -> {
-                                text = "친구 요청 중"
-                                isEnabled = false
-                            }
-                            "requested" -> {
-                                text = "친구 요청 수락"
-                                setOnClickListener {
-                                    viewModel.acceptFriendRequest(friendId)
-                                    text = "친구 요청 수락 중..."
-                                    isEnabled = false
-                                }
-                            }
-                            else -> {
-                                text = "친구 추가"
-                                setOnClickListener {
-                                    viewModel.addFriend(friendId)
-                                    text = "친구 추가 중..."
-                                    isEnabled = false
-                                }
-                            }
-                        }
-                    }
+                    binding.userDisplayIdTextview.text = "@" + it.displayId
+                    // Glide를 사용하여 프로필 이미지 로드
+                    Glide.with(this@FriendProfileFragment)
+                        .load(it.image.toString())
+                        .into(binding.profileImageView)
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isFriendAdded.collectLatest { isAdded ->
-                if (isAdded) {
-                    viewModel.loadFriendProfile(friendId)
-                }
-            }
-        }
-
+        // 뒤로 가기 버튼 설정
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-
-    private fun updateFavoriteGenres(genres: List<Category>) {
-        val genreTextViews = listOf(
-            binding.genreTextView1,
-            binding.genreTextView2,
-            binding.genreTextView3,
-            binding.genreTextView4
-        )
-
-        for (i in genreTextViews.indices) {
-            if (i < genres.size) {
-                genreTextViews[i].text = genres[i].toString()
-                genreTextViews[i].visibility = View.VISIBLE
-            } else {
-                genreTextViews[i].visibility = View.GONE
-            }
         }
     }
 
