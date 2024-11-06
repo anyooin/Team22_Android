@@ -57,14 +57,13 @@ class FriendSearchFragment : Fragment() {
             navigateToFriendProfile(friend.id)
         }
 
-        searchResultAdapter = SearchResultAdapter { user ->
-            if (friendSearchViewModel.isFriend(user)) {
-                Toast.makeText(requireContext(), "이미 친구 목록에 있습니다.", Toast.LENGTH_SHORT).show()
-            } else {
+        searchResultAdapter = SearchResultAdapter(
+            onRequestFriendClick = { user ->
                 friendSearchViewModel.requestFriend(user)
                 Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
+            },
+            isFriendRequested = { user -> friendSearchViewModel.isFriend(user) } // 이미 친구 요청 상태인지 확인
+        )
 
         setupRecyclerViews()
 

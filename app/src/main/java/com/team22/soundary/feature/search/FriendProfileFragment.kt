@@ -20,7 +20,6 @@ class FriendProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FriendProfileViewModel by viewModels()
     private lateinit var friendId: String
-    private val userId: String = "user" //  TODO: 나중에 수정하기
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +58,7 @@ class FriendProfileFragment : Fragment() {
                             "requested" -> {
                                 text = "친구 요청 수락"
                                 setOnClickListener {
-                                    viewModel.acceptFriendRequest(userId, friendId)
+                                    viewModel.acceptFriendRequest(friendId)
                                     text = "친구 요청 수락 중..."
                                     isEnabled = false
                                 }
@@ -67,7 +66,7 @@ class FriendProfileFragment : Fragment() {
                             else -> {
                                 text = "친구 추가"
                                 setOnClickListener {
-                                    viewModel.addFriend(userId, friendId)
+                                    viewModel.addFriend(friendId)
                                     text = "친구 추가 중..."
                                     isEnabled = false
                                 }
