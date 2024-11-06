@@ -1,6 +1,7 @@
-package com.team22.soundary.feature.share.data
+package com.team22.soundary.feature.share.data.di
 
 import com.team22.soundary.di.OtherRetrofit
+import com.team22.soundary.feature.share.data.remote.ShareService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ShareServiceModule {
+class ShareServiceModule {
     @Singleton
     @Provides
     fun provideShareApiService(@OtherRetrofit retrofit: Retrofit): ShareService =

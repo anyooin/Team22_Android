@@ -7,26 +7,36 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.team22.soundary.databinding.ActivitySignup2Binding
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
+import com.team22.soundary.core.data.TokenRepositoryImpl
+import com.team22.soundary.core.domain.model.Category
+import com.team22.soundary.core.domain.model.User
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ActivitySignup2 : AppCompatActivity() {
 
-    companion object{
-        private val PERMISSION_REQUEST_CODE = 100
-        private val GALLERY_REQUEST_CODE = 101
-    }
-
     private lateinit var binding: ActivitySignup2Binding
-
+    private val viewModel: SignupViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignup2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val nickname = intent.extras?.getString("nickname")
+        val categoryOrdinalList = intent.extras?.getIntArray("category")
+        val categoryList = categoryOrdinalList?.map {
+            getCategoryByOrdinal(it)
+        }
+
 
         // 갤러리 접근 권한 요청
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -45,9 +55,16 @@ class ActivitySignup2 : AppCompatActivity() {
         // 가입하기 버튼 클릭 시 MainActivity로 이동
         binding.signupButtonSubmit.setOnClickListener {
             // 가입 완료 처리 후 MainActivity로 이동
+            viewModel.updateUserInfo(
+                User(
+                    category = categoryList!!,
+                    name = nickname!!,
+                    statusMessage = binding.signupEdittextIntro.text.toString()
+                    )
+            )
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            finish() // 현재 Activity 종료
+            finish()
         }
     }
 
@@ -91,4 +108,12 @@ class ActivitySignup2 : AppCompatActivity() {
             }
         }
     }
+
+    private fun getCategoryByOrdinal(ordinal: Int): Category = Category.entries[ordinal]
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 100
+        private const val GALLERY_REQUEST_CODE = 101
+    }
+
 }

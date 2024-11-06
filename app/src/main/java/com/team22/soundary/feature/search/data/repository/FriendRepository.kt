@@ -147,3 +147,4 @@ class FriendRepository @Inject constructor(
         _dataChanged.emit(Unit)
     }
 }
+

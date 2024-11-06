@@ -2,23 +2,37 @@ package com.team22.soundary.feature.signup.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import com.kakao.sdk.user.UserApiClient
+import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.databinding.ActivitySignupBinding
 
 class ActivitySignup : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
-    private val selectedCategories = mutableListOf<ToggleButton>()
+    private val selectedCategories = mutableListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //이메일 예시
-        setEmailId("user@example.com")
+        setEmailId("default@example.com")
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                Log.e("akuby21", "사용자 정보 요청 실패", error)
+            }
+            else if (user != null) {
+                user.kakaoAccount?.let {account ->
+                    account.email?.let{
+                        setEmailId(it)
+                    }
+                }
+            }
+        }
 
         val categoryButtons = listOf(
             binding.signupTogglebuttonCategoryHiphop,
@@ -41,8 +55,12 @@ class ActivitySignup : AppCompatActivity() {
             } else if (selectedCategories.isEmpty()) {
                 Toast.makeText(this, "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                val intent = Intent(this, ActivitySignup2::class.java)
+                val intent = Intent(this, ActivitySignup2::class.java).apply {
+                    this.putExtra("nickname",nickname)
+                    this.putExtra("category",selectedCategories.toIntArray())
+                }
                 startActivity(intent)
+                finish()
             }
         }
 
@@ -60,16 +78,29 @@ class ActivitySignup : AppCompatActivity() {
             button.setOnClickListener {
                 if (button.isChecked) {
                     if (selectedCategories.size < 3) {
-                        selectedCategories.add(button)
+                        selectedCategories.add(getCategoryByButton(button))
                     } else {
                         button.isChecked = false
                         Toast.makeText(this, "최대 3개까지 선택 가능합니다.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    selectedCategories.remove(button)
+                    selectedCategories.remove(getCategoryByButton(button))
                 }
             }
         }
     }
+
+    private fun getCategoryByButton(button: ToggleButton) : Int =
+        when(button){
+            binding.signupTogglebuttonCategoryDance -> Category.DANCE
+            binding.signupTogglebuttonCategoryBallad -> Category.DANCE
+            binding.signupTogglebuttonCategoryJpop -> Category.JPOP
+            binding.signupTogglebuttonCategoryPop -> Category.POP
+            binding.signupTogglebuttonCategoryHiphop -> Category.HIPHOP
+            binding.signupTogglebuttonCategoryRnb -> Category.RNB
+            binding.signupTogglebuttonCategoryRock -> Category.ROCK
+            else -> Category.DANCE
+        }.ordinal
+
 }
 
