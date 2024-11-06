@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.kakao.sdk)
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.datastore.preferences)
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
