@@ -8,6 +8,7 @@ import com.team22.soundary.feature.main.domain.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -17,11 +18,15 @@ class LoginUseCase @Inject constructor(
 ) {
     suspend fun invoke(kakaoToken: String): Flow<User> {
         val token = tokenRepository.loginWithKakao(kakaoToken).first()
-        tokenRepository.saveRefreshToken(token.accessToken)
-        tokenRepository.saveAccessToken(token.refreshToken)
+        tokenRepository.saveRefreshToken(token.refreshToken)
+        tokenRepository.saveAccessToken(token.accessToken)
+
+        Log.d("testt","1: "+token.accessToken)
+        Log.d("testt","2: "+tokenRepository.getAccessToken().firstOrNull())
 
         try{
-            userRepository.getMyInfo()
+            val result = userRepository.getMyInfo()
+            Log.d("testt","role : "+result.firstOrNull()?.role)
         } catch (e : Exception){
             Log.d("testt",""+e)
         }

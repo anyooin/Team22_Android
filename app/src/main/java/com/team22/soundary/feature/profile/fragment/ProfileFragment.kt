@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.R
 import com.team22.soundary.databinding.FragmentMypageBinding
 import com.team22.soundary.feature.profile.domain.ProfileViewModel
@@ -86,6 +87,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 profileViewModel.deleteUserAccount()
+                profileViewModel.clearToken()
                 // 탈퇴 성공 시 메인 화면으로 이동하거나 로그아웃 처리
                 navigateToLoginScreen()
             } catch (e: Exception) {
@@ -101,7 +103,18 @@ class ProfileFragment : Fragment() {
                 Glide.with(requireContext())
                     .load(it.image)
                     .into(binding.profileImageview)
-
+                UserApiClient.instance.me { user, error ->
+                    if (error != null) {
+                        Log.e("akuby21", "사용자 정보 요청 실패", error)
+                    }
+                    else if (user != null) {
+                        user.kakaoAccount?.let {account ->
+                            account.email?.let{
+                                binding.profileTextviewEmail.text = it
+                            }
+                        }
+                    }
+                }
             }
         }
     }

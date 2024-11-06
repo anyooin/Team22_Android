@@ -54,7 +54,7 @@ class ActivitySignIntro : AppCompatActivity() {
                     is LoginUiState.Success -> {
                         val data = state.data
                         //val intent = Intent(this@ActivitySignIntro,ActivitySignup::class.java)
-
+                        Log.d("testt",""+data.role)
                         val intent = if(REGISTERED_USER_ROLE in data.role){
                             Intent(this@ActivitySignIntro, MainActivity::class.java)
                         } else {

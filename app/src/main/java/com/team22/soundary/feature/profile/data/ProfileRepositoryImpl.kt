@@ -36,7 +36,7 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addLabels(labels: List<String>) {
+    override suspend fun addLabels(labels:List<String>) {
         val response = withContext(dispatcher) {
             apiService.addLabels(LabelAdd(labels))
         }

@@ -37,10 +37,13 @@ class UserDetailUpdateUseCase @Inject constructor(
 
         when{
             response.isSuccessful -> {
-                tokenRepository.refresh()
+                val res = withContext(dispatcher){
+                    tokenRepository.refresh()
+                }
+                Log.d("kkkkkkk",""+res)
             }
             else -> {
-
+                Log.d("gi","bye")
             }
         }
     }

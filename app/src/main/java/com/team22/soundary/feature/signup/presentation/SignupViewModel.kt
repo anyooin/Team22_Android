@@ -58,6 +58,7 @@ class SignupViewModel @Inject constructor(
             try {
                 checkTokenUseCase.invoke()
                 _loginUiState.value = LoginUiState.Pass
+                Log.d("testt","invoked")
             } catch (e: Exception) {
                 _loginUiState.value = LoginUiState.Initial
             }

@@ -64,46 +64,59 @@
         app:layout_constraintTop_toBottomOf="@id/profile_cardview" />
 
     <Button
-        android:id="@+id/button_hiphop"
-        style="@style/CategoryButton"
-        android:text="@string/category_hiphop"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="350dp" />
-
-    <Button
         android:id="@+id/button_rock"
         style="@style/CategoryButton"
+        android:layout_marginTop="104dp"
         android:text="@string/category_rock"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="350dp" />
+        app:layout_constraintEnd_toStartOf="@id/button_pop"
+        app:layout_constraintStart_toEndOf="@id/button_hiphop"
+        app:layout_constraintTop_toBottomOf="@id/category_title" />
 
     <Button
-        android:id="@+id/button_pop"
+        android:id="@+id/button_hiphop"
         style="@style/CategoryButton"
-        android:text="@string/category_pop"
-        tools:layout_editor_absoluteX="213dp"
-        tools:layout_editor_absoluteY="350dp" />
-
-    <Button
-        android:id="@+id/button_jpop"
-        style="@style/CategoryButton"
-        android:text="@string/category_jpop"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="407dp" />
-
-    <Button
-        android:id="@+id/button_ballad"
-        style="@style/CategoryButton"
-        android:text="@string/category_ballad"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="407dp" />
+        android:layout_marginTop="104dp"
+        android:text="@string/category_hiphop"
+        app:layout_constraintEnd_toStartOf="@id/button_rock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_title" />
 
     <Button
         android:id="@+id/button_dance"
         style="@style/CategoryButton"
+        android:layout_marginTop="12dp"
         android:text="@string/category_dance"
-        tools:layout_editor_absoluteX="213dp"
-        tools:layout_editor_absoluteY="407dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_ballad"
+        app:layout_constraintTop_toBottomOf="@id/button_pop" />
+
+    <Button
+        android:id="@+id/button_pop"
+        style="@style/CategoryButton"
+        android:layout_marginTop="104dp"
+        android:text="@string/category_pop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_rock"
+        app:layout_constraintTop_toBottomOf="@id/category_title" />
+
+    <Button
+        android:id="@+id/button_jpop"
+        style="@style/CategoryButton"
+        android:layout_marginTop="16dp"
+        android:text="@string/category_jpop"
+        app:layout_constraintEnd_toStartOf="@id/button_ballad"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_hiphop" />
+
+    <Button
+        android:id="@+id/button_ballad"
+        style="@style/CategoryButton"
+        android:layout_marginTop="4dp"
+        android:text="@string/category_ballad"
+        app:layout_constraintEnd_toStartOf="@id/button_dance"
+        app:layout_constraintStart_toEndOf="@id/button_jpop"
+        app:layout_constraintTop_toBottomOf="@id/button_rock" />
+
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/category_grid"

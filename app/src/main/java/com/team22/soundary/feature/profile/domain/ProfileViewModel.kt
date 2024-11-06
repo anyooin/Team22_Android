@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.data.dto.UserInfoResponse
+import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.main.domain.SentShareRepository
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    private val sentShareRepository: SentShareRepository
+    private val sentShareRepository: SentShareRepository,
+    private val tokenRepository: TokenRepository
 ) : ViewModel() {
     private val _userInfo = MutableStateFlow<User>(User())
     val userInfo: StateFlow<User> = _userInfo.asStateFlow()
@@ -92,8 +94,16 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun deleteUserAccount() {
-        profileRepository.deleteUserAccount()
+    fun deleteUserAccount() {
+        viewModelScope.launch {
+            profileRepository.deleteUserAccount()
+        }
+    }
+
+    fun clearToken(){
+        viewModelScope.launch {
+            tokenRepository.clear()
+        }
     }
 
 

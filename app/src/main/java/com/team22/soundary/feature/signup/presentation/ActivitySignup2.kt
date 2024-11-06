@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.team22.soundary.databinding.ActivitySignup2Binding
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
@@ -20,6 +21,7 @@ import com.team22.soundary.core.data.TokenRepositoryImpl
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivitySignup2 : AppCompatActivity() {
@@ -60,18 +62,23 @@ class ActivitySignup2 : AppCompatActivity() {
 
         // 가입하기 버튼 클릭 시 MainActivity로 이동
         binding.signupButtonSubmit.setOnClickListener {
-            // 가입 완료 처리 후 MainActivity로 이동
-            viewModel.updateUserInfo(
-                User(
-                    category = categoryList!!,
-                    name = nickname!!,
-                    statusMessage = binding.signupEdittextIntro.text.toString(),
-                    image = selectedImageUri!!
+
+            lifecycleScope.launch{
+                // 가입 완료 처리 후 MainActivity로 이동
+                viewModel.updateUserInfo(
+                    User(
+                        category = categoryList!!,
+                        name = nickname!!,
+                        statusMessage = binding.signupEdittextIntro.text.toString(),
+                        image = selectedImageUri!!
+                    )
                 )
-            )
+
+            }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
+
         }
     }
 

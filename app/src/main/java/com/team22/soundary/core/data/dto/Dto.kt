@@ -144,7 +144,7 @@ data class RefreshRequestDto(
 @Serializable
 data class UserInfoInitRequestDto(
     @SerialName("labels") val category : List<Category>,
-    @SerialName("device_token") val deviceToken : String,
+    @SerialName("device_token") val deviceToken : String = "",
     @SerialName("display_id") val displayId : String,
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = null,
