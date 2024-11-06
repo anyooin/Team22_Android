@@ -49,7 +49,7 @@ class ShareViewModel @Inject constructor(
                     id = "$i",
                     name = "댄스",
                     image = Uri.EMPTY,
-                    category = listOf(Category.Dance)
+                    category = listOf(Category.DANCE)
                 )
             )
         }
@@ -59,7 +59,7 @@ class ShareViewModel @Inject constructor(
                     id = "$i",
                     name = "힙합",
                     image = Uri.EMPTY,
-                    category = listOf(Category.Hiphop)
+                    category = listOf(Category.HIPHOP)
                 )
             )
         }
@@ -69,7 +69,7 @@ class ShareViewModel @Inject constructor(
                     id = "$i",
                     name = "쿠키즈",
                     image = Uri.EMPTY,
-                    category = listOf(Category.RnB)
+                    category = listOf(Category.RNB)
                 )
             )
         }
