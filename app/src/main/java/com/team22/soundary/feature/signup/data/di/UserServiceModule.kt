@@ -19,4 +19,6 @@ object UserServiceModule {
     @Singleton
     fun provideUserService(@OtherRetrofit retrofit: Retrofit) : UserService =
         retrofit.create(UserService::class.java)
+
+
 }

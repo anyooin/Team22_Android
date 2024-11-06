@@ -9,6 +9,7 @@ import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
+import com.team22.soundary.BuildConfig.NATIVE_KEY
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

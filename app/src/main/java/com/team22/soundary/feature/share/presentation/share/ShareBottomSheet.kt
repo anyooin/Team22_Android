@@ -116,7 +116,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
                             R.id.category_pop -> Category.POP
                             R.id.category_rock -> Category.ROCK
                             R.id.category_jpop -> Category.JPOP
-                            R.id.category_dance -> Category.DANCE
+                            R.id.category_dance -> Category.KPOP
                             else -> null
                         }
                         viewModel.getFilteredFriendList(category)

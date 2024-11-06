@@ -30,7 +30,7 @@ internal class SentShareRepositoryImpl @Inject constructor(
                 response.body()?.shareList?.map { it.toVO() } ?: emptyList()
             )
         } else {
-            throw Exception("Error: ${response.message()}")
+            throw Exception("Error: ${response.code()} ${response.message()}")
         }
 
     }

@@ -1,3 +1,5 @@
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -7,6 +9,13 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("com.google.gms.google-services")
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val kakaoNativeKey: String = localProperties.getProperty("NATIVE_KEY") ?: ""
 
 android {
     namespace = "com.team22.soundary"
@@ -20,6 +29,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "NATIVE_KEY", "\"$kakaoNativeKey\"")
+
+        manifestPlaceholders["NATIVE_KEY"] = kakaoNativeKey
     }
 
 
@@ -79,8 +92,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+buildscript{
+    dependencies{
+        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.44")
+    }
 
-
-
-    
 }

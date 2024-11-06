@@ -1,6 +1,7 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
+import android.util.Log
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
@@ -123,21 +124,26 @@ data class LoginRequestDto(
 )
 
 @Serializable
-data class FriendRequestDto(
-    @SerialName("target_display_id") val targetId : String
-)
-
-@Serializable
 data class UserInfoResponse(
-    @SerialName("display_id") val displayId : String,
-    @SerialName("nickname") val nickname: String,
-    @SerialName("description") val description: String? = null,
-    @SerialName("profile_image_url") val profileImage : String? = null,
-    @SerialName("roles") val roles : List<String>,
-    @SerialName("labels") val category : List<Category>,
+    @SerialName("display_id") val displayId:String?,
+    @SerialName("nickname") val nickname: String?,
+    @SerialName("description") val description: String?,
+    @SerialName("profile_image_url") val profileImageUrl: String?,
+    @SerialName("roles") val roles: List<String>?,
+    @SerialName("labels") val labels: List<String>?,
+
 )
 
 @Serializable
+data class LabelView(
+    @SerialName("labels") val labels:List<String>
+    )
+
+@Serializable
+data class LabelAdd(
+    @SerialName("labels") val labels: List<String>
+)
+
 data class RefreshRequestDto(
     @SerialName("refresh_token") val refreshToken: String
 )
@@ -145,7 +151,7 @@ data class RefreshRequestDto(
 @Serializable
 data class UserInfoInitRequestDto(
     @SerialName("labels") val category : List<Category>,
-    @SerialName("device_token") val deviceToken : String,
+    @SerialName("device_token") val deviceToken : String = "",
     @SerialName("display_id") val displayId : String,
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = null,
@@ -153,6 +159,12 @@ data class UserInfoInitRequestDto(
 )
 
 @Serializable
+data class UserUpdateRequest(
+    @SerialName("display_id") val displayId : String,
+    @SerialName("nickname") val nickcname: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("profile_image_url") val profileImage: String? = null
+)
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,
@@ -241,3 +253,12 @@ fun TokenDto.toVO() : Token =
         this.refreshToken ?: ""
     )
 
+fun UserInfoResponse.toVO(): User {
+    return User(
+        id = this.displayId ?: "",
+        name = this.nickname ?: "",
+        image = Uri.parse(this.profileImageUrl),
+        label = this.labels ?: emptyList(),
+        statusMessage = this.description ?: "",
+    )
+}

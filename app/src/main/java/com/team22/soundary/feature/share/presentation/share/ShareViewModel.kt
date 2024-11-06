@@ -3,7 +3,6 @@ package com.team22.soundary.feature.share.presentation.share
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,9 +43,27 @@ class ShareViewModel @Inject constructor(
         _comment.value = updatedText
     }
 
-    private suspend fun initFriendList() {
-        friendRepository.getFriends().collect{
-            _userList.value = it
+    private fun initFriendList() {
+        val initList = mutableListOf<User>()
+        for (i in 0..5) {
+            initList.add(
+                User(
+                    id = "$i",
+                    name = "댄스",
+                    image = Uri.EMPTY,
+                    category = listOf(Category.KPOP)
+                )
+            )
+        }
+        for (i in 6..10) {
+            initList.add(
+                User(
+                    id = "$i",
+                    name = "힙합",
+                    image = Uri.EMPTY,
+                    category = listOf(Category.HIPHOP)
+                )
+            )
         }
         getFilteredFriendList(_category.value)
     }
