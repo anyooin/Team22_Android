@@ -1,8 +1,10 @@
 package com.team22.soundary.feature.profile.data
 
+import android.net.Uri
 import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.LabelAdd
+import com.team22.soundary.core.data.dto.UserUpdateRequest
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
 import kotlinx.coroutines.CoroutineDispatcher
@@ -54,4 +56,21 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun editedProfile(displayId: String, nickname: String, description: String?, profileUri: Uri?) {
+        // Uri를 String으로 변환하여 UserUpdateRequest 객체 생성
+        val userUpdateRequest = UserUpdateRequest(
+            displayId = displayId,
+            nickcname = nickname,
+            description = description,
+            profileImage = profileUri?.toString()
+        )
+
+        val response = withContext(dispatcher) {
+            apiService.putProfile(userUpdateRequest)
+        }
+
+        if (!response.isSuccessful) {
+            throw Exception("Error: ${response.message()}")
+        }
+    }
 }

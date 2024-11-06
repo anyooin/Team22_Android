@@ -46,6 +46,11 @@ class ProfileFragment : Fragment() {
                 .addToBackStack(null) // 백스택에 추가하여 뒤로 가기 버튼을 사용할 수 있게 함
                 .commit()
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.selectedCategories.collect { categories ->
+                binding.categoryLabel.text = categories.joinToString(", ")
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -63,14 +68,6 @@ class ProfileFragment : Fragment() {
                     .into(binding.profileImageview)
 
             }
-//            Log.d("uin", "" + profileViewModel.userInfo.value.statusMessage)
-//            binding.profileTextviewName.text = profileViewModel.userInfo.value.name
-//            /*binding.categoryLabel = profileViewModel.userInfo.value.labels,*/
-//            binding.profileTextviewIntro.text = profileViewModel.userInfo.value.statusMessage
-//
-//            Glide.with(requireContext())
-//                .load(profileViewModel.userInfo.value.image)
-//                .into(binding.profileImageview)
         }
     }
 }

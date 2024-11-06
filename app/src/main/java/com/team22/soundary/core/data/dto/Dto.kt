@@ -151,6 +151,14 @@ data class UserInfoInitRequestDto(
     @SerialName("profile_image_url") val profileImage : String? = null
 )
 
+@Serializable
+data class UserUpdateRequest(
+    @SerialName("display_id") val displayId : String,
+    @SerialName("nickname") val nickcname: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("profile_image_url") val profileImage: String? = null
+)
+
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,

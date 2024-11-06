@@ -19,7 +19,6 @@ class LoginUseCase @Inject constructor(
         val token = tokenRepository.loginWithKakao(kakaoToken).first()
         tokenRepository.saveRefreshToken(token.accessToken)
         tokenRepository.saveAccessToken(token.refreshToken)
-        Log.d("testt","token = "+token)
 
         try{
             userRepository.getMyInfo()

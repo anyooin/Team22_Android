@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.profile.data
 
+import android.net.Uri
 import com.team22.soundary.core.data.dto.LabelAdd
 import com.team22.soundary.core.data.dto.UserInfoResponse
 import com.team22.soundary.core.data.dto.toVO
@@ -11,4 +12,6 @@ interface ProfileRepository {
     suspend fun getProfiles() : Flow <User>
     suspend fun addLabels(labels: List<String>)
     suspend fun deleteLabel(label: String)
+
+    suspend fun editedProfile(displayId: String, nickname: String, description: String?, profileUri: Uri?)
 }

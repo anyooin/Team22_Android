@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.profile.domain
 
+import android.net.Uri
 import android.provider.ContactsContract.Profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,19 @@ class ProfileViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<User>(User())
     val userInfo: StateFlow<User> = _userInfo.asStateFlow()
 
+    private val _selectedCategories = MutableStateFlow<List<String>>(emptyList())
+    val selectedCategories: StateFlow<List<String>> = _selectedCategories.asStateFlow()
+
+
+    private val _editedName = MutableStateFlow("")
+    val editedName: StateFlow<String> = _editedName.asStateFlow()
+
+    private val _editedIntro = MutableStateFlow("")
+    val editedIntro: StateFlow<String> = _editedIntro.asStateFlow()
+
+    private val _image = MutableStateFlow<Uri>(Uri.EMPTY)
+    val image: StateFlow<Uri> = _image.asStateFlow()
+
     init {
         getProfile()
     }
@@ -39,6 +53,7 @@ class ProfileViewModel @Inject constructor(
     fun addLabel(label: String) {
         viewModelScope.launch {
             profileRepository.addLabels(listOf(label))
+            _selectedCategories.value = _selectedCategories.value + label
         }
     }
 
@@ -46,8 +61,47 @@ class ProfileViewModel @Inject constructor(
     fun deleteLabel(label: String) {
         viewModelScope.launch {
             profileRepository.deleteLabel(label)
+            _selectedCategories.value = _selectedCategories.value - label
         }
     }
+
+    fun editedProfile(displayId: String, nickname: String, description: String?, profileUri: Uri?) {
+        viewModelScope.launch {
+            profileRepository.editedProfile(
+                displayId = displayId,
+                nickname = nickname,
+                description = description,
+                profileUri = profileUri
+            )
+        }
+    }
+
+
+    fun setProfile(name: String, intro: String, profile: Uri) {
+        val displayId = _userInfo.value.id
+
+        viewModelScope.launch {
+            try {
+                // 서버에 업데이트 요청
+                profileRepository.editedProfile(
+                    displayId = displayId,
+                    nickname = name,
+                    description = intro,
+                    profileUri = profile
+                )
+                // 업데이트 성공 시 _userInfo 상태 갱신
+                _userInfo.value = _userInfo.value.copy(
+                    name = name,
+                    statusMessage = intro,
+                    image = profile
+                )
+            } catch (e: Exception) {
+                Log.e("ProfileViewModel", "Error updating profile: ${e.message}")
+            }
+        }
+    }
+
+
 
 
 }
