@@ -30,6 +30,7 @@ object RetrofitModule {
     private val contentType = MediaType.parse("application/json")
     private val json = Json {
         encodeDefaults = true
+        ignoreUnknownKeys = true
         serializersModule = SerializersModule {
             contextual(Date::class, DateAsStringSerializer)
         }
