@@ -155,4 +155,3 @@ class FriendSearchViewModel @Inject constructor(
         loadFriends()
     }
 }
-

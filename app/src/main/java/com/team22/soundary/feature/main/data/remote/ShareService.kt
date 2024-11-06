@@ -15,14 +15,14 @@ interface ShareService {
     @GET("/api/v1/shared-musics/received")
     suspend fun requestReceiveShare(): Response<ReceivedShareListDto>
 
-    @POST("/api/v1/shared-musics/received/{musicId}/likes")
+    @POST("/api/v1/shared-musics/received/{shared-music-id}/likes")
     suspend fun requestMusicLike(
-        @Path("musicId") musicId : String
+        @Path("shared-music-id") musicId : String
     ) : Response<Unit>
 
-    @DELETE("/api/v1/shared-musics/received/{musicId}/likes")
+    @DELETE("/api/v1/shared-musics/received/{shared-music-id}/likes")
     suspend fun deleteMusicLike(
-        @Path("musicId") musicId : String
+        @Path("shared-music-id") musicId : String
     ) : Response<Unit>
 
 }

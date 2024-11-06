@@ -1,7 +1,10 @@
 package com.team22.soundary.feature.main.presentation
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -45,6 +51,8 @@ class MainFragment : Fragment() {
     private var pausedPosition: Long = 0
     private lateinit var spinnerAdapter : ArrayAdapter<String>
     private lateinit var loadingDialog: LoadingDialog
+
+    private var isInit = false
 
     private val ExoPlayer.isPaused: Boolean
         get() = !player.isPlaying && player.currentPosition != 0L
@@ -172,6 +180,7 @@ class MainFragment : Fragment() {
             }
         }
     }
+    
 
     private fun setPlayerListener(){
         player.addListener(object : Player.Listener {
@@ -264,7 +273,13 @@ class MainFragment : Fragment() {
                 viewModel.uiState.collectLatest { uiState ->
                     when(uiState){
                         is UiState.Success -> {
-                            setSpinner(uiState.data.friendNameList)
+                            Log.d("dataa",""+uiState.data)
+                            if(!isInit){
+                                if(uiState.data.friendNameList.isNotEmpty()){
+                                    setSpinner(uiState.data.friendNameList)
+                                    isInit = !isInit
+                                }
+                            }
                             binding.friendNameTextView.text = uiState.data.share.friend.name
                             binding.musicNameTextView.text = uiState.data.share.song.title
                             binding.singerTextView.text = uiState.data.share.song.artist.joinToString()
@@ -323,8 +338,27 @@ class MainFragment : Fragment() {
         binding.instructionTextView.isGone = !binding.instructionTextView.isGone
     }
 
+    fun checkAndRequestPermissions(activity: AppCompatActivity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    activity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // 권한이 없는 경우 요청
+                ActivityCompat.requestPermissions(
+                    activity,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
+
     companion object {
         const val PROGRESS_UPDATE_DELAY = 50
         const val MESSAGE_THRESHOLD = 5
+        private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
     }
 }
