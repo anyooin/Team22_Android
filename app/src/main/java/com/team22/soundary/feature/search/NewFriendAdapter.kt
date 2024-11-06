@@ -6,35 +6,43 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team22.soundary.core.domain.model.User
-import com.team22.soundary.databinding.FriendItemBasicBinding
+import com.team22.soundary.databinding.FriendItemNewBinding
 
-class FriendAdapter(
+class NewFriendAdapter(
     private val onItemClick: (User) -> Unit,
-    private val onDeleteClick: ((User) -> Unit)? = null
-) : ListAdapter<User, BasicFriendViewHolder>(FriendDiffCallback()) {
+    private val onAcceptClick: ((User) -> Unit)? = null,
+    private val onDeclineClick: ((User) -> Unit)? = null
+) : ListAdapter<User, NewFriendViewHolder>(FriendDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasicFriendViewHolder {
-        val binding = FriendItemBasicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return BasicFriendViewHolder(binding, onItemClick, onDeleteClick)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewFriendViewHolder {
+        val binding = FriendItemNewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NewFriendViewHolder(binding, onItemClick, onAcceptClick, onDeclineClick)
     }
 
-    override fun onBindViewHolder(holder: BasicFriendViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: NewFriendViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
 
-class BasicFriendViewHolder(
-    private val binding: FriendItemBasicBinding,
+class NewFriendViewHolder(
+    private val binding: FriendItemNewBinding,
     private val onItemClick: (User) -> Unit,
-    private val onDeleteClick: ((User) -> Unit)?
+    private val onAcceptClick: ((User) -> Unit)?,
+    private val onDeclineClick: ((User) -> Unit)?
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var currentFriend: User? = null
 
     init {
-        binding.friendDeleteButton.setOnClickListener {
+        binding.friendAcceptButton.setOnClickListener {
             currentFriend?.let { friend ->
-                onDeleteClick?.invoke(friend)
+                onAcceptClick?.invoke(friend)
+            }
+        }
+
+        binding.friendDeclineButton.setOnClickListener {
+            currentFriend?.let { friend ->
+                onDeclineClick?.invoke(friend)
             }
         }
 
@@ -56,4 +64,3 @@ class BasicFriendViewHolder(
         binding.userIdTextview.text = "@${friend.id}"
     }
 }
-
