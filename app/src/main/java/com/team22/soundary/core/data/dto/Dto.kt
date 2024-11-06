@@ -1,7 +1,6 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
-
 import android.util.Log
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.Share
@@ -16,19 +15,19 @@ import java.util.Date
 // 친구 목록 응답 DTO
 @Serializable
 data class FriendsResponse(
-    @SerialName("friends") val friends: List<UserInfoDto>?
+    @SerialName("friends") val friends: List<FriendInfoDto>?
 )
 
 // 받은 친구 요청 목록 응답 DTO
 @Serializable
 data class ReceivedRequestsResponse(
-    @SerialName("received_requests") val receivedRequests: List<UserInfoDto>?
+    @SerialName("received_requests") val receivedRequests: List<FriendInfoDto>?
 )
 
 // 보낸 친구 요청 목록 응답 DTO
 @Serializable
 data class SentRequestsResponse(
-    @SerialName("sent_requests") val sentRequests: List<UserInfoDto>?
+    @SerialName("sent_requests") val sentRequests: List<FriendInfoDto>?
 )
 
 @Serializable
@@ -38,6 +37,14 @@ data class UserInfoDto(
     @SerialName("description") val description : String?,
     @SerialName("profile_image_url") val profile : String?,
     @SerialName("roles") val roles : List<String>?
+)
+
+@Serializable
+data class FriendInfoDto(
+    @SerialName("id") val id : String?,
+    @SerialName("display_id") val displayId : String?,
+    @SerialName("nickname") val name : String?,
+    @SerialName("profile_image_url") val profile : String?,
 )
 
 @Serializable
@@ -60,7 +67,8 @@ data class ReceivedShareDto(
     @SerialName("from_user") val fromUser: FromUserResponse?,
     @SerialName("track") val track: TrackDto?,
     @SerialName("comment") val comment: String?,
-    @Contextual @SerialName("shared_at") val sharedAt: Date?
+    @Contextual @SerialName("shared_at") val sharedAt: Date?,
+    @SerialName("is_liked") val isLiked : Boolean? = false
 )
 
 @Serializable
@@ -86,13 +94,13 @@ data class TrackListDto(
 
 @Serializable
 data class TrackDto(
-    @SerialName("platform") val platform: String?,
-    @SerialName("platform_track_id") val platformTrackId: String?,
-    @SerialName("title") val title: String?,
-    @SerialName("artists") val artist: List<String>?,
-    @SerialName("duration") val duration: Int?,
-    @SerialName("album_cover_url") val albumCoverUrl: String?,
-    @SerialName("preview_mp3_url") val previewMp3Url: String?
+    @SerialName("platform") val platform: String? = null,
+    @SerialName("track_id") val platformTrackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("duration") val duration: Int? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null
 )
 
 @Serializable
@@ -136,7 +144,6 @@ data class LabelAdd(
     @SerialName("labels") val labels: List<String>
 )
 
-
 data class RefreshRequestDto(
     @SerialName("refresh_token") val refreshToken: String
 )
@@ -158,7 +165,6 @@ data class UserUpdateRequest(
     @SerialName("description") val description: String? = null,
     @SerialName("profile_image_url") val profileImage: String? = null
 )
-
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,
@@ -193,7 +199,7 @@ fun ReceivedShareDto.toVO(): Share {
         this.track?.toVO() ?: Song(),
         this.comment ?: "",
         this.fromUser?.toVO() ?: User(),
-        false,
+        this.isLiked ?: false,
         this.sharedAt ?: Date()
     )
 }
@@ -223,6 +229,24 @@ fun UserInfoDto.toVO(): User {
         role = this.roles ?: emptyList()
     )
 }
+
+fun FriendInfoDto.toVO(): User {
+    return User(
+        id = this.id ?: "",
+        displayId = this.displayId ?: "",
+        name = this.name ?: "",
+        image = Uri.parse(this.profile),
+    )
+}
+
+fun UserInfoResponse.toVO(): User {
+    return User(
+        displayId = this.displayId ?: "",
+        name = this.nickname ?: "",
+        image = Uri.parse(this.profileImage),
+    )
+}
+
 fun TokenDto.toVO() : Token =
     Token(
         this.accessToken ?: "",

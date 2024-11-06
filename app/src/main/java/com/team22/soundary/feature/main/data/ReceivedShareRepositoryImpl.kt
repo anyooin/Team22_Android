@@ -20,22 +20,17 @@ internal class ReceivedShareRepositoryImpl @Inject constructor(
         val response = withContext(dispatcher) {
             shareService.requestReceiveShare()
         }
-
         if (response.isSuccessful) {
             emit(
                 response.body()?.shareList?.map { it.toVO() } ?: emptyList()
             )
         } else {
-            Log.d("akuby21",""+response)
             throw Exception("Error: ${response.message()}")
         }
-
-
     }
 
     override suspend fun likeMusic(musicId: String){
         val response = shareService.requestMusicLike(musicId)
-
         if(!response.isSuccessful) throw Exception("Error: ${response.message()}")
     }
 

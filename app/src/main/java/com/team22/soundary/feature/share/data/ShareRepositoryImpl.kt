@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.share.data
 
+import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.ShareMusicRequest
 import com.team22.soundary.core.data.dto.ShareMusicResponse
@@ -21,8 +22,9 @@ class ShareRepositoryImpl @Inject constructor(
         platformTrackId: String,
         comment: String,
         userList: List<String>
-    ): Flow<Result<ShareMusicResponse>> = flow {
+    ) {
         val response = withContext(dispatcher) {
+            Log.d("testt", "1212121")
             retrofitService.requestShareMusic(
                 ShareMusicRequest(
                     track = TrackIdentifierDto("SPOTIFY", platformTrackId),
@@ -32,16 +34,19 @@ class ShareRepositoryImpl @Inject constructor(
             )
         }
 
-        emit(runCatching {
-            when {
-                response.isSuccessful -> {
-                    response.body() ?: throw IllegalStateException("share music failed")
-                }
+        Log.d("testt", "성공123!")
 
-                else -> {
-                    throw IllegalStateException("share music failed")
-                }
+        when {
+            response.isSuccessful -> {
+                Log.d("testt", "성공!")
+                response.body() ?: throw IllegalStateException("share music failed")
             }
-        })
+
+            else -> {
+                Log.d("testt", "실패!")
+                throw IllegalStateException("share music failed")
+            }
+        }
+
     }
 }

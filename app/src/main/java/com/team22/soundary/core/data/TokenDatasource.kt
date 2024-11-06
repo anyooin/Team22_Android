@@ -7,6 +7,6 @@ interface TokenDatasource {
     fun getRefreshToken() : Flow<Result<String>>
     suspend fun saveAccessToken(token: String)
     suspend fun saveRefreshToken(token: String)
-
     suspend fun clearToken()
+
 }

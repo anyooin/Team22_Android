@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.search.data.repository.FriendRepository
 import com.team22.soundary.feature.share.domain.ShareRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShareViewModel @Inject constructor(
-    private val repository: ShareRepository
+    private val shareRepository: ShareRepository,
+    private val friendRepository: FriendRepository
 ) : ViewModel() {
     private val _userList = MutableStateFlow<List<User>>(emptyList())
     val userList: StateFlow<List<User>> = _userList.asStateFlow()
@@ -32,7 +34,9 @@ class ShareViewModel @Inject constructor(
     private val _category = MutableStateFlow<Category?>(null)
 
     init {
-        initFriendList()
+        viewModelScope.launch {
+            initFriendList()
+        }
     }
 
     fun setComment(updatedText: String) {
@@ -61,17 +65,6 @@ class ShareViewModel @Inject constructor(
                 )
             )
         }
-        for (i in 11..19) {
-            initList.add(
-                User(
-                    id = "$i",
-                    name = "쿠키즈",
-                    image = Uri.EMPTY,
-                    category = listOf(Category.RNB)
-                )
-            )
-        }
-        _userList.value = initList
         getFilteredFriendList(_category.value)
     }
 
@@ -119,9 +112,9 @@ class ShareViewModel @Inject constructor(
     }
 
     fun shareSongToFriends(songId: String) {
-//        viewModelScope.launch {
-//            repository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
-//        }
+        viewModelScope.launch {
+            shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
+        }
         Log.d("uin", songId)
     }
 }

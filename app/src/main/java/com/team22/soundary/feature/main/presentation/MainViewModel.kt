@@ -25,22 +25,28 @@ class MainViewModel @Inject constructor(
     private var _groupedShares: Map<String, List<Share>> = emptyMap()
     private val _uiState = MutableStateFlow<UiState<MainUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<MainUiState>> = _uiState.asStateFlow()
-
     init {
         viewModelScope.launch {
-            getShareUseCase.invoke().collect { result ->
-                _groupedShares = result
-                _uiState.value = UiState.Success(MainUiState())
-                if (result.isNotEmpty()) updateUiState(result.entries.first().value.first(), 0)
-                else _uiState.value = UiState.Empty
+            try{
+                getShareUseCase.invoke().collect { result ->
+                    _groupedShares = result
+                    _uiState.value = UiState.Success(MainUiState())
+                    if (result.isNotEmpty()){
+                        updateUiState(result.entries.first().value.first(), 0)
+                    }
+                    else _uiState.value = UiState.Empty
+                }
+            } catch(e : Exception){
+                _uiState.value = UiState.Error(e.message)
             }
         }
     }
 
-
     fun onFriendChanged(index: Int) {
         val targetFriendName = _groupedShares.keys.toList()[index]
-        _groupedShares[targetFriendName]?.first()?.let { updateUiState(it, 0) }
+        _groupedShares[targetFriendName]?.first()?.let {
+            updateUiState(it, 0)
+        }
     }
 
     fun onNextClicked() {
@@ -66,15 +72,32 @@ class MainViewModel @Inject constructor(
     }
 
     fun likeMusic() {
-        val data = _uiState as UiState.Success<MainUiState>
+        val data = _uiState.value as? UiState.Success
         viewModelScope.launch {
-            try {
-                if(data.data.share.isLike) likeSongUseCase.dislike(data.data.share.song.id)
-                else likeSongUseCase.like(data.data.share.song.id)
-            } catch (e: Exception) {
-                Log.e("akuby21", "좋아요 실패 : ${e.message}")
+            data?.let{
+                try {
+                    if(data.data.share.isLike){
+                        likeSongUseCase.dislike(data.data.share.id)
+                        updateUiState(data.data.share.copy(
+                            isLike = false
+                        ),getCurrentShareIndex())
+                    }
+                    else{
+                        likeSongUseCase.like(data.data.share.id)
+                        updateUiState(data.data.share.copy(
+                            isLike = true
+                        ),getCurrentShareIndex())
+                    }
+                } catch (e: Exception) {
+                    Log.e("akuby21", "좋아요 실패 : ${e.message} ${e.cause}")
+                }
             }
         }
+    }
+
+    fun isReceivedShare():Boolean{
+        val data = _uiState.value as? UiState.Success
+        return (data?.data?.share?.isReceived == true)
     }
 
     fun getSongUri(): Uri? = (_uiState.value as? UiState.Success)?.data?.share?.song?.preview
@@ -98,14 +121,27 @@ class MainViewModel @Inject constructor(
                         1
                     ),
                     isFirstSong = shareIndex == 0,
-                    likeBackground = if (targetShare.isLike) R.drawable.main_like_background_pressed else R.drawable.main_like_background,
+                    likeBackground = if(targetShare.isReceived){
+                        if(targetShare.isLike){
+                            R.drawable.main_like_background_pressed
+                        } else {
+                            R.drawable.main_like_background
+                        }
+                    } else {
+                        if(targetShare.isLike){
+                            R.drawable.main_like_background_sent_pressed
+                        } else {
+                            R.drawable.main_like_background_sent
+                        }
+                    }
+
                 )
             )
         }
     }
 
     fun getSongId(): String {
-        val data = _uiState as UiState.Success<MainUiState>
+        val data = _uiState.value as UiState.Success<MainUiState>
         return data.data.share.song.id
     }
 

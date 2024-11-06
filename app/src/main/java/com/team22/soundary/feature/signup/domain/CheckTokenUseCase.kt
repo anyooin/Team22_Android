@@ -3,9 +3,11 @@ package com.team22.soundary.feature.signup.domain
 import android.util.Log
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.feature.main.domain.UserRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Base64
 import javax.inject.Inject
@@ -26,7 +28,6 @@ class CheckTokenUseCase @Inject constructor(
         } catch (e: Exception) {
             false
         }
-
 
     private fun isTokenExpired(token: String): Boolean {
         return try {

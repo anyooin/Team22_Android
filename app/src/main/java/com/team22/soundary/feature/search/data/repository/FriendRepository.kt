@@ -1,13 +1,14 @@
 package com.team22.soundary.feature.search.data.repository
 
-import android.net.Uri
-import com.team22.soundary.core.data.dto.FromUserResponse
+import android.util.Log
+import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
-import com.team22.soundary.feature.search.data.FriendRequest
 import com.team22.soundary.feature.search.data.api.FriendApiService
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,39 +18,46 @@ class FriendRepository @Inject constructor(
 ) {
 
     // 친구 목록 가져오기
-    suspend fun getFriends(userId: String, label: List<String>? = null): List<User> {
-        return try {
-            val response = friendApiService.getFriends(userId, label)
-            if (response.isSuccessful) {
-                response.body()?.friends?.map { it.toVO() }?:emptyList()
-            } else {
-                emptyList()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
+    suspend fun getFriends(): Flow<List<User>> = flow {
+        val response = friendApiService.getFriends()
+        if (response.isSuccessful) {
+            emit(response.body()?.friends?.map { it.toVO() } ?: emptyList())
+        } else {
+            Log.d("testt", "response fail")
         }
     }
 
+
     // 친구 추가 요청 보내기
-    suspend fun addFriend(userId: String, targetDisplayId: String): Boolean {
+    suspend fun addFriend(targetDisplayId: FriendRequestDto): Boolean {
         return try {
-            val requestBody = mapOf("target_display_id" to targetDisplayId)
-            friendApiService.addFriend(userId, requestBody).isSuccessful.also { success ->
-                if (success) notifyDataChange()
+            // API 호출 시, 전달된 FriendRequestDto 객체를 그대로 사용
+            val response = friendApiService.addFriend(targetDisplayId)
+            Log.d("testt", "targetDisplayId : " + targetDisplayId.targetId)
+            if (response.isSuccessful) {
+                notifyDataChange()
+                Log.d("testt", "success")
+                true
+            } else {
+                Log.d("testt", "error: ${response.code()} - ${response.message()}")
+                false
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("testt", "error on addFriend: $e")
             false
         }
     }
 
+
     // 보낸 친구 요청 목록 가져오기
-    suspend fun getSentRequests(userId: String): List<User> {
+    suspend fun getSentRequests(): List<User> {
         return try {
-            val response = friendApiService.getSentRequests(userId)
+            val response = friendApiService.getSentRequests()
+            //Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
+            //Log.d("testt","getSent2" + response.body()?.sentRequests)
             if (response.isSuccessful) {
-                response.body()?.sentRequests?.map { it.toVO() }?: emptyList()
+                response.body()?.sentRequests?.map { it.toVO() } ?: emptyList()
             } else {
                 emptyList()
             }
@@ -60,11 +68,11 @@ class FriendRepository @Inject constructor(
     }
 
     // 받은 친구 요청 목록 가져오기
-    suspend fun getReceivedRequests(userId: String): List<User> {
+    suspend fun getReceivedRequests(): List<User> {
         return try {
-            val response = friendApiService.getReceivedRequests(userId)
+            val response = friendApiService.getReceivedRequests()
             if (response.isSuccessful) {
-                response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList()
+                response.body()?.receivedRequests?.map { it.toVO() } ?: emptyList()
             } else {
                 emptyList()
             }
@@ -77,7 +85,7 @@ class FriendRepository @Inject constructor(
     // 친구 프로필 가져오기
     suspend fun getFriendById(friendId: String): User? {
         return try {
-            val response = friendApiService.getFriendProfile(friendId)
+            val response = friendApiService.searchUser(friendId)
             if (response.isSuccessful) {
                 response.body()?.toVO()
             } else {
@@ -109,12 +117,12 @@ class FriendRepository @Inject constructor(
             false
         }
     }
+
     // 친구 상태 업데이트 메서드 (친구 수락 시에만 적용)
-    suspend fun updateFriendStatus(userId: String, friendId: String, newStatus: String): Boolean {
+    suspend fun updateFriendStatus(friendId: String, newStatus: String): Boolean {
         return try {
             if (newStatus == "accepted") {
-                val requestBody = mapOf("target_display_id" to friendId)
-                friendApiService.addFriend(userId, requestBody).isSuccessful
+                friendApiService.addFriend(FriendRequestDto(friendId)).isSuccessful
             } else {
                 false
             }
@@ -123,10 +131,12 @@ class FriendRepository @Inject constructor(
             false
         }
     }
+
     // 사용자 검색
     suspend fun searchUserByDisplayId(displayId: String): User? {
         return try {
             val response = friendApiService.searchUser(displayId)
+
             if (response.isSuccessful) {
                 response.body()?.toVO()
             } else {
