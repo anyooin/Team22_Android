@@ -1,9 +1,10 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.share
 
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,23 +28,44 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setCanceledOnTouchOutside(false)
 
         _binding = BottomSheetBinding.bind(view)
 
-        setSendButton()
-        setComment()
+        when (this.tag) {
+            MAIN_BOTTOM_SHEET -> {
+                setMainSendButton(arguments?.getString(KEY_ID) ?: "")
+            }
+            SHARE_BOTTOM_SHEET -> {
+                setShareSendButton()
+                setComment()
+            }
+        }
+
         setRecyclerView(view)
         setSelectAllButton()
         setCategoryRadioButton()
         observeSelectedFriends()
+        observeFilteredFriends()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireActivity(), R.style.bottomSheetBackground)
     }
 
-    private fun setSendButton() {
-        updateSendButtonText()
+    private fun setMainSendButton(songId: String) {
+        binding.bottomSheetSendButton.setOnClickListener {
+            if(viewModel.isAnyFriendSelected()) {
+                viewModel.setComment(binding.shareCommentEdittext.text.toString())
+                viewModel.shareSongToFriends(songId)
+                dismiss()
+            } else {
+                Toast.makeText(requireContext(), "친구를 1명 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setShareSendButton() {
         binding.bottomSheetSendButton.setOnClickListener {
             viewModel.setComment(binding.shareCommentEdittext.text.toString())
             viewModel.getFilteredFriendList(null)
@@ -114,16 +136,37 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
         }
     }
 
-    private fun updateSendButtonText() {
-        binding.bottomSheetSendButton.text = viewModel.getButtonText()
+    private fun observeFilteredFriends() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filteredUserList.collectLatest {
+                binding.shareSelectAllButton.isChecked = viewModel.isAllFriendsSelected()
+            }
+        }
     }
 
-    companion object {
-        const val TAG = "ShareBottomModalSheet"
+    private fun updateSendButtonText() {
+        binding.bottomSheetSendButton.text = viewModel.getButtonText()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val TAG = "TempTag" // Main에서 호출할때 MAIN_BOTTOM_SHEET로 바꾸고 없애야함
+        const val MAIN_BOTTOM_SHEET = "MainBottomSheet"
+        const val SHARE_BOTTOM_SHEET = "ShareBottomSheet"
+
+        private const val KEY_ID = "id"
+
+        // Main에서 val modal = ShareBottomSheet.newInstance(songId값) 으로 생성하고 show해주면 됨
+        fun newInstance(songId: String): ShareBottomSheet {
+            val fragment = ShareBottomSheet()
+            val args = Bundle()
+            args.putString(KEY_ID, songId)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

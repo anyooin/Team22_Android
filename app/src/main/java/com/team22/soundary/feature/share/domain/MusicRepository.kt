@@ -4,5 +4,9 @@ import com.team22.soundary.core.domain.model.Song
 import kotlinx.coroutines.flow.Flow
 
 interface MusicRepository {
-    fun getMusicList(): Flow<List<Song>>
+    suspend fun getMusicList(query: String): Flow<List<Song>>
+
+    suspend fun getMostSharedMusicList(): Flow<List<Song>>
+
+    suspend fun getMostLikedMusicList(): Flow<List<Song>>
 }
