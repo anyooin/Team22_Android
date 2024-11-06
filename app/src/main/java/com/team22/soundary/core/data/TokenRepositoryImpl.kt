@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
-class TokenRepositoryImpl @Inject constructor(
+internal class TokenRepositoryImpl @Inject constructor(
     @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val tokenDataStore: TokenDatasource,
     private val loginService: LoginService
