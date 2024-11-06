@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.User
@@ -24,11 +25,18 @@ class SignupViewModel @Inject constructor(
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
 
+    private val _selectedCategories = MutableStateFlow<List<String>>(emptyList())
+    val selectedCategories: StateFlow<List<String>> = _selectedCategories.asStateFlow()
+
+    fun saveSelectedCategories(categories: List<String>) {
+        _selectedCategories.value = categories
+    }
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
             loginUseCase.invoke(kakaoToken)
                 .catch { e ->
+                    Log.e("testt",""+e.stackTraceToString())
                     val errorMessage = when (e) {
                         is IOException -> e.message
                         is IllegalStateException -> e.message
@@ -48,6 +56,7 @@ class SignupViewModel @Inject constructor(
     fun updateUserInfo(user: User) {
         viewModelScope.launch {
             userDetailUpdateUseCase.updateUserInfo(user)
+
         }
     }
 
@@ -56,6 +65,7 @@ class SignupViewModel @Inject constructor(
             try {
                 checkTokenUseCase.invoke()
                 _loginUiState.value = LoginUiState.Pass
+                Log.d("testt","invoked")
             } catch (e: Exception) {
                 _loginUiState.value = LoginUiState.Initial
             }

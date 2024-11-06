@@ -5,15 +5,20 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.databinding.ActivitySignupBinding
+import com.team22.soundary.feature.profile.fragment.ProfileFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ActivitySignup : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
     private val selectedCategories = mutableListOf<Int>()
+    private val viewModel: SignupViewModel by viewModels() // ViewModel 초기화
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +29,9 @@ class ActivitySignup : AppCompatActivity() {
         UserApiClient.instance.me { user, error ->
             if (error != null) {
                 Log.e("akuby21", "사용자 정보 요청 실패", error)
-            }
-            else if (user != null) {
-                user.kakaoAccount?.let {account ->
-                    account.email?.let{
+            } else if (user != null) {
+                user.kakaoAccount?.let { account ->
+                    account.email?.let {
                         setEmailId(it)
                     }
                 }
@@ -39,8 +43,7 @@ class ActivitySignup : AppCompatActivity() {
             binding.signupTogglebuttonCategoryRock,
             binding.signupTogglebuttonCategoryPop,
             binding.signupTogglebuttonCategoryJpop,
-            binding.signupTogglebuttonCategoryBallad,
-            binding.signupTogglebuttonCategoryDance,
+            binding.signupTogglebuttonCategoryKpop,
             binding.signupTogglebuttonCategoryRnb
         )
 
@@ -49,6 +52,8 @@ class ActivitySignup : AppCompatActivity() {
         // 계속 가입하기 버튼 클릭 시 처리
         binding.signupButtonContinue.setOnClickListener {
             val nickname = binding.signupEdittextNickname.text.toString()
+            val selectedCategoryNames = selectedCategories.map { getCategoryNameById(it) } // 라벨 이름 목록 생성
+            viewModel.saveSelectedCategories(selectedCategoryNames)
 
             if (nickname.isEmpty()) {
                 Toast.makeText(this, "닉네임은 필수 입력칸입니다.", Toast.LENGTH_SHORT).show()
@@ -56,14 +61,14 @@ class ActivitySignup : AppCompatActivity() {
                 Toast.makeText(this, "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this, ActivitySignup2::class.java).apply {
-                    this.putExtra("nickname",nickname)
-                    this.putExtra("category",selectedCategories.toIntArray())
+                    this.putExtra("nickname", nickname)
+                    this.putExtra("category", selectedCategories.toIntArray())
                 }
+                viewModel.saveSelectedCategories(selectedCategoryNames) // 선택한 카테고리 저장
                 startActivity(intent)
                 finish()
             }
         }
-
     }
 
     private fun setEmailId(email: String) {
@@ -73,7 +78,6 @@ class ActivitySignup : AppCompatActivity() {
     }
 
     private fun setupCategoryButtons(categoryButtons: List<ToggleButton>) {
-        // 카테고리 선택 처리
         for (button in categoryButtons) {
             button.setOnClickListener {
                 if (button.isChecked) {
@@ -90,17 +94,27 @@ class ActivitySignup : AppCompatActivity() {
         }
     }
 
-    private fun getCategoryByButton(button: ToggleButton) : Int =
-        when(button){
-            binding.signupTogglebuttonCategoryDance -> Category.DANCE
-            binding.signupTogglebuttonCategoryBallad -> Category.DANCE
-            binding.signupTogglebuttonCategoryJpop -> Category.JPOP
-            binding.signupTogglebuttonCategoryPop -> Category.POP
-            binding.signupTogglebuttonCategoryHiphop -> Category.HIPHOP
-            binding.signupTogglebuttonCategoryRnb -> Category.RNB
-            binding.signupTogglebuttonCategoryRock -> Category.ROCK
-            else -> Category.DANCE
-        }.ordinal
+    private fun getCategoryByButton(button: ToggleButton): Int {
+        return when (button) {
+            binding.signupTogglebuttonCategoryHiphop -> Category.HIPHOP.ordinal
+            binding.signupTogglebuttonCategoryRock -> Category.ROCK.ordinal
+            binding.signupTogglebuttonCategoryPop -> Category.POP.ordinal
+            binding.signupTogglebuttonCategoryJpop -> Category.JPOP.ordinal
+            binding.signupTogglebuttonCategoryKpop -> Category.KPOP.ordinal
+            binding.signupTogglebuttonCategoryRnb -> Category.RNB.ordinal
+            else -> -1
+        }
+    }
 
+    private fun getCategoryNameById(id: Int): String {
+        return when (id) {
+            binding.signupTogglebuttonCategoryHiphop.id -> "힙합"
+            binding.signupTogglebuttonCategoryRock.id -> "ROCK"
+            binding.signupTogglebuttonCategoryPop.id -> "POP"
+            binding.signupTogglebuttonCategoryJpop.id -> "JPOP"
+            binding.signupTogglebuttonCategoryKpop.id -> "KPOP"
+            binding.signupTogglebuttonCategoryRnb.id -> "RNB"
+            else -> ""
+        }
+    }
 }
-

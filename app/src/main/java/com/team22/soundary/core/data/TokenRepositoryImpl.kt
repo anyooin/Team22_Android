@@ -54,6 +54,7 @@ internal class TokenRepositoryImpl @Inject constructor(
                 }
 
                 else -> {
+                    Log.e("akuby21",""+response.code()+response.message())
                     throw IllegalStateException("login request failed")
                 }
             }
@@ -69,7 +70,11 @@ internal class TokenRepositoryImpl @Inject constructor(
             )
         }
 
+        Log.d("aaasdf",""+response)
+
         if(response.isSuccessful){
+
+            Log.d("akuby21","sadsadfsdaf sadf sa: "+response)
             response.body()?.accessToken?.let{
                 saveAccessToken(it)
             }
@@ -78,6 +83,10 @@ internal class TokenRepositoryImpl @Inject constructor(
                 saveRefreshToken(it)
             }
         }
+    }
+
+    override suspend fun clear() {
+        tokenDataStore.clearToken()
     }
 
 }

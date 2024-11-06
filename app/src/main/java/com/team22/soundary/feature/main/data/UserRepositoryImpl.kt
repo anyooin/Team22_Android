@@ -26,6 +26,7 @@ internal class UserRepositoryImpl @Inject constructor(
         if(response.isSuccessful){
             emit(response.body()?.toVO() ?: throw IllegalStateException("Empty User"))
         } else {
+            Log.e("testt","code : "+response.code())
             throw Exception("Error : ${response.message()}")
         }
     }

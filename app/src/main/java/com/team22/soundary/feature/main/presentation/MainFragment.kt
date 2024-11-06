@@ -180,7 +180,7 @@ class MainFragment : Fragment() {
             }
         }
     }
-    
+
 
     private fun setPlayerListener(){
         player.addListener(object : Player.Listener {
@@ -336,6 +336,7 @@ class MainFragment : Fragment() {
         binding.friendPicImageView.isGone = !binding.friendPicImageView.isGone
         binding.dayTextView.isGone = !binding.dayTextView.isGone
         binding.instructionTextView.isGone = !binding.instructionTextView.isGone
+        binding.mainProgressBar.isGone = !binding.mainProgressBar.isGone
     }
 
     fun checkAndRequestPermissions(activity: AppCompatActivity) {

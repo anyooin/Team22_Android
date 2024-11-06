@@ -26,16 +26,18 @@
     </androidx.cardview.widget.CardView>
 
     <!-- 연필 아이콘 -->
+
+    <!-- 프로필 이름 -->
+
     <ImageButton
         android:id="@+id/edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="12dp"
         android:src="@drawable/mypage_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/profile_cardview" />
 
-    <!-- 프로필 이름 -->
     <TextView
         android:id="@+id/profile_textview_name"
         android:layout_width="wrap_content"
@@ -89,31 +91,46 @@
         app:layout_constraintTop_toBottomOf="@id/profile_textview_intro" />
 
     <!-- 카테고리 버튼들 -->
-    <GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:id="@+id/category_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:columnCount="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_label">
+        app:layout_constraintTop_toBottomOf="@id/category_label"
+        app:columnCount="4">
 
         <Button
+            android:id = "@+id/hiphop"
             style="@style/CategoryButton"
             android:text="@string/category_hiphop" />
 
         <Button
+            android:id = "@+id/rock"
             style="@style/CategoryButton"
             android:text="@string/category_rock" />
 
         <Button
+            android:id = "@+id/pop"
             style="@style/CategoryButton"
             android:text="@string/category_pop" />
 
         <Button
+            android:id = "@+id/jpop"
             style="@style/CategoryButton"
             android:text="@string/category_jpop" />
-    </GridLayout>
+
+        <Button
+            android:id = "@+id/rnb"
+            style="@style/CategoryButton"
+            android:text="@string/category_rnb" />
+
+        <Button
+            android:id = "@+id/kpop"
+            style="@style/CategoryButton"
+            android:text="@string/category_kpop" />
+
+    </androidx.gridlayout.widget.GridLayout>
 
     <!-- 공유한 노래 목록 -->
     <TextView
@@ -129,40 +146,46 @@
         app:layout_constraintTop_toBottomOf="@id/category_grid" />
 
     <!-- 공유한 앨범 이미지들 -->
-    <GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_half"
-        android:columnCount="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shared_songs_label">
+        app:layout_constraintTop_toBottomOf="@id/shared_songs_label"
+        app:columnCount="3">
 
         <ImageView
+            android:id="@+id/image_one"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album1" />
+            android:src="@drawable/mypage_album1"
+            android:visibility="gone"/>
 
         <ImageView
+            android:id="@+id/image_two"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album2" />
+            android:src="@drawable/mypage_album2"
+            android:visibility="gone"/>
 
         <ImageView
+            android:id="@+id/image_three"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album3" />
-    </GridLayout>
+            android:src="@drawable/mypage_album3"
+            android:visibility="gone"/>
+    </androidx.gridlayout.widget.GridLayout>
 
     <!-- 탈퇴하기 버튼 -->
     <Button
-        android:id="@+id/leave_button"
+        android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="112dp"
         android:backgroundTint="@color/red"
         android:text="@string/mypage_out"
         android:textColor="@color/white"
