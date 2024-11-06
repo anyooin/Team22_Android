@@ -1,115 +1,140 @@
 package com.team22.soundary.feature.search.data.repository
 
-import com.team22.soundary.core.domain.model.Category
+import android.net.Uri
+import com.team22.soundary.core.data.dto.FromUserResponse
+import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.search.data.FriendRequest
+import com.team22.soundary.feature.search.data.api.FriendApiService
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FriendRepository @Inject constructor() {
+class FriendRepository @Inject constructor(
+    private val friendApiService: FriendApiService
+) {
 
-    private val allFriends = mutableListOf(
-        User(
-            id = extractIdFromEmail("gogoKim@example.com"),
-            name = "김고고",
-            email = "gogoKim@example.com",
-            statusMessage = "안녕하세요!",
-            category = listOf(Category.DANCE, Category.POP),
-            status = "requested"
-        ),
-        User(
-            id = extractIdFromEmail("parkKim@example.com"),
-            name = "박고고",
-            email = "parkKim@example.com",
-            statusMessage = "음악 좋아요",
-            category = listOf(Category.ROCK, Category.POP),
-            status = "requested"
-        ),
-        User(
-            id = extractIdFromEmail("nyamnyam@example.com"),
-            name = "김남남",
-            email = "nyamnyam@example.com",
-            statusMessage = "행복한 하루!",
-            category = listOf(Category.DANCE, Category.JPOP),
-            status = "accepted"
-        ),
-        User(
-            id = extractIdFromEmail("nyamnyam22@example.com"),
-            name = "이남남",
-            email = "nyamnyam22@example.com",
-            statusMessage = "즐거운 음악!",
-            category = listOf(Category.RNB, Category.POP),
-            status = "accepted"
-        ),
-        User(
-            id = extractIdFromEmail("kookooyong@example.com"),
-            name = "쿠키즈용",
-            email = "kookooyong@example.com",
-            statusMessage = "Let's enjoy music!",
-            category = listOf(Category.DANCE, Category.HIPHOP),
-            status = "pending"
-        ),
-        User(
-            id = extractIdFromEmail("kookoo@example.com"),
-            name = "쿠키즈",
-            email = "kookoo@example.com",
-            statusMessage = "음악은 삶의 일부",
-            category = listOf(Category.JPOP, Category.POP),
-            status = "pending"
-        )
-    )
-
-    // 이메일에서 '@' 앞부분을 추출하여 ID로 사용
-    private fun extractIdFromEmail(email: String): String {
-        return email.substringBefore("@")
+    // 친구 목록 가져오기
+    suspend fun getFriends(userId: String, label: List<String>? = null): List<User> {
+        return try {
+            val response = friendApiService.getFriends(userId, label)
+            if (response.isSuccessful) {
+                response.body()?.friends?.map { it.toVO() }?:emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
     }
 
-    // 나에게 친구 요청을 보낸 친구 목록 반환 (NewFriends)
-    fun getNewFriends(): List<User> {
-        return allFriends.filter { it.status == "requested" }
-    }
-
-    // 내가 친구 요청을 보낸 친구 목록 반환 (PendingFriends)
-    fun getPendingFriends(): List<User> {
-        return allFriends.filter { it.status == "pending" }
-    }
-
-    // 친구 상태인 친구 목록 반환 (My Friends)
-    fun getMyFriends(): List<User> {
-        return allFriends.filter { it.status == "accepted" }
-    }
-
-    // 친구 ID로 프로필 정보 가져오기
-    fun getFriendById(friendId: String): User? {
-        return allFriends.find { it.id == friendId }
-    }
-    // 친구의 상태를 업데이트하는 메서드 수정
-    fun updateFriendStatus(friendId: String, newStatus: String) {
-        val friend = allFriends.find { it.id == friendId }
-        friend?.status = newStatus
-    }
-
-    // 친구를 리스트에서 제거하는 메서드 수정 -> mutableListof로 변경해야함 했음 !!
-    fun removeFriend(friendId: String) {
-        allFriends.removeAll { it.id == friendId }
-    }
-    // 친구를 추가하는 메서드 추가
-    fun addFriend(friendId: String): Boolean {
-        // 이미 친구인지 확인
-        val existingFriend = allFriends.find { it.id == friendId }
-        return if (existingFriend == null) {
-            // 새로운 친구 정보 생성
-            val newFriend = fetchFriendDetails(friendId)
-            newFriend?.let {
-                it.status = "accepted" // 친구 추가 시 상태를 'accepted'로 설정
-                allFriends.add(it)
-                true // 성공적으로 추가됨
-            } ?: false // 친구 정보 가져오기 실패
-        } else {
-            // 이미 존재하는 경우
+    // 친구 추가 요청 보내기
+    suspend fun addFriend(userId: String, targetDisplayId: String): Boolean {
+        return try {
+            val requestBody = mapOf("target_display_id" to targetDisplayId)
+            friendApiService.addFriend(userId, requestBody).isSuccessful.also { success ->
+                if (success) notifyDataChange()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
             false
+        }
+    }
+
+    // 보낸 친구 요청 목록 가져오기
+    suspend fun getSentRequests(userId: String): List<User> {
+        return try {
+            val response = friendApiService.getSentRequests(userId)
+            if (response.isSuccessful) {
+                response.body()?.sentRequests?.map { it.toVO() }?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    // 받은 친구 요청 목록 가져오기
+    suspend fun getReceivedRequests(userId: String): List<User> {
+        return try {
+            val response = friendApiService.getReceivedRequests(userId)
+            if (response.isSuccessful) {
+                response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    // 친구 프로필 가져오기
+    suspend fun getFriendById(friendId: String): User? {
+        return try {
+            val response = friendApiService.getFriendProfile(friendId)
+            if (response.isSuccessful) {
+                response.body()?.toVO()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun removeFriend(targetUserId: String): Boolean {
+        return try {
+            val response = friendApiService.removeFriend(targetUserId)
+            response.isSuccessful
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    // 받은 친구 요청 거절 메서드
+    suspend fun rejectReceivedRequest(targetUserId: String): Boolean {
+        return try {
+            val response = friendApiService.rejectReceivedRequest(targetUserId)
+            response.isSuccessful
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+    // 친구 상태 업데이트 메서드 (친구 수락 시에만 적용)
+    suspend fun updateFriendStatus(userId: String, friendId: String, newStatus: String): Boolean {
+        return try {
+            if (newStatus == "accepted") {
+                val requestBody = mapOf("target_display_id" to friendId)
+                friendApiService.addFriend(userId, requestBody).isSuccessful
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+    // 사용자 검색
+    suspend fun searchUserByDisplayId(displayId: String): User? {
+        return try {
+            val response = friendApiService.searchUser(displayId)
+            if (response.isSuccessful) {
+                response.body()?.toVO()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
@@ -117,15 +142,9 @@ class FriendRepository @Inject constructor() {
     private val _dataChanged = MutableSharedFlow<Unit>()
     val dataChanged = _dataChanged.asSharedFlow()
 
-    // 친구의 상세 정보를 가져오는 메서드 (예시로 간단히 구현)
-    private fun fetchFriendDetails(friendId: String): User? {
-        return User(
-            id = friendId,
-            name = "새 친구",
-            email = "$friendId@example.com",
-            statusMessage = "안녕하세요!",
-            category = listOf(Category.JPOP, Category.POP),
-            status = "accepted"
-        )
+    // 데이터 변경 알림 메서드
+    private suspend fun notifyDataChange() {
+        _dataChanged.emit(Unit)
     }
 }
+

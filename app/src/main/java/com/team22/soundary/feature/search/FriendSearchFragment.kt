@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.team22.soundary.R
+import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.FragmentFriendSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -24,6 +25,7 @@ class FriendSearchFragment : Fragment() {
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
     private var _binding: FragmentFriendSearchBinding? = null
     private val binding get() = _binding!!
+    private val user: String = "user" // TODO: 로그인 기능으로 수정 필요
 
     private val friendSearchViewModel: FriendSearchViewModel by viewModels()
 
@@ -38,99 +40,30 @@ class FriendSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 새로운 친구 어댑터 초기화 (수락/거절 콜백 포함)
-        newFriendsAdapter = FriendAdapter(
-            onItemClick = { friend ->
-                // 친구 프로필 화면으로 이동
-                val fragment = FriendProfileFragment().apply {
-                    arguments = Bundle().apply {
-                        putString("FRIEND_ID", friend.id)
-                    }
-                }
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            },
-            onAcceptClick = { friend ->
-                friendSearchViewModel.acceptFriend(friend)
-            },
-            onDeclineClick = { friend ->
-                friendSearchViewModel.declineFriend(friend)
-            }
-        )
 
-        // 내 친구 어댑터 초기화 (삭제 콜백 포함)
-        myFriendsAdapter = FriendAdapter(
-            onItemClick = { friend ->
-                // 친구 프로필 화면으로 이동
-                val fragment = FriendProfileFragment().apply {
-                    arguments = Bundle().apply {
-                        putString("FRIEND_ID", friend.id)
-                    }
-                }
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.frame, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            },
-            onDeleteClick = { friend ->
-                friendSearchViewModel.deleteFriend(friend)
-            }
-        )
+        // 어댑터 초기화
+        newFriendsAdapter = createFriendAdapter(onAcceptClick = { friend ->
+            friendSearchViewModel.acceptFriend(friend) // `User` 객체만 전달
+        }, onDeclineClick = { friend ->
+            friendSearchViewModel.declineFriend(friend) // `User` 객체만 전달
+        })
 
-        // 대기 중인 친구 어댑터 초기화
+        myFriendsAdapter = createFriendAdapter(onDeleteClick = { friend ->
+            friendSearchViewModel.deleteFriend(friend) // `User` 객체만 전달
+        })
+
         pendingFriendsAdapter = PendingFriendAdapter { friend ->
-            // 친구 프로필 화면으로 이동
-            val fragment = FriendProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString("FRIEND_ID", friend.id)
-                }
-            }
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.frame, fragment)
-                .addToBackStack(null)
-                .commit()
+            navigateToFriendProfile(friend.id)
         }
 
         // RecyclerView 설정
-        binding.newFriendsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.newFriendsRecyclerView.adapter = newFriendsAdapter
-
-        binding.myFriendsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.myFriendsRecyclerView.adapter = myFriendsAdapter
-
-        binding.pendingFriendsRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.pendingFriendsRecyclerView.adapter = pendingFriendsAdapter
-
-        // 대기 중인 친구 섹션 토글 기능
-        binding.pendingFriendsHeader.setOnClickListener {
-            binding.pendingFriendsRecyclerView.visibility =
-                if (binding.pendingFriendsRecyclerView.visibility == View.GONE) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-        }
+        setupRecyclerViews()
 
         // ViewModel의 StateFlow 관찰
         observeViewModel()
 
         // 검색 기능 추가
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                if (query.isEmpty()) {
-                    friendSearchViewModel.resetFilters()
-                } else {
-                    friendSearchViewModel.filterFriends(query)
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+        setupSearchFunctionality()
 
         // 취소 버튼 클릭 시 검색창 초기화
         binding.cancelButton.setOnClickListener {
@@ -167,4 +100,72 @@ class FriendSearchFragment : Fragment() {
     private fun updateFriendsCount(count: Int) {
         binding.friendsListTitle.text = "내 친구 ($count/20)"
     }
+
+    // 친구 프로필 화면으로 이동하는 함수로 중복 제거
+    private fun navigateToFriendProfile(friendId: String) {
+        val fragment = FriendProfileFragment().apply {
+            arguments = Bundle().apply {
+                putString("FRIEND_ID", friendId)
+            }
+        }
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frame, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // 어댑터 생성 함수로 중복 제거
+    private fun createFriendAdapter(
+        onAcceptClick: ((User) -> Unit)? = null,
+        onDeclineClick: ((User) -> Unit)? = null,
+        onDeleteClick: ((User) -> Unit)? = null
+    ) = FriendAdapter(
+        onItemClick = { friend -> navigateToFriendProfile(friend.id) },
+        onAcceptClick = onAcceptClick,
+        onDeclineClick = onDeclineClick,
+        onDeleteClick = onDeleteClick
+    )
+
+    // RecyclerView 설정을 함수로 분리
+    private fun setupRecyclerViews() {
+        binding.newFriendsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = newFriendsAdapter
+        }
+
+        binding.myFriendsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = myFriendsAdapter
+        }
+
+        binding.pendingFriendsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = pendingFriendsAdapter
+        }
+
+        // 대기 중인 친구 섹션 토글 기능
+        binding.pendingFriendsHeader.setOnClickListener {
+            binding.pendingFriendsRecyclerView.visibility =
+                if (binding.pendingFriendsRecyclerView.visibility == View.GONE) View.VISIBLE else View.GONE
+        }
+    }
+
+    // 검색 기능 설정 함수로 분리
+    private fun setupSearchFunctionality() {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString()
+                if (query.isEmpty()) {
+                    friendSearchViewModel.resetFilters(user)
+                } else {
+                    friendSearchViewModel.filterFriends(user, query)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
 }
+
+
