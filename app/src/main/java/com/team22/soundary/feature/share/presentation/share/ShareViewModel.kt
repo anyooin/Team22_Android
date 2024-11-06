@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,7 +47,10 @@ class ShareViewModel @Inject constructor(
     }
 
     private suspend fun initFriendList() {
-        _userList.value  = friendRepository.getFriends()
+
+        friendRepository.getFriends().collectLatest {
+            _userList.value = it
+        }
         getFilteredFriendList(_category.value)
     }
 
