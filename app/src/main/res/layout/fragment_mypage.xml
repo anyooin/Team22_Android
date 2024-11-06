@@ -101,20 +101,35 @@
         app:columnCount="4">
 
         <Button
+            android:id = "@+id/hiphop"
             style="@style/CategoryButton"
             android:text="@string/category_hiphop" />
 
         <Button
+            android:id = "@+id/rock"
             style="@style/CategoryButton"
             android:text="@string/category_rock" />
 
         <Button
+            android:id = "@+id/pop"
             style="@style/CategoryButton"
             android:text="@string/category_pop" />
 
         <Button
+            android:id = "@+id/jpop"
             style="@style/CategoryButton"
             android:text="@string/category_jpop" />
+
+        <Button
+            android:id = "@+id/rnb"
+            style="@style/CategoryButton"
+            android:text="@string/category_rnb" />
+
+        <Button
+            android:id = "@+id/kpop"
+            style="@style/CategoryButton"
+            android:text="@string/category_kpop" />
+
     </androidx.gridlayout.widget.GridLayout>
 
     <!-- 공유한 노래 목록 -->

@@ -232,8 +232,9 @@ fun TokenDto.toVO() : Token =
 fun UserInfoResponse.toVO(): User {
     return User(
         id = this.displayId ?: "",
-        name = this.nickname ?: "wldo",
+        name = this.nickname ?: "",
         image = Uri.parse(this.profileImageUrl),
-        statusMessage = this.description ?: "sdgsfh",
+        label = this.labels ?: emptyList(),
+        statusMessage = this.description ?: "",
     )
 }

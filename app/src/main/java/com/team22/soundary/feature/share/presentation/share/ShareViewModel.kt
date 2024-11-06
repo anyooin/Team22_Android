@@ -3,7 +3,6 @@ package com.team22.soundary.feature.share.presentation.share
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.share.domain.ShareRepository
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +47,7 @@ class ShareViewModel @Inject constructor(
                     id = "$i",
                     name = "댄스",
                     image = Uri.EMPTY,
-                    category = listOf(Category.DANCE)
+                    category = listOf(Category.KPOP)
                 )
             )
         }

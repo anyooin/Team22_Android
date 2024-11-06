@@ -11,6 +11,7 @@ import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.main.domain.SentShareRepository
 import com.team22.soundary.feature.profile.data.ProfileRepository
+import com.team22.soundary.feature.signup.presentation.SignupViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +44,9 @@ class ProfileViewModel @Inject constructor(
     private val _sentShare = MutableStateFlow<List<Share>>(emptyList())
     val sentShare = _sentShare.asStateFlow()
 
+
+
+
     init {
         getProfile()
         getSentShare()
@@ -73,6 +77,10 @@ class ProfileViewModel @Inject constructor(
             profileRepository.addLabels(listOf(label))
             _selectedCategories.value = _selectedCategories.value + label
         }
+    }
+
+    fun getLabel(label: String) {
+
     }
 
     // 선택된 카테고리 라벨을 삭제

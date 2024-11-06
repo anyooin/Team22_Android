@@ -108,10 +108,10 @@
             android:textOn="@string/category_ballad" />
 
         <ToggleButton
-            android:id="@+id/signup_togglebutton_category_dance"
+            android:id="@+id/signup_togglebutton_category_kpop"
             style="@style/SignupCategory"
-            android:textOff="@string/category_dance"
-            android:textOn="@string/category_dance" />
+            android:textOff="@string/category_kpop"
+            android:textOn="@string/category_kpop" />
 
         <ToggleButton
             android:id="@+id/signup_togglebutton_category_rnb"

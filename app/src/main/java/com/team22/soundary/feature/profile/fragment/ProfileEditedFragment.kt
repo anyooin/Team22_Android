@@ -68,7 +68,7 @@ class ProfileEditedFragment : Fragment() {
             binding.buttonPop,
             binding.buttonJpop,
             binding.buttonBallad,
-            binding.buttonDance
+            binding.buttonKpop
         )
 
         categoryButtons.forEach { button ->

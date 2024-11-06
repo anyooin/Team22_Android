@@ -25,6 +25,12 @@ class SignupViewModel @Inject constructor(
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
 
+    private val _selectedCategories = MutableStateFlow<List<String>>(emptyList())
+    val selectedCategories: StateFlow<List<String>> = _selectedCategories.asStateFlow()
+
+    fun saveSelectedCategories(categories: List<String>) {
+        _selectedCategories.value = categories
+    }
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
@@ -50,6 +56,7 @@ class SignupViewModel @Inject constructor(
     fun updateUserInfo(user: User) {
         viewModelScope.launch {
             userDetailUpdateUseCase.updateUserInfo(user)
+
         }
     }
 

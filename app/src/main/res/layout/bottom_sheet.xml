@@ -78,7 +78,7 @@
         <RadioButton
             android:id="@+id/category_dance"
             style="@style/bottomSheetCategory"
-            android:text="@string/category_dance" />
+            android:text="@string/category_kpop" />
     </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView

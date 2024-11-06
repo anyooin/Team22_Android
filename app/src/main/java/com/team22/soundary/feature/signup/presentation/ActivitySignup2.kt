@@ -37,7 +37,9 @@ class ActivitySignup2 : AppCompatActivity() {
 
         val nickname = intent.extras?.getString("nickname")
         val categoryOrdinalList = intent.extras?.getIntArray("category")
+        Log.d("aaaaasddfsafqf",""+categoryOrdinalList)
         val categoryList = categoryOrdinalList?.map {
+            Log.d("asdfdas",""+it)
             getCategoryByOrdinal(it)
         }
 

@@ -14,9 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.R
+import com.team22.soundary.core.domain.model.getCategoryMap
+import com.team22.soundary.core.domain.model.stringListToEnumList
 import com.team22.soundary.databinding.FragmentMypageBinding
 import com.team22.soundary.feature.profile.domain.ProfileViewModel
 import com.team22.soundary.feature.signup.presentation.ActivitySignIntro
+import com.team22.soundary.feature.signup.presentation.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +32,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val profileViewModel: ProfileViewModel by viewModels()
+    private val signupViewModel: SignupViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -43,6 +47,13 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setProfileInfo()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.selectedCategories.collect { categories ->
+                binding.categoryLabel.text = categories.joinToString(", ") // 카테고리 텍스트 표시
+            }
+        }
+
         // 연필 버튼 클릭 이벤트 설정
         binding.editButton.setOnClickListener {
             // ProfileEditedFragment로 이동
@@ -96,6 +107,14 @@ class ProfileFragment : Fragment() {
         }
     }
     fun setProfileInfo() {
+        val categoryButtons = listOf(
+            binding.hiphop,
+            binding.rock,
+            binding.pop,
+            binding.jpop,
+            binding.rnb,
+            binding.kpop
+        )
         lifecycleScope.launch {
             profileViewModel.userInfo.collect {
                 binding.profileTextviewName.text = it.name
@@ -103,6 +122,16 @@ class ProfileFragment : Fragment() {
                 Glide.with(requireContext())
                     .load(it.image)
                     .into(binding.profileImageview)
+
+                val categoryList = stringListToEnumList(it.label)
+                val categoryMap = getCategoryMap()
+
+                categoryList.forEach {
+                    categoryMap[it]?.let{
+                        categoryButtons[it].isVisible = true
+                    }
+                }
+
                 UserApiClient.instance.me { user, error ->
                     if (error != null) {
                         Log.e("akuby21", "사용자 정보 요청 실패", error)
@@ -179,5 +208,14 @@ class ProfileFragment : Fragment() {
 
     companion object{
         private const val MAX_SENT_IMAGE = 3
+
+        const val CATEGORY_HIPHOP = 0
+        const val CATEGORY_ROCK = 0
+        const val CATEGORY_POP = 0
+        const val CATEGORY_JPOP = 0
+        const val CATEGORY_RNB = 0
+        const val CATEGORY_KPOP = 0
+
+
     }
 }

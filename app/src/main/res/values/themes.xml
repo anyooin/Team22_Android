@@ -29,6 +29,7 @@
         <item name="android:background">@drawable/all_rounded_toggle_button</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_margin">@dimen/category_margin</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <!--signup-->
