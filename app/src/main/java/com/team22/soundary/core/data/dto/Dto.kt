@@ -152,6 +152,7 @@ data class UserInfoInitRequestDto(
     @SerialName("profile_image_url") val profileImage : String? = null
 )
 
+@Serializable
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,
