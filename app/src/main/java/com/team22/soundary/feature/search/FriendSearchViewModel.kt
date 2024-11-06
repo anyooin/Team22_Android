@@ -7,9 +7,11 @@ import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,6 +35,7 @@ class FriendSearchViewModel @Inject constructor(
     init {
         loadFriends()
         loadPendingFriends()
+        startPeriodicFriendsUpdate()
     }
 
     // 친구 신청 메서드
@@ -48,11 +51,23 @@ class FriendSearchViewModel @Inject constructor(
         }
     }
 
+    // 친구 목록을 주기적으로 갱신하는 함수
+    private fun startPeriodicFriendsUpdate() {
+        viewModelScope.launch {
+            while (true) {
+                loadFriends()
+                loadPendingFriends()
+                delay(10000) // 10초마다 갱신 (필요에 따라 조정)
+            }
+        }
+    }
 
     // 친구 목록 로드
     private fun loadFriends() {
         viewModelScope.launch {
-            _myFriends.value = friendRepository.getFriends()
+            friendRepository.getFriends().collectLatest {
+                _myFriends.value = it
+            }
             _newFriends.value = friendRepository.getReceivedRequests()
             _pendingFriends.value = friendRepository.getSentRequests()
         }
@@ -72,7 +87,6 @@ class FriendSearchViewModel @Inject constructor(
     fun isFriend(user: User): Boolean {
         val isInMyFriends = _myFriends.value.any { it.displayId == user.displayId }
         val isInPendingFriends = _pendingFriends.value.any { it.displayId == user.displayId }
-        Log.d("testt","pendingFriends : ${_pendingFriends.value.first().displayId}, user.id = ${user.displayId}")
         val isInNewFriends = _newFriends.value.any { it.displayId == user.displayId }
         if(isInMyFriends || isInPendingFriends || isInNewFriends) {
             Log.d("testt", "true")
@@ -95,7 +109,7 @@ class FriendSearchViewModel @Inject constructor(
     // 친구 수락 메서드
     fun acceptFriend(friend: User) {
         viewModelScope.launch {
-            friendRepository.updateFriendStatus(friend.id, "accepted")
+            friendRepository.updateFriendStatus(friend.displayId, "accepted")
             _newFriends.value = _newFriends.value.filter { it.id != friend.id }
             _myFriends.value = _myFriends.value + friend.copy(status = "accepted")
         }
@@ -123,7 +137,7 @@ class FriendSearchViewModel @Inject constructor(
             val filteredNewFriends = friendRepository.getReceivedRequests().filter {
                 it.name.contains(query, ignoreCase = true)
             }
-            val filteredMyFriends = friendRepository.getFriends().filter {
+            val filteredMyFriends = _myFriends.value.filter {
                 it.status == "accepted" && it.name.contains(query, ignoreCase = true)
             }
             val filteredPendingFriends = friendRepository.getSentRequests().filter {
@@ -141,4 +155,3 @@ class FriendSearchViewModel @Inject constructor(
         loadFriends()
     }
 }
-

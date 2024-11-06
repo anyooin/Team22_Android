@@ -2,6 +2,7 @@ package com.team22.soundary.feature.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
 import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
@@ -20,38 +21,42 @@ class FriendProfileViewModel @Inject constructor(
     private val _friendProfile = MutableStateFlow<User?>(null)
     val friendProfile: StateFlow<User?> get() = _friendProfile.asStateFlow()
 
-    private val _isFriendAdded = MutableStateFlow<Boolean>(false)
+    private val _isFriendAdded = MutableStateFlow(false)
     val isFriendAdded: StateFlow<Boolean> get() = _isFriendAdded.asStateFlow()
 
-    // 친구 프로필 로드
     fun loadFriendProfile(friendId: String) {
         viewModelScope.launch {
-            val profile = friendRepository.getFriendById(friendId)
-            _friendProfile.value = profile
+            try {
+                val profile = friendRepository.getFriendById(friendId)
+                _friendProfile.value = profile
+            } catch (e: Exception) {
+                Log.e("FriendProfileViewModel", "Error loading friend profile", e)
+                _friendProfile.value = null // 실패 시 null 설정
+            }
         }
     }
 
     fun addFriend(friendId: String) {
         viewModelScope.launch {
-            // friendId를 사용하여 FriendRequestDto 객체 생성
-            val friendRequestDto = FriendRequestDto(targetId = friendId)
-
-            // friendRequestDto 객체를 전달
-            val result = friendRepository.addFriend(friendRequestDto)
-
-            _isFriendAdded.value = result
-            loadFriendProfile(friendId)
-            _isFriendAdded.value = false // 상태 초기화
+            try {
+                val isAdded = friendRepository.addFriend(FriendRequestDto(friendId))
+                _isFriendAdded.value = isAdded
+            } catch (e: Exception) {
+                Log.e("FriendProfileViewModel", "Error adding friend", e)
+                _isFriendAdded.value = false
+            }
         }
     }
 
-
-    // 친구 요청 수락
     fun acceptFriendRequest(friendId: String) {
         viewModelScope.launch {
-            friendRepository.updateFriendStatus(friendId, "accepted")
-            loadFriendProfile(friendId)
+            try {
+                friendRepository.updateFriendStatus(friendId, "accepted")
+                _isFriendAdded.value = true
+            } catch (e: Exception) {
+                Log.e("FriendProfileViewModel", "Error accepting friend request", e)
+                _isFriendAdded.value = false
+            }
         }
     }
 }
-
