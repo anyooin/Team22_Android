@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class FriendSearchFragment : Fragment() {
 
-    private lateinit var newFriendsAdapter: FriendAdapter
+    private lateinit var newFriendsAdapter: NewFriendAdapter
     private lateinit var myFriendsAdapter: FriendAdapter
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
     private lateinit var searchResultAdapter: SearchResultAdapter
@@ -43,7 +43,7 @@ class FriendSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize adapters
-        newFriendsAdapter = createFriendAdapter(onAcceptClick = { friend ->
+        newFriendsAdapter = createNewFriendAdapter(onAcceptClick = { friend ->
             friendSearchViewModel.acceptFriend(friend)
         }, onDeclineClick = { friend ->
             friendSearchViewModel.declineFriend(friend)
@@ -125,15 +125,21 @@ class FriendSearchFragment : Fragment() {
     }
 
     private fun createFriendAdapter(
-        onAcceptClick: ((User) -> Unit)? = null,
-        onDeclineClick: ((User) -> Unit)? = null,
         onDeleteClick: ((User) -> Unit)? = null
     ) = FriendAdapter(
         onItemClick = { friend -> navigateToFriendProfile(friend.id) },
-        onAcceptClick = onAcceptClick,
-        onDeclineClick = onDeclineClick,
         onDeleteClick = onDeleteClick
     )
+
+    private fun createNewFriendAdapter(
+        onAcceptClick: ((User) -> Unit)? = null,
+        onDeclineClick: ((User) -> Unit)? = null,
+    ) = NewFriendAdapter(
+        onItemClick = { friend -> navigateToFriendProfile(friend.id) },
+        onAcceptClick = onAcceptClick,
+        onDeclineClick = onDeclineClick,
+    )
+
     private fun setupRecyclerViews() {
         binding.newFriendsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -163,6 +169,8 @@ class FriendSearchFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+
     }
 
     private fun setupSearchFunctionality() {
