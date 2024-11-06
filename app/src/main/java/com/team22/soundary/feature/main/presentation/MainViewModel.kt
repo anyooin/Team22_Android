@@ -25,10 +25,10 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getShareUseCase.invoke().collect { result ->
+            /*getShareUseCase.invoke().collect { result ->
                 _groupedShares = result
                 if(result.isNotEmpty()) updateUiState(result.entries.first().value.first(),0)
-            }
+            }*/
         }
     }
 

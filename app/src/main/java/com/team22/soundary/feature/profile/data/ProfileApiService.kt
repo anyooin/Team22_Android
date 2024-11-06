@@ -1,5 +1,8 @@
 package com.team22.soundary.feature.profile.data
 
+import com.team22.soundary.core.data.dto.LabelAdd
+import com.team22.soundary.core.data.dto.LabelView
+import com.team22.soundary.core.data.dto.UserInfoResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -9,15 +12,15 @@ import retrofit2.http.Path
 
 interface ProfileApiService {
     @GET("profile")
-    suspend fun getProfile(): ProfileResponse // profile 받기
+    suspend fun getProfile(): UserInfoResponse // profile 받기
 
     //label 목록 조회
     @GET("/api/v1/labels")
-    suspend fun getLabels(): Response<LabelsResponse>
+    suspend fun getLabels(): Response<LabelView>
 
     //label 추가
     @POST("/api/v1/labels")
-    suspend fun addLabels(@Body labels: LabelsRequest): Response<LabelsResponse>
+    suspend fun addLabels(@Body labels: LabelAdd): Response<LabelAdd>
 
     //label 삭제
     @DELETE("/api/v1/labels/{label}")
@@ -25,7 +28,4 @@ interface ProfileApiService {
 }
 
 
-//데이터 정의
-data class ProfileResponse(val name: String, val email: String, val bio: String)
-data class LabelsResponse(val labels: List<String>)
-data class LabelsRequest(val labels: List<String>)
+

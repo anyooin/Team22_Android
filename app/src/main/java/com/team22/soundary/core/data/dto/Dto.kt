@@ -1,19 +1,13 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
-import android.util.Log
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
 import com.team22.soundary.core.domain.model.User
 import kotlinx.serialization.Contextual
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 @Serializable
@@ -96,6 +90,29 @@ data class LoginRequestDto(
     @SerialName("platform") val platform: String = "KAKAO",
     @SerialName("token") val token: String
 )
+
+@Serializable
+data class UserInfoResponse(
+    @SerialName("displayId") val displayId:String?,
+    @SerialName("nickname") val nickname: String?,
+    @SerialName ("description") val description: String?,
+    @SerialName("profileImageUrI") val profileImageUrI: String?,
+    @SerialName("roles") val roles: List<String>,
+    @SerialName("labels") val labels: List<String>,
+
+)
+
+@Serializable
+data class LabelView(
+    @SerialName("labels") val labels:List<String>
+    )
+
+@Serializable
+data class LabelAdd(
+    @SerialName("labels") val labels: List<String>
+)
+
+
 
 fun SentShareDto.toVO(): Share {
     return Share(

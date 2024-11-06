@@ -40,7 +40,7 @@ class ProfileEditedFragment : Fragment() {
     }
 
     private fun setupCategoryButtons() {
-        // 각 버튼에 대해 클릭 이벤트를 설정합니다
+        // 각 버튼에 대해 클릭 이벤트 설정
         val categoryButtons = listOf(
             binding.buttonHiphop,
             binding.buttonRock,

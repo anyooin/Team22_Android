@@ -26,16 +26,18 @@
     </androidx.cardview.widget.CardView>
 
     <!-- 연필 아이콘 -->
+
+    <!-- 프로필 이름 -->
+
     <ImageButton
         android:id="@+id/edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="12dp"
         android:src="@drawable/mypage_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/profile_cardview" />
 
-    <!-- 프로필 이름 -->
     <TextView
         android:id="@+id/profile_textview_name"
         android:layout_width="wrap_content"
@@ -89,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/profile_textview_intro" />
 
     <!-- 카테고리 버튼들 -->
-    <GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:id="@+id/category_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,7 +115,7 @@
         <Button
             style="@style/CategoryButton"
             android:text="@string/category_jpop" />
-    </GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 
     <!-- 공유한 노래 목록 -->
     <TextView
@@ -129,14 +131,14 @@
         app:layout_constraintTop_toBottomOf="@id/category_grid" />
 
     <!-- 공유한 앨범 이미지들 -->
-    <GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_half"
-        android:columnCount="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shared_songs_label">
+        app:layout_constraintTop_toBottomOf="@id/shared_songs_label"
+        app:columnCount="3">
 
         <ImageView
             android:layout_width="100dp"
@@ -155,18 +157,19 @@
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
             android:src="@drawable/mypage_album3" />
-    </GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 
     <!-- 탈퇴하기 버튼 -->
     <Button
         android:id="@+id/leave_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="184dp"
         android:backgroundTint="@color/red"
         android:text="@string/mypage_out"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shared_songs_label" />
 </androidx.constraintlayout.widget.ConstraintLayout>
