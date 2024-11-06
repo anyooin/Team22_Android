@@ -39,13 +39,13 @@ class ShareViewModel @Inject constructor(
     private fun initFriendList() {
         val initList = mutableListOf<User>()
         for (i in 0..5) {
-            initList.add(User(id="$i", name="댄스", image= Uri.EMPTY, category = listOf(Category.Dance)))
+            initList.add(User(id="$i", name="댄스", image= Uri.EMPTY, category = listOf(Category.DANCE)))
         }
         for (i in 6..10) {
-            initList.add(User(id="$i", name="힙합", image= Uri.EMPTY, category = listOf(Category.Hiphop)))
+            initList.add(User(id="$i", name="힙합", image= Uri.EMPTY, category = listOf(Category.HIPHOP)))
         }
         for (i in 11..19) {
-            initList.add(User(id="$i", name="쿠키즈", image= Uri.EMPTY, category = listOf(Category.RnB)))
+            initList.add(User(id="$i", name="쿠키즈", image= Uri.EMPTY, category = listOf(Category.RNB)))
         }
         _userList.value = initList
         getFilteredFriendList(_category.value)

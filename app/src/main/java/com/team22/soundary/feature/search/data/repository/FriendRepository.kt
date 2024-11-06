@@ -16,7 +16,7 @@ class FriendRepository @Inject constructor() {
             name = "김고고",
             email = "gogoKim@example.com",
             statusMessage = "안녕하세요!",
-            category = listOf(Category.Dance, Category.Pop),
+            category = listOf(Category.DANCE, Category.POP),
             status = "requested"
         ),
         User(
@@ -24,7 +24,7 @@ class FriendRepository @Inject constructor() {
             name = "박고고",
             email = "parkKim@example.com",
             statusMessage = "음악 좋아요",
-            category = listOf(Category.Rock, Category.Pop),
+            category = listOf(Category.ROCK, Category.POP),
             status = "requested"
         ),
         User(
@@ -32,7 +32,7 @@ class FriendRepository @Inject constructor() {
             name = "김남남",
             email = "nyamnyam@example.com",
             statusMessage = "행복한 하루!",
-            category = listOf(Category.Dance, Category.Jpop),
+            category = listOf(Category.DANCE, Category.JPOP),
             status = "accepted"
         ),
         User(
@@ -40,7 +40,7 @@ class FriendRepository @Inject constructor() {
             name = "이남남",
             email = "nyamnyam22@example.com",
             statusMessage = "즐거운 음악!",
-            category = listOf(Category.RnB, Category.Pop),
+            category = listOf(Category.RNB, Category.POP),
             status = "accepted"
         ),
         User(
@@ -48,7 +48,7 @@ class FriendRepository @Inject constructor() {
             name = "쿠키즈용",
             email = "kookooyong@example.com",
             statusMessage = "Let's enjoy music!",
-            category = listOf(Category.Dance, Category.Hiphop),
+            category = listOf(Category.DANCE, Category.HIPHOP),
             status = "pending"
         ),
         User(
@@ -56,7 +56,7 @@ class FriendRepository @Inject constructor() {
             name = "쿠키즈",
             email = "kookoo@example.com",
             statusMessage = "음악은 삶의 일부",
-            category = listOf(Category.Jpop, Category.Pop),
+            category = listOf(Category.JPOP, Category.POP),
             status = "pending"
         )
     )
@@ -124,7 +124,7 @@ class FriendRepository @Inject constructor() {
             name = "새 친구",
             email = "$friendId@example.com",
             statusMessage = "안녕하세요!",
-            category = listOf(Category.Jpop, Category.Pop),
+            category = listOf(Category.JPOP, Category.POP),
             status = "accepted"
         )
     }
