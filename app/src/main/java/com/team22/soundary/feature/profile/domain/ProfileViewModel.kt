@@ -63,9 +63,9 @@ class ProfileViewModel @Inject constructor(
     fun getProfile() {
         viewModelScope.launch {
              profileRepository.getProfiles().collect{
-                 Log.d("uin", "" + it.statusMessage)
                  _userInfo.value = it
-                 Log.d("uin", "" + _userInfo.value.statusMessage)
+                 Log.d("uin", "new" + _userInfo.value.statusMessage)
+                 Log.d("uin", "new" + _userInfo.value.label)
 
             }
         }

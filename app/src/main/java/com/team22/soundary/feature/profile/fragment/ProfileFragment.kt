@@ -75,6 +75,8 @@ class ProfileFragment : Fragment() {
             }
         }
         observeState()
+
+        profileViewModel.getProfile()
     }
 
     override fun onDestroyView() {
@@ -127,6 +129,7 @@ class ProfileFragment : Fragment() {
                 val categoryMap = getCategoryMap()
 
                 categoryList.forEach {
+                    Log.d("uin", it.toString())
                     categoryMap[it]?.let{
                         categoryButtons[it].isVisible = true
                     }
