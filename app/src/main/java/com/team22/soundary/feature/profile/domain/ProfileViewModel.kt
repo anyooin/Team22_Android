@@ -12,10 +12,27 @@ class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
-    fun loadProfileData() {
+    // 선택된 카테고리 라벨을 추가
+    fun addLabel(label: String) {
         viewModelScope.launch {
-            val profileData = profileRepository.getProfileData()
-            // 데이터 추가
+            profileRepository.addLabels(listOf(label))
+        }
+    }
+
+    // 선택된 카테고리 라벨을 삭제
+    fun deleteLabel(label: String) {
+        viewModelScope.launch {
+            profileRepository.deleteLabel(label)
+        }
+    }
+
+    // 현재 라벨 목록을 조회
+    fun loadLabels() {
+        viewModelScope.launch {
+            val response = profileRepository.getLabels()
+            if (response.isSuccessful) {
+                // 조회된 라벨 목록을 처리 (필요에 따라 UI 업데이트)
+            }
         }
     }
 }

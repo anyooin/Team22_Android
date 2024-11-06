@@ -26,10 +26,10 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel.loadProfileData() // ViewModel에서 데이터 받기
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

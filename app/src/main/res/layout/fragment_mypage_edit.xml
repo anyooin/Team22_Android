@@ -94,4 +94,19 @@
             style="@style/CategoryButton"
             android:text="@string/category_dance" />
     </androidx.gridlayout.widget.GridLayout>
+
+    <!--저장-->
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="저장하기"
+        android:backgroundTint="@color/yellow_300"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_grid"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
