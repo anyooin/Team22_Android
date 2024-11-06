@@ -33,7 +33,7 @@ interface ProfileApiService {
 
     //label 추가
     @POST("/api/v1/labels")
-    suspend fun addLabels(@Body labels: LabelAdd) : Response <Void>
+    suspend fun addLabels(@Body labels: LabelAdd) : Response<Void>
 
     //label 삭제
     @DELETE("/api/v1/labels/{label}")

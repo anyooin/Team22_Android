@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.Date
@@ -46,6 +47,11 @@ object RetrofitModule {
             .addConverterFactory(json.asConverterFactory(contentType!!))
             .client(
                 OkHttpClient.Builder().apply {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
                     addInterceptor(
                         TokenInterceptor(tokenRepository)
                     )

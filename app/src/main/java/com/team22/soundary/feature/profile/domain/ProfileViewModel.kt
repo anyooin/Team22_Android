@@ -72,10 +72,11 @@ class ProfileViewModel @Inject constructor(
     }
 
     // 선택된 카테고리 라벨을 추가
-    fun addLabel(label: String) {
+    fun addLabel(label: List<String>) {
+        Log.d("dsdddd",""+label)
         viewModelScope.launch {
-            profileRepository.addLabels(listOf(label))
-            _selectedCategories.value = _selectedCategories.value + label
+            profileRepository.addLabels(label)
+            _selectedCategories.value += label
         }
     }
 

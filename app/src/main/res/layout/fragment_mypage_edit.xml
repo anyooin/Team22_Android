@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/button_rock"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="104dp"
         android:text="@string/category_rock"
         app:layout_constraintEnd_toStartOf="@id/button_pop"
@@ -74,7 +74,7 @@
 
     <Button
         android:id="@+id/button_hiphop"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="104dp"
         android:text="@string/category_hiphop"
         app:layout_constraintEnd_toStartOf="@id/button_rock"
@@ -83,7 +83,7 @@
 
     <Button
         android:id="@+id/button_kpop"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="12dp"
         android:text="@string/category_kpop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +92,7 @@
 
     <Button
         android:id="@+id/button_pop"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="104dp"
         android:text="@string/category_pop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
 
     <Button
         android:id="@+id/button_jpop"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="16dp"
         android:text="@string/category_jpop"
         app:layout_constraintEnd_toStartOf="@id/button_ballad"
@@ -110,7 +110,7 @@
 
     <Button
         android:id="@+id/button_ballad"
-        style="@style/CategoryButton"
+        style="@style/CategoryEditButton"
         android:layout_marginTop="4dp"
         android:text="@string/category_rnb"
         app:layout_constraintEnd_toStartOf="@id/button_kpop"

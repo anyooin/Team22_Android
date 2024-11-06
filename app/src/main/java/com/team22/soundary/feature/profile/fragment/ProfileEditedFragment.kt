@@ -82,14 +82,9 @@ class ProfileEditedFragment : Fragment() {
     private fun toggleCategorySelection(button: View, category: String) {
         if (selectedCategories.contains(category)) {
             selectedCategories.remove(category)
-            profileViewModel.deleteLabel(category)
-            button.setBackgroundColor(Color.WHITE)
-            (button as Button).setTextColor(Color.BLACK)
         } else {
             selectedCategories.add(category)
-            profileViewModel.addLabel(category)
-            button.setBackgroundColor(Color.parseColor("#800080"))
-            (button as Button).setTextColor(Color.WHITE)
+            (button as Button).setTextColor(Color.BLACK)
         }
     }
 
@@ -152,12 +147,15 @@ class ProfileEditedFragment : Fragment() {
 
     private fun setSaveButton() {
         binding.saveButton.setOnClickListener {
-            profileViewModel.setProfile(
-                name = binding.profileNameEdit.text.toString(),
-                intro = binding.profileIntroEdit.text.toString(),
-                profile = selectedImageUri ?: Uri.EMPTY
-            )
-            parentFragmentManager.popBackStack()
+            lifecycleScope.launch {
+                profileViewModel.setProfile(
+                    name = binding.profileNameEdit.text.toString(),
+                    intro = binding.profileIntroEdit.text.toString(),
+                    profile = selectedImageUri ?: Uri.EMPTY
+                )
+                profileViewModel.addLabel(selectedCategories.toList())
+                parentFragmentManager.popBackStack()
+            }
         }
     }
 
