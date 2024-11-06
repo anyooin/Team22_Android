@@ -31,8 +31,8 @@ class FriendProfileViewModel @Inject constructor(
                 _friendProfile.value = profile
                 Log.d("testt", "FriendProfile eee"+_friendProfile.value!!.displayId)
             } catch (e: Exception) {
-                Log.e("FriendProfileViewModel", "Error loading friend profile", e)
-                _friendProfile.value = null
+                Log.e("FriendProfileViewModel", "Error loading friend profile")
+                _friendProfile.value = null // 실패 시 null 설정
             }
         }
     }
@@ -43,7 +43,7 @@ class FriendProfileViewModel @Inject constructor(
                 val isAdded = friendRepository.addFriend(FriendRequestDto(friendId))
                 _isFriendAdded.value = isAdded
             } catch (e: Exception) {
-                Log.d("FriendProfileViewModel", "Error adding friend")
+                Log.e("FriendProfileViewModel", "Error adding friend")
                 _isFriendAdded.value = false
             }
         }
@@ -55,7 +55,7 @@ class FriendProfileViewModel @Inject constructor(
                 friendRepository.updateFriendStatus(friendId, "accepted")
                 _isFriendAdded.value = true
             } catch (e: Exception) {
-                Log.d("FriendProfileViewModel", "Error accepting friend request")
+                Log.e("FriendProfileViewModel", "Error accepting friend request")
                 _isFriendAdded.value = false
             }
         }

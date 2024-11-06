@@ -165,10 +165,17 @@ data class UserUpdateRequest(
     @SerialName("description") val description: String? = null,
     @SerialName("profile_image_url") val profileImage: String? = null
 )
+
+@Serializable
 data class ShareMusicRequest(
     @SerialName("track") val track: TrackIdentifierDto,
     @SerialName("comment") val comment: String,
     @SerialName("target_user_ids") val userList: List<String>
+)
+
+@Serializable
+data class FriendRequestDto(
+    @SerialName("target_display_id") val displayId: String
 )
 
 @Serializable
@@ -239,13 +246,6 @@ fun FriendInfoDto.toVO(): User {
     )
 }
 
-fun UserInfoResponse.toVO(): User {
-    return User(
-        displayId = this.displayId ?: "",
-        name = this.nickname ?: "",
-        image = Uri.parse(this.profileImage),
-    )
-}
 
 fun TokenDto.toVO() : Token =
     Token(

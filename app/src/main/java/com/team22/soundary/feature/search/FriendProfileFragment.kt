@@ -43,7 +43,7 @@ class FriendProfileFragment : Fragment() {
             viewModel.friendProfile.collectLatest { profile ->
                 profile?.let {
                     binding.userNameTextview.text = it.name
-                    binding.userDisplayIdTextview.text = "@" + it.displayId
+                    binding.userEmailTextview.text = "@" + it.displayId
                     // Glide를 사용하여 프로필 이미지 로드
                     Glide.with(this@FriendProfileFragment)
                         .load(it.image.toString())

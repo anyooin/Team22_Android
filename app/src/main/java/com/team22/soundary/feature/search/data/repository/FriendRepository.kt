@@ -40,7 +40,6 @@ class FriendRepository @Inject constructor(
         return try {
             // API 호출 시, 전달된 FriendRequestDto 객체를 그대로 사용
             val response = friendApiService.addFriend(targetDisplayId)
-            Log.d("testt", "targetDisplayId : " + targetDisplayId.targetId)
             if (response.isSuccessful) {
                 notifyDataChange()
                 Log.d("testt", "success")

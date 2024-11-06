@@ -44,7 +44,7 @@ class FriendSearchViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            val isRequested = friendRepository.addFriend(FriendRequestDto(targetId = user.displayId))
+            val isRequested = friendRepository.addFriend(FriendRequestDto(user.displayId))
             if (isRequested) {
                 loadPendingFriends()  // 서버의 친구 요청 목록으로 업데이트
             }
