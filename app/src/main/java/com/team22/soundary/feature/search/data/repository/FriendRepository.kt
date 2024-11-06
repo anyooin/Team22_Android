@@ -1,6 +1,7 @@
 package com.team22.soundary.feature.search.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.team22.soundary.core.data.dto.FromUserResponse
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
@@ -127,9 +128,11 @@ class FriendRepository @Inject constructor(
     suspend fun searchUserByDisplayId(displayId: String): User? {
         return try {
             val response = friendApiService.searchUser(displayId)
+
             if (response.isSuccessful) {
                 response.body()?.toVO()
             } else {
+                Log.d("testt","repo" + response.code())
                 null
             }
         } catch (e: Exception) {

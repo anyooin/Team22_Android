@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ class FriendSearchFragment : Fragment() {
     private lateinit var newFriendsAdapter: FriendAdapter
     private lateinit var myFriendsAdapter: FriendAdapter
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
+    private lateinit var searchResultAdapter: SearchResultAdapter  // 검색 결과 어댑터 추가
     private var _binding: FragmentFriendSearchBinding? = null
     private val binding get() = _binding!!
     private val user: String = "user" // TODO: 로그인 기능으로 수정 필요
@@ -54,6 +56,12 @@ class FriendSearchFragment : Fragment() {
 
         pendingFriendsAdapter = PendingFriendAdapter { friend ->
             navigateToFriendProfile(friend.id)
+        }
+
+        // 검색 결과 어댑터 초기화
+        searchResultAdapter = SearchResultAdapter { user ->
+            friendSearchViewModel.requestFriend(user) // 검색 결과에서 추가된 사용자 처리
+            Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
         }
 
         // RecyclerView 설정
@@ -93,6 +101,13 @@ class FriendSearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             friendSearchViewModel.pendingFriends.collectLatest { pendingFriends ->
                 pendingFriendsAdapter.submitList(pendingFriends)
+            }
+        }
+
+        // 검색 결과 관찰 및 어댑터에 전달
+        viewLifecycleOwner.lifecycleScope.launch {
+            friendSearchViewModel.searchResultList.collectLatest { searchResults ->
+                searchResultAdapter.submitList(searchResults)
             }
         }
     }
@@ -148,6 +163,13 @@ class FriendSearchFragment : Fragment() {
             binding.pendingFriendsRecyclerView.visibility =
                 if (binding.pendingFriendsRecyclerView.visibility == View.GONE) View.VISIBLE else View.GONE
         }
+        binding.searchEditText.setOnClickListener {
+            val fragment = SearchResultFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.frame, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     // 검색 기능 설정 함수로 분리
@@ -156,9 +178,9 @@ class FriendSearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
                 if (query.isEmpty()) {
-                    friendSearchViewModel.resetFilters(user)
+                    friendSearchViewModel.resetFilters() // 검색어가 없을 경우 필터 초기화
                 } else {
-                    friendSearchViewModel.filterFriends(user, query)
+                    friendSearchViewModel.filterFriends(query) // 검색어에 따라 친구 목록 필터링
                 }
             }
 
@@ -166,6 +188,5 @@ class FriendSearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
 }
-
-
