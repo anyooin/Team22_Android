@@ -127,7 +127,7 @@ class FriendSearchFragment : Fragment() {
     private fun createFriendAdapter(
         onDeleteClick: ((User) -> Unit)? = null
     ) = FriendAdapter(
-        onItemClick = { friend -> navigateToFriendProfile(friend.id) },
+        onItemClick = { friend -> navigateToFriendProfile(friend.displayId) },
         onDeleteClick = onDeleteClick
     )
 
@@ -135,7 +135,7 @@ class FriendSearchFragment : Fragment() {
         onAcceptClick: ((User) -> Unit)? = null,
         onDeclineClick: ((User) -> Unit)? = null,
     ) = NewFriendAdapter(
-        onItemClick = { friend -> navigateToFriendProfile(friend.id) },
+        onItemClick = { friend -> navigateToFriendProfile(friend.displayId) },
         onAcceptClick = onAcceptClick,
         onDeclineClick = onDeclineClick,
     )

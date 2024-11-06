@@ -5,8 +5,10 @@ import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.api.FriendApiService
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,20 +18,20 @@ class FriendRepository @Inject constructor(
 ) {
 
     // 친구 목록 가져오기
-    suspend fun getFriends(): List<User> {
-        return try {
-            val response = friendApiService.getFriends()
-            if (response.isSuccessful) {
-                Log.d("testt", "response.body()"+response.body()?.friends?.size)
-                response.body()?.friends?.map { it.toVO() }?:emptyList()
-            } else {
+    suspend fun getFriends(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getFriends()
+                if (response.isSuccessful) {
+                    Log.d("testt", "response.body()" + response.body()?.friends?.size)
+                    emit(response.body()?.friends?.map { it.toVO() } ?: emptyList())
+                } else {
+                    Log.d("testt", "response fail")
+                }
+            } catch (e: Exception) {
                 Log.d("testt", "response fail")
-                emptyList()
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            Log.d("testt", "response fail")
-            e.printStackTrace()
-            emptyList()
         }
     }
 
@@ -126,7 +128,10 @@ class FriendRepository @Inject constructor(
     suspend fun updateFriendStatus(friendId: String, newStatus: String): Boolean {
         return try {
             if (newStatus == "accepted") {
-                friendApiService.addFriend(FriendRequestDto(friendId)).isSuccessful
+                Log.d("aaaaa","invoke")
+                val res = friendApiService.addFriend(FriendRequestDto(friendId))
+                Log.d("aaaaa",""+res.errorBody())
+                res.isSuccessful
             } else {
                 false
             }
