@@ -1,6 +1,11 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
+<<<<<<< HEAD
+=======
+import android.util.Log
+import com.team22.soundary.core.domain.model.Category
+>>>>>>> review
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
@@ -9,6 +14,24 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.Date
+
+// 친구 목록 응답 DTO
+@Serializable
+data class FriendsResponse(
+    @SerialName("friends") val friends: List<UserInfoDto>?
+)
+
+// 받은 친구 요청 목록 응답 DTO
+@Serializable
+data class ReceivedRequestsResponse(
+    @SerialName("received_requests") val receivedRequests: List<UserInfoDto>?
+)
+
+// 보낸 친구 요청 목록 응답 DTO
+@Serializable
+data class SentRequestsResponse(
+    @SerialName("sent_requests") val sentRequests: List<UserInfoDto>?
+)
 
 @Serializable
 data class UserInfoDto(
@@ -21,6 +44,8 @@ data class UserInfoDto(
 
 @Serializable
 data class ReceivedShareListDto(
+    @SerialName("total") val total: Int?,
+    @SerialName("total_pages") val totalPage : Int?,
     @SerialName("shared_musics") val shareList: List<ReceivedShareDto>?
 )
 
@@ -63,12 +88,13 @@ data class TrackListDto(
 
 @Serializable
 data class TrackDto(
-    @SerialName("track_id") val platformTrackId: String?,
+    @SerialName("platform") val platform: String?,
+    @SerialName("platform_track_id") val platformTrackId: String?,
     @SerialName("title") val title: String?,
     @SerialName("artists") val artist: List<String>?,
+    @SerialName("duration") val duration: Int?,
     @SerialName("album_cover_url") val albumCoverUrl: String?,
-    @SerialName("preview_mp3_url") val previewMp3Url: String?,
-    @SerialName("duration_in_seconds") val duration: Int?
+    @SerialName("preview_mp3_url") val previewMp3Url: String?
 )
 
 @Serializable
@@ -113,6 +139,36 @@ data class LabelAdd(
 )
 
 
+data class RefreshRequestDto(
+    @SerialName("refresh_token") val refreshToken: String
+)
+
+@Serializable
+data class UserInfoInitRequestDto(
+    @SerialName("labels") val category : List<Category>,
+    @SerialName("device_token") val deviceToken : String,
+    @SerialName("display_id") val displayId : String,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("profile_image_url") val profileImage : String? = null
+)
+
+data class ShareMusicRequest(
+    @SerialName("track") val track: TrackIdentifierDto,
+    @SerialName("comment") val comment: String,
+    @SerialName("target_user_ids") val userList: List<String>
+)
+
+@Serializable
+data class TrackIdentifierDto(
+    @SerialName("platform") val platform: String = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String
+)
+
+@Serializable
+data class ShareMusicResponse(
+    @SerialName("shared_music_id") val platformTrackId: String?
+)
 
 fun SentShareDto.toVO(): Share {
     return Share(
@@ -151,19 +207,19 @@ fun FromUserResponse.toVO(): User =
         image = Uri.parse(this.profileImageUrl ?: "")
     )
 
-fun UserInfoDto.toVO(): User =
-    User(
+
+fun UserInfoDto.toVO(): User {
+    return User(
         id = this.id ?: "",
         name = this.name ?: "",
         image = Uri.parse(this.profile),
-        statusMessage = this.description ?: ""
+        statusMessage = this.description ?: "",
+        role = this.roles ?: emptyList()
     )
-
+}
 fun TokenDto.toVO() : Token =
     Token(
         this.accessToken ?: "",
         this.refreshToken ?: ""
     )
-
-
 

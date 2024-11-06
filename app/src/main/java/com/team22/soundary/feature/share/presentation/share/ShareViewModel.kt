@@ -1,18 +1,23 @@
-package com.team22.soundary.feature.share
+package com.team22.soundary.feature.share.presentation.share
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.share.domain.ShareRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ShareViewModel @Inject constructor(
+    private val repository: ShareRepository
 ) : ViewModel() {
     private val _userList = MutableStateFlow<List<User>>(emptyList())
     val userList: StateFlow<List<User>> = _userList.asStateFlow()
@@ -39,13 +44,34 @@ class ShareViewModel @Inject constructor(
     private fun initFriendList() {
         val initList = mutableListOf<User>()
         for (i in 0..5) {
-            initList.add(User(id="$i", name="댄스", image= Uri.EMPTY, category = listOf(Category.Dance)))
+            initList.add(
+                User(
+                    id = "$i",
+                    name = "댄스",
+                    image = Uri.EMPTY,
+                    category = listOf(Category.DANCE)
+                )
+            )
         }
         for (i in 6..10) {
-            initList.add(User(id="$i", name="힙합", image= Uri.EMPTY, category = listOf(Category.Hiphop)))
+            initList.add(
+                User(
+                    id = "$i",
+                    name = "힙합",
+                    image = Uri.EMPTY,
+                    category = listOf(Category.HIPHOP)
+                )
+            )
         }
         for (i in 11..19) {
-            initList.add(User(id="$i", name="쿠키즈", image= Uri.EMPTY, category = listOf(Category.RnB)))
+            initList.add(
+                User(
+                    id = "$i",
+                    name = "쿠키즈",
+                    image = Uri.EMPTY,
+                    category = listOf(Category.RNB)
+                )
+            )
         }
         _userList.value = initList
         getFilteredFriendList(_category.value)
@@ -79,7 +105,7 @@ class ShareViewModel @Inject constructor(
     }
 
     fun isAllFriendsSelected(): Boolean {
-        return _selectedFriendIds.value.size == _filteredUserList.value.size
+        return _selectedFriendIds.value.isNotEmpty() && _selectedFriendIds.value.size == _filteredUserList.value.size
     }
 
     fun getButtonText(): String {
@@ -88,5 +114,16 @@ class ShareViewModel @Inject constructor(
 
     fun getSelectedFriends(): List<User> {
         return _userList.value.filter { _selectedFriendIds.value.contains(it.id) }
+    }
+
+    fun isAnyFriendSelected(): Boolean {
+        return _selectedFriendIds.value.isNotEmpty()
+    }
+
+    fun shareSongToFriends(songId: String) {
+//        viewModelScope.launch {
+//            repository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
+//        }
+        Log.d("uin", songId)
     }
 }

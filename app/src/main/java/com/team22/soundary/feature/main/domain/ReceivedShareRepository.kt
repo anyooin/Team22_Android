@@ -5,4 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReceivedShareRepository {
     suspend fun getShareList() : Flow<List<Share>>
+    suspend fun likeMusic(musicId: String)
+
+    suspend fun deleteLikeMusic(musicId: String)
 }

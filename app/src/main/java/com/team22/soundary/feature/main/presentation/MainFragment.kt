@@ -3,7 +3,6 @@ package com.team22.soundary.feature.main.presentation
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,8 +25,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.team22.soundary.R
 import com.team22.soundary.core.UiState
 import com.team22.soundary.databinding.FragmentMainBinding
-import com.team22.soundary.feature.share.ShareBottomSheet
+import com.team22.soundary.feature.share.presentation.share.ShareBottomSheet
 import com.team22.soundary.extensions.getDiff
+import com.team22.soundary.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -43,8 +43,8 @@ class MainFragment : Fragment() {
     private var shouldPreparePlayer: Boolean = true
     private var pausedPosition: Long = 0
     private lateinit var spinnerAdapter : ArrayAdapter<String>
+    private lateinit var loadingDialog: LoadingDialog
 
-    private var test = listOf<String>()
     private val ExoPlayer.isPaused: Boolean
         get() = !player.isPlaying && player.currentPosition != 0L
 
@@ -72,15 +72,17 @@ class MainFragment : Fragment() {
 
     private fun setupUI() {
         setSongClickListener()
-        setSpinner()
         setMediaPlayer()
         setShareButton()
+        binding.likeButton.setOnClickListener {
+            viewModel.likeMusic()
+        }
     }
 
     private fun setShareButton(){
         binding.shareImageButton.setOnClickListener {
-            val modal = ShareBottomSheet()
-            modal.show(parentFragmentManager, ShareBottomSheet.TAG)
+            val modal = ShareBottomSheet.newInstance(viewModel.getSongId())
+            modal.show(parentFragmentManager, ShareBottomSheet.MAIN_BOTTOM_SHEET)
         }
     }
 
@@ -99,8 +101,8 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun setSpinner() {
-        spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, test)
+    private fun setSpinner(friendNameList : List<String>) {
+        spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, friendNameList)
         binding.sortSpinner.adapter = spinnerAdapter
         binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -276,20 +278,41 @@ class MainFragment : Fragment() {
                                     .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
                                     .into(binding.currentImageView)
                             }
-                            spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, test)
+                            spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, uiState.data.friendNameList)
+                            loadingDialog.dismiss()
                         }
                         is UiState.Loading -> {
-
+                            loadingDialog = LoadingDialog(requireContext())
+                            loadingDialog.show()
                         }
                         is UiState.Error -> {
+                            loadingDialog.dismiss()
                             Snackbar.make(requireContext(), binding.main, "에러 발생 : " + uiState.message, Snackbar.LENGTH_LONG)
                                 .show()
+                        }
+                        is UiState.Empty -> {
+                            loadingDialog.dismiss()
+                            toggleUi()
                         }
                     }
 
                 }
             }
         }
+    }
+
+    private fun toggleUi(){
+        binding.emptyShareTextView.isGone = !binding.emptyShareTextView.isGone
+        binding.controlImageView.isGone = !binding.controlImageView.isGone
+        binding.currentImageView.isGone = !binding.currentImageView.isGone
+        binding.prevImageView.isGone = !binding.prevImageView.isGone
+        binding.nextImageView.isGone = !binding.nextImageView.isGone
+        binding.likeButton.isGone = !binding.likeButton.isGone
+        binding.shareImageButton.isGone = !binding.shareImageButton.isGone
+        binding.friendNameTextView.isGone = !binding.friendNameTextView.isGone
+        binding.friendPicImageView.isGone = !binding.friendPicImageView.isGone
+        binding.dayTextView.isGone = !binding.dayTextView.isGone
+        binding.instructionTextView.isGone = !binding.instructionTextView.isGone
     }
 
     companion object {

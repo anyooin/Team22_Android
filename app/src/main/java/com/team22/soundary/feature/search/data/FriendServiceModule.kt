@@ -1,6 +1,7 @@
 package com.team22.soundary.feature.search.data
 
-import com.team22.soundary.feature.search.data.api.FriendService
+import com.team22.soundary.di.OtherRetrofit
+import com.team22.soundary.feature.search.data.api.FriendApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ object FriendServiceModule {
 
     @Provides
     @Singleton
-    fun provideFriendService(retrofit: Retrofit): FriendService =
-        retrofit.create(FriendService::class.java)
+    fun provideFriendService(@OtherRetrofit retrofit: Retrofit): FriendApiService =
+        retrofit.create(FriendApiService::class.java)
 
 }

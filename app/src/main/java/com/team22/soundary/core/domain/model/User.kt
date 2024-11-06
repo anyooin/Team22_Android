@@ -10,4 +10,5 @@ data class User(
     val statusMessage: String = "",
     val category: List<Category> = emptyList(),
     var status: String = ""
+    val role : List<String> = emptyList()
 )

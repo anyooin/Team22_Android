@@ -32,6 +32,7 @@ object RetrofitModule {
     private const val BASE_URL = "http://103.124.101.43:8080"
     private val json = Json {
         encodeDefaults = true
+        ignoreUnknownKeys = true
         serializersModule = SerializersModule {
             contextual(Date::class, DateAsStringSerializer)
         }

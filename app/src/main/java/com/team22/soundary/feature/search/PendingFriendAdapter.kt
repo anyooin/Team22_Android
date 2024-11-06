@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team22.soundary.R
@@ -25,15 +24,18 @@ class PendingFriendAdapter(
         holder.bind(friend)
     }
 
-    class PendingFriendViewHolder(itemView: View, private val onItemClick: (User) -> Unit)
-        : RecyclerView.ViewHolder(itemView) {
+    class PendingFriendViewHolder(
+        itemView: View,
+        private val onItemClick: (User) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
 
         private val profileInitialTextView: TextView = itemView.findViewById(R.id.profile_initial_textview)
         private val userNameTextView: TextView = itemView.findViewById(R.id.user_name_textview)
+
         private var currentFriend: User? = null
 
         init {
-            // init 블록에서 setOnClickListener 호출
+            // 클릭 리스너 설정
             itemView.setOnClickListener {
                 currentFriend?.let { friend ->
                     onItemClick(friend)
@@ -42,19 +44,9 @@ class PendingFriendAdapter(
         }
 
         fun bind(friend: User) {
-            currentFriend = friend
+            currentFriend = friend // 현재 friend 객체를 저장하여 클릭 리스너에서 사용
             profileInitialTextView.text = friend.name.first().toString()
             userNameTextView.text = friend.name
-        }
-    }
-
-    class FriendDiffCallback : DiffUtil.ItemCallback<User>() {
-        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
-            return oldItem == newItem
         }
     }
 }
