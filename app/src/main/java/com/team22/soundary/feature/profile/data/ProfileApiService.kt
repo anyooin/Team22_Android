@@ -9,10 +9,11 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ProfileApiService {
-    @GET("profile")
-    suspend fun getProfile(): UserInfoResponse // profile 받기
+    @GET("/api/v1/me")
+    suspend fun getProfile(): Response<UserInfoResponse> // profile 받기
 
     //label 목록 조회
     @GET("/api/v1/labels")

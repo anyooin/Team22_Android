@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.team22.soundary.databinding.ActivitySignup2Binding
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
+import com.team22.soundary.R
 import com.team22.soundary.core.data.TokenRepositoryImpl
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
@@ -26,6 +27,7 @@ class ActivitySignup2 : AppCompatActivity() {
     private lateinit var binding: ActivitySignup2Binding
     private val viewModel: SignupViewModel by viewModels()
 
+    private var selectedImageUri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignup2Binding.inflate(layoutInflater)
@@ -35,6 +37,10 @@ class ActivitySignup2 : AppCompatActivity() {
         val categoryOrdinalList = intent.extras?.getIntArray("category")
         val categoryList = categoryOrdinalList?.map {
             getCategoryByOrdinal(it)
+        }
+
+        if (selectedImageUri == null){
+            selectedImageUri = Uri.parse("android.resource://$packageName/${R.drawable.all_logo_image}")
         }
 
 
@@ -59,8 +65,9 @@ class ActivitySignup2 : AppCompatActivity() {
                 User(
                     category = categoryList!!,
                     name = nickname!!,
-                    statusMessage = binding.signupEdittextIntro.text.toString()
-                    )
+                    statusMessage = binding.signupEdittextIntro.text.toString(),
+                    image = selectedImageUri!!
+                )
             )
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

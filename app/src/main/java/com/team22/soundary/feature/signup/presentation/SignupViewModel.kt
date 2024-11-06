@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.User
@@ -29,6 +30,7 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.invoke(kakaoToken)
                 .catch { e ->
+                    Log.e("testt",""+e.stackTraceToString())
                     val errorMessage = when (e) {
                         is IOException -> e.message
                         is IllegalStateException -> e.message

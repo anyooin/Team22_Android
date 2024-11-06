@@ -34,9 +34,9 @@ class ProfileEditedFragment : Fragment() {
 
         setupCategoryButtons()
 
-        binding.saveButton.setOnClickListener {
-            profileViewModel.loadLabels() // 저장 시 라벨 목록 조회
-        }
+        /*binding.saveButton.setOnClickListener {
+
+        }*/
     }
 
     private fun setupCategoryButtons() {

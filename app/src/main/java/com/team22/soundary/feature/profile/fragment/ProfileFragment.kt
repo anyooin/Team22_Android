@@ -1,15 +1,21 @@
 package com.team22.soundary.feature.profile.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.team22.soundary.R
 import com.team22.soundary.databinding.FragmentMypageBinding
 import com.team22.soundary.feature.profile.domain.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -17,6 +23,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val profileViewModel: ProfileViewModel by viewModels()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +37,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setProfileInfo()
         // 연필 버튼 클릭 이벤트 설정
         binding.editButton.setOnClickListener {
             // ProfileEditedFragment로 이동
@@ -43,5 +51,26 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun setProfileInfo (){
+        lifecycleScope.launch {
+            profileViewModel.userInfo.collect{
+                binding.profileTextviewName.text = it.name
+                binding.profileTextviewIntro.text = it.statusMessage
+                Glide.with(requireContext())
+                    .load(it.image)
+                    .into(binding.profileImageview)
+
+            }
+//            Log.d("uin", "" + profileViewModel.userInfo.value.statusMessage)
+//            binding.profileTextviewName.text = profileViewModel.userInfo.value.name
+//            /*binding.categoryLabel = profileViewModel.userInfo.value.labels,*/
+//            binding.profileTextviewIntro.text = profileViewModel.userInfo.value.statusMessage
+//
+//            Glide.with(requireContext())
+//                .load(profileViewModel.userInfo.value.image)
+//                .into(binding.profileImageview)
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.team22.soundary.feature.signup.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -40,6 +41,7 @@ class ActivitySignIntro : AppCompatActivity() {
                 showErrorDialog(error.message ?: UNKNOWN_ERROR)
             } else if(token != null){
                 viewModel.login(token.accessToken)
+                Log.d("accessToken:", token.accessToken)
             }
         }
     }
@@ -51,11 +53,13 @@ class ActivitySignIntro : AppCompatActivity() {
                     is LoginUiState.Initial -> {}
                     is LoginUiState.Success -> {
                         val data = state.data
-                        val intent = if(REGISTERED_USER_ROLE in data.role){
-                            Intent(this@ActivitySignIntro, MainActivity::class.java)
-                        } else {
-                            Intent(this@ActivitySignIntro,ActivitySignup::class.java)
-                        }
+                        val intent = Intent(this@ActivitySignIntro,ActivitySignup::class.java)
+
+ //                       val intent = if(REGISTERED_USER_ROLE in data.role){
+ //                           Intent(this@ActivitySignIntro, MainActivity::class.java)
+ //                       } else {
+ //                           Intent(this@ActivitySignIntro,ActivitySignup::class.java)
+ //                   }
 
                         startActivity(intent)
                         finish()
@@ -67,10 +71,10 @@ class ActivitySignIntro : AppCompatActivity() {
                         showErrorDialog(state.message ?: UNKNOWN_ERROR)
                     }
                     is LoginUiState.Pass -> {
-                        startActivity(
+                    /*    startActivity(
                             Intent(this@ActivitySignIntro,MainActivity::class.java)
                         )
-                        finish()
+                        finish()*/
                     }
                 }
             }

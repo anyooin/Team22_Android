@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.domain
 
+import android.util.Log
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.domain.model.Token
 import com.team22.soundary.core.domain.model.User
@@ -18,6 +19,13 @@ class LoginUseCase @Inject constructor(
         val token = tokenRepository.loginWithKakao(kakaoToken).first()
         tokenRepository.saveRefreshToken(token.accessToken)
         tokenRepository.saveAccessToken(token.refreshToken)
+        Log.d("testt","token = "+token)
+
+        try{
+            userRepository.getMyInfo()
+        } catch (e : Exception){
+            Log.d("testt",""+e)
+        }
 
         return userRepository.getMyInfo()
     }

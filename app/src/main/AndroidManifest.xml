@@ -5,13 +5,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
-<<<<<<< HEAD
-    <uses-permission android:name="android.permission.INTERNET"/>
 
-    <!-- Android 11 이상-->
-=======
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Android 11 이상 -->
->>>>>>> review
+
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 카메라가 없는 기기 -->
@@ -42,6 +38,8 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
                 <data android:host="oauth"
                     android:scheme="kakao${NATIVE_KEY}" />
             </intent-filter>
@@ -67,7 +65,7 @@
             android:name=".feature.signup.presentation.ActivitySignup2"
             android:exported="true"></activity>
         <activity
-            android:name=".feature.share.ShareFriendActivity"
+            android:name=".feature.share.presentation.share.ShareFriendActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" /> <!-- Widget Provider 설정 -->
         <receiver

@@ -28,7 +28,8 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-
+            getShareUseCase.invoke().collect { result ->
+                _groupedShares = result
                 _uiState.value = UiState.Success(MainUiState())
                 if (result.isNotEmpty()) updateUiState(result.entries.first().value.first(), 0)
                 else _uiState.value = UiState.Empty

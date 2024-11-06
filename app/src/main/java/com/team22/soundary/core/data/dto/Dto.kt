@@ -1,11 +1,9 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
-<<<<<<< HEAD
-=======
+
 import android.util.Log
 import com.team22.soundary.core.domain.model.Category
->>>>>>> review
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
@@ -35,10 +33,10 @@ data class SentRequestsResponse(
 
 @Serializable
 data class UserInfoDto(
-    @SerialName("displayId") val id : String?,
+    @SerialName("display_id") val id : String?,
     @SerialName("nickname") val name : String?,
     @SerialName("description") val description : String?,
-    @SerialName("profileImageUrl") val profile : String?,
+    @SerialName("profile_image_url") val profile : String?,
     @SerialName("roles") val roles : List<String>?
 )
 
@@ -119,12 +117,12 @@ data class LoginRequestDto(
 
 @Serializable
 data class UserInfoResponse(
-    @SerialName("displayId") val displayId:String?,
+    @SerialName("display_id") val displayId:String?,
     @SerialName("nickname") val nickname: String?,
-    @SerialName ("description") val description: String?,
-    @SerialName("profileImageUrI") val profileImageUrI: String?,
-    @SerialName("roles") val roles: List<String>,
-    @SerialName("labels") val labels: List<String>,
+    @SerialName("description") val description: String?,
+    @SerialName("profile_image_url") val profileImageUrl: String?,
+    @SerialName("roles") val roles: List<String>?,
+    @SerialName("labels") val labels: List<String>?,
 
 )
 
@@ -223,3 +221,11 @@ fun TokenDto.toVO() : Token =
         this.refreshToken ?: ""
     )
 
+fun UserInfoResponse.toVO(): User {
+    return User(
+        id = this.displayId ?: "",
+        name = this.nickname ?: "wldo",
+        image = Uri.parse(this.profileImageUrl),
+        statusMessage = this.description ?: "sdgsfh",
+    )
+}
