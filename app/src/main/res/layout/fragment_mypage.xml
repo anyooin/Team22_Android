@@ -141,22 +141,28 @@
         app:columnCount="3">
 
         <ImageView
+            android:id="@+id/image_one"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album1" />
+            android:src="@drawable/mypage_album1"
+            android:visibility="gone"/>
 
         <ImageView
+            android:id="@+id/image_two"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album2" />
+            android:src="@drawable/mypage_album2"
+            android:visibility="gone"/>
 
         <ImageView
+            android:id="@+id/image_three"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album3" />
+            android:src="@drawable/mypage_album3"
+            android:visibility="gone"/>
     </androidx.gridlayout.widget.GridLayout>
 
     <!-- 탈퇴하기 버튼 -->

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -93,6 +94,40 @@ class ProfileFragment : Fragment() {
                     .into(binding.profileImageview)
 
             }
+
+            profileViewModel.sentShare.collectLatest {
+                it.forEachIndexed{ idx,share ->
+                    if(idx < MAX_SENT_IMAGE){
+                        val targetUri = share.song.coverImage
+                        when(idx) {
+                            0 -> {
+                                binding.imageOne.isVisible = true
+                                Glide.with(requireContext())
+                                    .load(targetUri)
+                                    .into(binding.imageOne)
+                            }
+                            1 -> {
+                                binding.imageTwo.isVisible = true
+                                Glide.with(requireContext())
+                                    .load(targetUri)
+                                    .into(binding.imageTwo)
+                            }
+                            2 -> {
+                                binding.imageThree.isVisible = true
+                                Glide.with(requireContext())
+                                    .load(targetUri)
+                                    .into(binding.imageThree)
+                            }
+                        }
+                    } else{
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
+    }
+
+    companion object{
+        private const val MAX_SENT_IMAGE = 3
     }
 }

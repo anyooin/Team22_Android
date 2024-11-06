@@ -6,7 +6,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.data.dto.UserInfoResponse
+import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.main.domain.SentShareRepository
 import com.team22.soundary.feature.profile.data.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val sentShareRepository: SentShareRepository
 ) : ViewModel() {
     private val _userInfo = MutableStateFlow<User>(User())
     val userInfo: StateFlow<User> = _userInfo.asStateFlow()
@@ -35,9 +38,21 @@ class ProfileViewModel @Inject constructor(
     private val _image = MutableStateFlow<Uri>(Uri.EMPTY)
     val image: StateFlow<Uri> = _image.asStateFlow()
 
+    private val _sentShare = MutableStateFlow<List<Share>>(emptyList())
+    val sentShare = _sentShare.asStateFlow()
+
     init {
         getProfile()
+        getSentShare()
         Log.d("uin","vm init")
+    }
+
+    fun getSentShare(){
+        viewModelScope.launch {
+            sentShareRepository.getShareList().collect{
+                _sentShare.value = it
+            }
+        }
     }
     fun getProfile() {
         viewModelScope.launch {
