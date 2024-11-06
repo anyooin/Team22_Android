@@ -21,7 +21,11 @@ class GetShareUseCase @Inject constructor(
             sent.forEach{
                 modifiedSent.add(
                     it.copy(
-                        friend = me
+                        friend = me.copy(
+                            name = "나"
+                        ),
+                        isReceived = false,
+
                     )
                 )
             }
