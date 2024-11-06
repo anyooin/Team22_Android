@@ -1,5 +1,7 @@
 package com.team22.soundary.feature.profile.fragment
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.team22.soundary.R
 import com.team22.soundary.databinding.FragmentMypageBinding
 import com.team22.soundary.feature.profile.domain.ProfileViewModel
+import com.team22.soundary.feature.signup.presentation.ActivitySignIntro
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +53,10 @@ class ProfileFragment : Fragment() {
                 .addToBackStack(null) // 백스택에 추가하여 뒤로 가기 버튼을 사용할 수 있게 함
                 .commit()
         }
+        // "탈퇴하기" 버튼 클릭 이벤트 설정
+        binding.logoutButton.setOnClickListener {
+            showDeleteAccountDialog()
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             profileViewModel.selectedCategories.collect { categories ->
                 binding.categoryLabel.text = categories.joinToString(", ")
@@ -63,6 +70,29 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
+    private fun showDeleteAccountDialog() {
+        AlertDialog.Builder(requireContext())
+            .setMessage("정말 탈퇴하시겠습니까?")
+            .setPositiveButton("예") { _, _ ->
+                deleteUserAccount()
+            }
+            .setNegativeButton("아니요") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun deleteUserAccount() {
+        lifecycleScope.launch {
+            try {
+                profileViewModel.deleteUserAccount()
+                // 탈퇴 성공 시 메인 화면으로 이동하거나 로그아웃 처리
+                navigateToLoginScreen()
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "회원 탈퇴 실패: ${e.message}")
+            }
+        }
+    }
     fun setProfileInfo() {
         lifecycleScope.launch {
             profileViewModel.userInfo.collect {
@@ -126,6 +156,13 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    private fun navigateToLoginScreen() {
+        val intent = Intent(requireContext(), ActivitySignIntro::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
 
     companion object{
         private const val MAX_SENT_IMAGE = 3

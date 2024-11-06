@@ -74,4 +74,13 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteUserAccount() {
+        val response = withContext(dispatcher) {
+            apiService.deleteUserAccount()
+        }
+        if(!response.isSuccessful) {
+            throw Exception("회원 탈퇴 실패: ${response.message()}")
+        }
+    }
+
 }

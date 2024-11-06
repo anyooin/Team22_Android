@@ -13,5 +13,7 @@ interface ProfileRepository {
     suspend fun addLabels(labels: List<String>)
     suspend fun deleteLabel(label: String)
 
+    suspend fun deleteUserAccount()
+
     suspend fun editedProfile(displayId: String, nickname: String, description: String?, profileUri: Uri?)
 }

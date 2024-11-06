@@ -92,6 +92,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    suspend fun deleteUserAccount() {
+        profileRepository.deleteUserAccount()
+    }
+
 
     fun setProfile(name: String, intro: String, profile: Uri) {
         val displayId = _userInfo.value.id

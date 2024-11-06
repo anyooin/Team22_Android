@@ -23,6 +23,10 @@ interface ProfileApiService {
         @Body userUpdateRequest: UserUpdateRequest
     ) : Response<Void>
 
+    //profile 탈퇴
+    @DELETE("/api/v1/me")
+    suspend fun deleteUserAccount() : Response<Void>
+
     //label 목록 조회
     @GET("/api/v1/labels")
     suspend fun getLabels(): Response<LabelView>
