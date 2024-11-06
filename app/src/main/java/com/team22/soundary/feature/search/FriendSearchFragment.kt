@@ -1,8 +1,6 @@
 package com.team22.soundary.feature.search
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,12 +66,6 @@ class FriendSearchFragment : Fragment() {
         setupRecyclerViews()
 
         observeViewModel()
-
-        setupSearchFunctionality()
-
-        binding.cancelButton.setOnClickListener {
-            binding.searchEditText.text.clear()
-        }
     }
 
     override fun onDestroyView() {
@@ -124,6 +116,13 @@ class FriendSearchFragment : Fragment() {
             .commit()
     }
 
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            friendSearchViewModel.loadFriends()
+        }
+    }
+
     private fun createFriendAdapter(
         onDeleteClick: ((User) -> Unit)? = null
     ) = FriendAdapter(
@@ -171,21 +170,5 @@ class FriendSearchFragment : Fragment() {
         }
 
 
-    }
-
-    private fun setupSearchFunctionality() {
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                if (query.isEmpty()) {
-                    friendSearchViewModel.resetFilters()
-                } else {
-                    friendSearchViewModel.filterFriends(query)
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
     }
 }

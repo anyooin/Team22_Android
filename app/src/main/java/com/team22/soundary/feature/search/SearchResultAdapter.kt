@@ -28,6 +28,7 @@ class SearchResultAdapter(
         fun bind(user: User) {
             binding.userNameTextview.text = user.name
             binding.userIdTextview.text = user.id
+            binding.profileInitialTextview.text = user.name.first().toString()
 
             // 버튼 상태 초기화
             if (isFriendRequested(user)) {

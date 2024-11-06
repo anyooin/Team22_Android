@@ -58,34 +58,32 @@ class FriendRepository @Inject constructor(
 
 
     // 보낸 친구 요청 목록 가져오기
-    suspend fun getSentRequests(): List<User> {
-        return try {
-            val response = friendApiService.getSentRequests()
-            //Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
-            //Log.d("testt","getSent2" + response.body()?.sentRequests)
-            if (response.isSuccessful) {
-                response.body()?.sentRequests?.map { it.toVO() }?: emptyList()
-            } else {
-                emptyList()
+    suspend fun getSentRequests(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getSentRequests()
+                Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
+                Log.d("testt","getSent2" + response.body()?.sentRequests)
+                if (response.isSuccessful) {
+                    emit(response.body()?.sentRequests?.map { it.toVO() }?: emptyList())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
         }
     }
 
     // 받은 친구 요청 목록 가져오기
-    suspend fun getReceivedRequests(): List<User> {
-        return try {
-            val response = friendApiService.getReceivedRequests()
-            if (response.isSuccessful) {
-                response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList()
-            } else {
-                emptyList()
+    suspend fun getReceivedRequests(): Flow<List<User>> {
+        return flow {
+            try {
+                val response = friendApiService.getReceivedRequests()
+                if (response.isSuccessful) {
+                    emit(response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emptyList()
         }
     }
 
