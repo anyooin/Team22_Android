@@ -1,7 +1,5 @@
 package com.team22.soundary.feature.search
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.domain.model.User
@@ -37,12 +35,13 @@ class FriendSearchViewModel @Inject constructor(
 
     // 친구 신청 메서드
     fun requestFriend(user: User) {
+        if (isFriend(user)){
+            return
+        }
         viewModelScope.launch {
             val isRequested = friendRepository.addFriend(userId, user.id)
             if (isRequested) {
-                val updatedPendingFriends = _pendingFriends.value.toMutableList()
-                updatedPendingFriends.add(user)
-                _pendingFriends.value = updatedPendingFriends
+                loadPendingFriends()
             }
         }
     }
@@ -54,6 +53,14 @@ class FriendSearchViewModel @Inject constructor(
             _myFriends.value = allFriends.filter { it.status == "accepted" }
             _newFriends.value = friendRepository.getReceivedRequests(userId = userId)
             _pendingFriends.value = friendRepository.getSentRequests(userId = userId)
+        }
+    }
+
+    // 서버에서 PendingFriends 목록을 다시 불러오는 메서드
+    private fun loadPendingFriends() {
+        viewModelScope.launch {
+            val sentRequests = friendRepository.getSentRequests(userId)
+            _pendingFriends.value = sentRequests
         }
     }
 
@@ -69,8 +76,6 @@ class FriendSearchViewModel @Inject constructor(
     fun searchUser(searchName: String) {
         viewModelScope.launch {
             val searchResult = friendRepository.searchUserByDisplayId(searchName)
-
-            Log.d("testt","in Viewmodel : "+searchResult+" ,"+searchName)
             searchResult?.let {
                 _searchResultList.value = listOf(it)
             } ?: run {

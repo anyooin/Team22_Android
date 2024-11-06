@@ -24,10 +24,9 @@ class FriendSearchFragment : Fragment() {
     private lateinit var newFriendsAdapter: FriendAdapter
     private lateinit var myFriendsAdapter: FriendAdapter
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
-    private lateinit var searchResultAdapter: SearchResultAdapter  // 검색 결과 어댑터 추가
+    private lateinit var searchResultAdapter: SearchResultAdapter
     private var _binding: FragmentFriendSearchBinding? = null
     private val binding get() = _binding!!
-    private val user: String = "user" // TODO: 로그인 기능으로 수정 필요
 
     private val friendSearchViewModel: FriendSearchViewModel by viewModels()
 
@@ -43,37 +42,36 @@ class FriendSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터 초기화
+        // Initialize adapters
         newFriendsAdapter = createFriendAdapter(onAcceptClick = { friend ->
-            friendSearchViewModel.acceptFriend(friend) // `User` 객체만 전달
+            friendSearchViewModel.acceptFriend(friend)
         }, onDeclineClick = { friend ->
-            friendSearchViewModel.declineFriend(friend) // `User` 객체만 전달
+            friendSearchViewModel.declineFriend(friend)
         })
 
         myFriendsAdapter = createFriendAdapter(onDeleteClick = { friend ->
-            friendSearchViewModel.deleteFriend(friend) // `User` 객체만 전달
+            friendSearchViewModel.deleteFriend(friend)
         })
 
         pendingFriendsAdapter = PendingFriendAdapter { friend ->
             navigateToFriendProfile(friend.id)
         }
 
-        // 검색 결과 어댑터 초기화
         searchResultAdapter = SearchResultAdapter { user ->
-            friendSearchViewModel.requestFriend(user) // 검색 결과에서 추가된 사용자 처리
-            Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
+            if (friendSearchViewModel.isFriend(user)) {
+                Toast.makeText(requireContext(), "이미 친구 목록에 있습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                friendSearchViewModel.requestFriend(user)
+                Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        // RecyclerView 설정
         setupRecyclerViews()
 
-        // ViewModel의 StateFlow 관찰
         observeViewModel()
 
-        // 검색 기능 추가
         setupSearchFunctionality()
 
-        // 취소 버튼 클릭 시 검색창 초기화
         binding.cancelButton.setOnClickListener {
             binding.searchEditText.text.clear()
         }
@@ -104,7 +102,6 @@ class FriendSearchFragment : Fragment() {
             }
         }
 
-        // 검색 결과 관찰 및 어댑터에 전달
         viewLifecycleOwner.lifecycleScope.launch {
             friendSearchViewModel.searchResultList.collectLatest { searchResults ->
                 searchResultAdapter.submitList(searchResults)
@@ -116,7 +113,6 @@ class FriendSearchFragment : Fragment() {
         binding.friendsListTitle.text = "내 친구 ($count/20)"
     }
 
-    // 친구 프로필 화면으로 이동하는 함수로 중복 제거
     private fun navigateToFriendProfile(friendId: String) {
         val fragment = FriendProfileFragment().apply {
             arguments = Bundle().apply {
@@ -129,7 +125,6 @@ class FriendSearchFragment : Fragment() {
             .commit()
     }
 
-    // 어댑터 생성 함수로 중복 제거
     private fun createFriendAdapter(
         onAcceptClick: ((User) -> Unit)? = null,
         onDeclineClick: ((User) -> Unit)? = null,
@@ -140,8 +135,6 @@ class FriendSearchFragment : Fragment() {
         onDeclineClick = onDeclineClick,
         onDeleteClick = onDeleteClick
     )
-
-    // RecyclerView 설정을 함수로 분리
     private fun setupRecyclerViews() {
         binding.newFriendsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -158,11 +151,12 @@ class FriendSearchFragment : Fragment() {
             adapter = pendingFriendsAdapter
         }
 
-        // 대기 중인 친구 섹션 토글 기능
+
         binding.pendingFriendsHeader.setOnClickListener {
             binding.pendingFriendsRecyclerView.visibility =
                 if (binding.pendingFriendsRecyclerView.visibility == View.GONE) View.VISIBLE else View.GONE
         }
+
         binding.searchEditText.setOnClickListener {
             val fragment = SearchResultFragment()
             requireActivity().supportFragmentManager.beginTransaction()
@@ -172,15 +166,14 @@ class FriendSearchFragment : Fragment() {
         }
     }
 
-    // 검색 기능 설정 함수로 분리
     private fun setupSearchFunctionality() {
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
                 if (query.isEmpty()) {
-                    friendSearchViewModel.resetFilters() // 검색어가 없을 경우 필터 초기화
+                    friendSearchViewModel.resetFilters()
                 } else {
-                    friendSearchViewModel.filterFriends(query) // 검색어에 따라 친구 목록 필터링
+                    friendSearchViewModel.filterFriends(query)
                 }
             }
 
@@ -188,5 +181,4 @@ class FriendSearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
-
 }

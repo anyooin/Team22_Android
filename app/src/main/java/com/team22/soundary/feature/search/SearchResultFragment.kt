@@ -3,7 +3,6 @@ package com.team22.soundary.feature.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +65,6 @@ class SearchResultFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             friendSearchViewModel.searchResultList.collectLatest { searchResults ->
-                Log.d("testt",""+searchResults)
                 searchResultAdapter.submitList(searchResults)
             }
         }
