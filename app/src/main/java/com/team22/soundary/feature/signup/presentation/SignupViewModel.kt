@@ -30,7 +30,6 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase.invoke(kakaoToken)
                 .catch { e ->
-                    Log.e("testt", "" + e.stackTraceToString())
                     val errorMessage = when (e) {
                         is IOException -> e.message
                         is IllegalStateException -> e.message
@@ -57,15 +56,8 @@ class SignupViewModel @Inject constructor(
     fun checkTokenValidity() {
         viewModelScope.launch {
             try {
-                if(checkTokenUseCase.invoke()) {
-                    _loginUiState.value = LoginUiState.Pass
-                    Log.d("akuby", "invoked")
-                } else {
-                    _loginUiState.value = LoginUiState.Initial
-                    Log.d("akuby", "init")
-                }
-//                _loginUiState.value = LoginUiState.Pass
-//                Log.d("testt", "invoked")
+                checkTokenUseCase.invoke()
+                _loginUiState.value = LoginUiState.Pass
             } catch (e: Exception) {
                 _loginUiState.value = LoginUiState.Initial
             }
