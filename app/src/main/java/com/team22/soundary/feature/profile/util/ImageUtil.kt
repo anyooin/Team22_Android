@@ -8,7 +8,12 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
+import android.net.Uri
 import com.team22.soundary.R
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class ImageUtil {
@@ -33,5 +38,19 @@ class ImageUtil {
         paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
         canvas.drawBitmap(bitmap, rect, rect, paint)
         return output
+    }
+
+    fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
+        return try {
+            val url = URL(uri.toString())
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+            getCircularBitmap(BitmapFactory.decodeStream(input))
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 }
