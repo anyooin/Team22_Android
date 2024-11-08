@@ -1,17 +1,14 @@
-package com.team22.soundary.feature.profile.domain
+package com.team22.soundary.feature.profile.fragment
 
 import android.net.Uri
-import android.provider.ContactsContract.Profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team22.soundary.core.data.dto.UserInfoResponse
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.main.domain.SentShareRepository
-import com.team22.soundary.feature.profile.data.ProfileRepository
-import com.team22.soundary.feature.signup.presentation.SignupViewModel
+import com.team22.soundary.feature.profile.domain.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

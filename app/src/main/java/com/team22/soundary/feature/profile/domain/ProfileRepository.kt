@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.profile.data
+package com.team22.soundary.feature.profile.domain
 
 import android.net.Uri
 import com.team22.soundary.core.domain.model.User

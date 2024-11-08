@@ -17,12 +17,9 @@ import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.getCategoryMap
 import com.team22.soundary.core.domain.model.stringListToEnumList
 import com.team22.soundary.databinding.FragmentMypageBinding
-import com.team22.soundary.feature.profile.domain.ProfileViewModel
 import com.team22.soundary.feature.signup.presentation.ActivitySignIntro
 import com.team22.soundary.feature.signup.presentation.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -142,7 +139,7 @@ class ProfileFragment : Fragment() {
                     else if (user != null) {
                         user.kakaoAccount?.let {account ->
                             account.email?.let{
-                                binding.profileTextviewEmail.text = it
+                                binding.profileTextviewDisplayid.text = it
                             }
                         }
                     }

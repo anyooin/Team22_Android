@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.profile.data
+package com.team22.soundary.feature.profile.data.remote
 
 import com.team22.soundary.core.data.dto.LabelAddRequest
 import com.team22.soundary.core.data.dto.LabelView
