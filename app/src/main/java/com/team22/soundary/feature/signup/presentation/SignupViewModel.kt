@@ -25,24 +25,17 @@ class SignupViewModel @Inject constructor(
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
 
-    private val _selectedCategories = MutableStateFlow<List<String>>(emptyList())
-    val selectedCategories: StateFlow<List<String>> = _selectedCategories.asStateFlow()
-
-    fun saveSelectedCategories(categories: List<String>) {
-        _selectedCategories.value = categories
-    }
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
             loginUseCase.invoke(kakaoToken)
                 .catch { e ->
-                    Log.e("testt",""+e.stackTraceToString())
+                    Log.e("testt", "" + e.stackTraceToString())
                     val errorMessage = when (e) {
                         is IOException -> e.message
                         is IllegalStateException -> e.message
                         else -> e.message
                     }
-
                     _loginUiState.value = LoginUiState.Error(errorMessage)
                 }
                 .collect { result ->
@@ -53,19 +46,26 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(user: User) {
+    fun updateUserInfo(user: User) : Boolean {
+        var result = true
         viewModelScope.launch {
-            userDetailUpdateUseCase.updateUserInfo(user)
-
+            result = userDetailUpdateUseCase.updateUserInfo(user)
         }
+        return result
     }
 
     fun checkTokenValidity() {
         viewModelScope.launch {
             try {
-                checkTokenUseCase.invoke()
-                _loginUiState.value = LoginUiState.Pass
-                Log.d("testt","invoked")
+                if(checkTokenUseCase.invoke()) {
+                    _loginUiState.value = LoginUiState.Pass
+                    Log.d("akuby", "invoked")
+                } else {
+                    _loginUiState.value = LoginUiState.Initial
+                    Log.d("akuby", "init")
+                }
+//                _loginUiState.value = LoginUiState.Pass
+//                Log.d("testt", "invoked")
             } catch (e: Exception) {
                 _loginUiState.value = LoginUiState.Initial
             }

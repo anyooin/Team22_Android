@@ -76,7 +76,7 @@
             android:text="@string/category_jpop" />
 
         <RadioButton
-            android:id="@+id/category_dance"
+            android:id="@+id/category_kpop"
             style="@style/bottomSheetCategory"
             android:text="@string/category_kpop" />
     </RadioGroup>

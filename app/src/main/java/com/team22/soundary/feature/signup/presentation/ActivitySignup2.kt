@@ -35,18 +35,20 @@ class ActivitySignup2 : AppCompatActivity() {
         binding = ActivitySignup2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nickname = intent.extras?.getString("nickname")
-        val categoryOrdinalList = intent.extras?.getIntArray("category")
-        Log.d("aaaaasddfsafqf",""+categoryOrdinalList)
-        val categoryList = categoryOrdinalList?.map {
-            Log.d("asdfdas",""+it)
-            getCategoryByOrdinal(it)
-        }
+        val nickname = intent.extras?.getString(KEY_NICKNAME) ?: ""
+        val displayId = intent.extras?.getString(KEY_DISPLAY_ID) ?: ""
+        val label = intent.extras?.getStringArrayList(KEY_LABEL) ?: emptyList()
+//        val categoryOrdinalList = intent.extras?.getIntArray("category")
+//        Log.d("aaaaasddfsafqf",""+categoryOrdinalList)
+//        val categoryList = categoryOrdinalList?.map {
+//            Log.d("asdfdas",""+it)
+//            getCategoryByOrdinal(it)
+//        }
 
-        if (selectedImageUri == null){
-            selectedImageUri = Uri.parse("android.resource://$packageName/${R.drawable.all_logo_image}")
+        if (selectedImageUri == null) {
+            selectedImageUri =
+                Uri.parse("android.resource://$packageName/${R.drawable.all_logo_image}")
         }
-
 
         // 갤러리 접근 권한 요청
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -62,26 +64,7 @@ class ActivitySignup2 : AppCompatActivity() {
             }
         }
 
-        // 가입하기 버튼 클릭 시 MainActivity로 이동
-        binding.signupButtonSubmit.setOnClickListener {
-
-            lifecycleScope.launch{
-                // 가입 완료 처리 후 MainActivity로 이동
-                viewModel.updateUserInfo(
-                    User(
-                        category = categoryList!!,
-                        name = nickname!!,
-                        statusMessage = binding.signupEdittextIntro.text.toString(),
-                        image = selectedImageUri!!
-                    )
-                )
-
-            }
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
-        }
+        setSignupButton(nickname, displayId, label)
     }
 
     // 권한이 부여된 후 갤러리에 접근하는 함수
@@ -125,11 +108,44 @@ class ActivitySignup2 : AppCompatActivity() {
         }
     }
 
+    private fun setSignupButton(nickname: String, displayId: String, label: List<String>) {
+        var result = true
+        binding.signupButtonSubmit.setOnClickListener {
+            lifecycleScope.launch {
+                // 가입 완료 처리 후 MainActivity로 이동
+                result = viewModel.updateUserInfo(
+                    User(
+                        //category = categoryList!!,
+                        label = label,
+                        displayId = displayId,
+                        name = nickname!!,
+                        statusMessage = binding.signupEdittextIntro.text.toString(),
+                        image = selectedImageUri!!
+                    )
+                )
+            }
+            if (result) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "중복된 ID값", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, ActivitySignup::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
     private fun getCategoryByOrdinal(ordinal: Int): Category = Category.entries[ordinal]
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 100
         private const val GALLERY_REQUEST_CODE = 101
+
+        const val KEY_NICKNAME = "nickname"
+        const val KEY_DISPLAY_ID = "displayId"
+        const val KEY_LABEL = "label"
     }
 
 }

@@ -3,7 +3,7 @@ package com.team22.soundary.feature.profile.data
 import android.net.Uri
 import android.util.Log
 import com.team22.soundary.core.IODispatcher
-import com.team22.soundary.core.data.dto.LabelAdd
+import com.team22.soundary.core.data.dto.LabelAddRequest
 import com.team22.soundary.core.data.dto.UserUpdateRequest
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
@@ -38,7 +38,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun addLabels(labels:List<String>) {
         val response = withContext(dispatcher) {
-            apiService.addLabels(LabelAdd(labels))
+            apiService.addLabels(LabelAddRequest(labels))
         }
 
         if (!response.isSuccessful) {

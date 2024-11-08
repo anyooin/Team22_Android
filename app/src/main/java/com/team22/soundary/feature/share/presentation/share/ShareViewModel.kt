@@ -101,6 +101,5 @@ class ShareViewModel @Inject constructor(
         viewModelScope.launch {
             shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
         }
-        Log.d("uin", songId)
     }
 }

@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 class CheckTokenUseCase @Inject constructor(
     private val tokenRepository: TokenRepository,
-    private val userRepository: UserRepository
 ) {
     suspend fun invoke(): Boolean =
         try {

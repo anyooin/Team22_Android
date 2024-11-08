@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team22.soundary.R
-import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.core.domain.model.stringToCategory
 import com.team22.soundary.databinding.BottomSheetBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -110,15 +110,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
                         viewModel.getFilteredFriendList(null)
                     } else {
                         lastCheckedRadioButtonId = checkedId
-                        val category = when (checkedId) {
-                            R.id.category_rnb -> Category.RNB
-                            R.id.category_hiphop -> Category.HIPHOP
-                            R.id.category_pop -> Category.POP
-                            R.id.category_rock -> Category.ROCK
-                            R.id.category_jpop -> Category.JPOP
-                            R.id.category_dance -> Category.KPOP
-                            else -> null
-                        }
+                        val category = stringToCategory(selectedRadioButton.text.toString())
                         viewModel.getFilteredFriendList(category)
                     }
                 }
@@ -154,13 +146,11 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
     }
 
     companion object {
-        const val TAG = "TempTag" // Main에서 호출할때 MAIN_BOTTOM_SHEET로 바꾸고 없애야함
         const val MAIN_BOTTOM_SHEET = "MainBottomSheet"
         const val SHARE_BOTTOM_SHEET = "ShareBottomSheet"
 
         private const val KEY_ID = "id"
 
-        // Main에서 val modal = ShareBottomSheet.newInstance(songId값) 으로 생성하고 show해주면 됨
         fun newInstance(songId: String): ShareBottomSheet {
             val fragment = ShareBottomSheet()
             val args = Bundle()

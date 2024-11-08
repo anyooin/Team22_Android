@@ -1,8 +1,6 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
-import android.util.Log
-import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
@@ -94,8 +92,8 @@ data class TrackListDto(
 
 @Serializable
 data class TrackDto(
-    @SerialName("platform") val platform: String? = null,
-    @SerialName("track_id") val platformTrackId: String? = null,
+    @SerialName("platform") val platform: String? = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String? = null,
     @SerialName("title") val title: String? = null,
     @SerialName("artists") val artist: List<String>? = null,
     @SerialName("duration") val duration: Int? = null,
@@ -140,7 +138,7 @@ data class LabelView(
     )
 
 @Serializable
-data class LabelAdd(
+data class LabelAddRequest(
     @SerialName("labels") val labels: List<String>
 )
 
@@ -150,7 +148,7 @@ data class RefreshRequestDto(
 
 @Serializable
 data class UserInfoInitRequestDto(
-    @SerialName("labels") val category : List<Category>,
+    @SerialName("labels") val category : List<String>,
     @SerialName("device_token") val deviceToken : String = "",
     @SerialName("display_id") val displayId : String,
     @SerialName("nickname") val nickname: String,
