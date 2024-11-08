@@ -52,9 +52,9 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(user: User) {
+    fun updateUserInfo(token:String,user: User) {
         viewModelScope.launch {
-            userDetailUpdateUseCase.updateUserInfo(user)
+            userDetailUpdateUseCase.updateUserInfo(token,user)
 
         }
     }

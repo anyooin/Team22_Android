@@ -23,12 +23,12 @@ class UserDetailUpdateUseCase @Inject constructor(
     private val tokenRepository: TokenRepository
 ) {
 
-    suspend fun updateUserInfo(user: User) {
+    suspend fun updateUserInfo(token:String, user: User) {
         val response = withContext(dispatcher){
             userService.updateMyInfo(
                 UserInfoInitRequestDto(
                     user.category,
-                    "",
+                    token,
                     user.id,
                     user.name,
                     user.statusMessage,

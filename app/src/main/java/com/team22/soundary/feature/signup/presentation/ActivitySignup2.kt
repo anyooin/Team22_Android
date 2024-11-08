@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.messaging.FirebaseMessaging
 import com.team22.soundary.databinding.ActivitySignup2Binding
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
@@ -67,14 +68,20 @@ class ActivitySignup2 : AppCompatActivity() {
 
             lifecycleScope.launch{
                 // 가입 완료 처리 후 MainActivity로 이동
-                viewModel.updateUserInfo(
-                    User(
-                        category = categoryList!!,
-                        name = nickname!!,
-                        statusMessage = binding.signupEdittextIntro.text.toString(),
-                        image = selectedImageUri!!
+                FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                    if(it.isSuccessful) Log.d("akuby21",it.result)
+
+                    viewModel.updateUserInfo(
+                        it.result,
+                        User(
+                            category = categoryList!!,
+                            name = nickname!!,
+                            statusMessage = binding.signupEdittextIntro.text.toString(),
+                            image = selectedImageUri!!
+                        )
                     )
-                )
+                }
+
 
             }
             val intent = Intent(this, MainActivity::class.java)
