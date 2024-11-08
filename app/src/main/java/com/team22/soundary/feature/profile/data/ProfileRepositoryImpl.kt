@@ -7,6 +7,8 @@ import com.team22.soundary.core.data.dto.LabelAddRequest
 import com.team22.soundary.core.data.dto.UserUpdateRequest
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.profile.data.remote.ProfileApiService
+import com.team22.soundary.feature.profile.domain.ProfileRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

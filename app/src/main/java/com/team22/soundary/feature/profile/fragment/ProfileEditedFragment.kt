@@ -19,11 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team22.soundary.databinding.FragmentMypageEditBinding
-import com.team22.soundary.feature.profile.domain.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -67,7 +65,7 @@ class ProfileEditedFragment : Fragment() {
             binding.buttonRock,
             binding.buttonPop,
             binding.buttonJpop,
-            binding.buttonBallad,
+            binding.buttonKpop,
             binding.buttonKpop
         )
 
