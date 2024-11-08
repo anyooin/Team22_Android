@@ -6,16 +6,32 @@
     android:background="@android:color/white"
     android:padding="@dimen/padding_normal">
 
+    <ImageView
+        android:id="@+id/back_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/all_icon_back"
+        android:contentDescription="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_top_textview"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_top_textview"
+        android:layout_margin="@dimen/padding_normal" />
+
+    <TextView
+        android:id="@+id/profile_top_textview"
+        style="@style/shareTopTextStyle"
+        android:text="@string/profile_edit_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- 프로필 이미지 - CardView로 감쌈 -->
     <androidx.cardview.widget.CardView
         android:id="@+id/profile_cardview"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="75dp"
-        app:cardElevation="4dp"
+        style="@style/ProfileImageCardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/profile_top_textview">
 
         <ImageView
             android:id="@+id/profile_imageview"
@@ -24,140 +40,112 @@
             android:contentDescription="@string/share_album_image"
             android:scaleType="centerCrop"
             android:src="@drawable/all_profile_placeholder" />
+
     </androidx.cardview.widget.CardView>
 
-    <!-- 한줄 소개 수정 -->
-
-    <!-- 카테고리 설정 -->
-
-    <!-- GridLayout 추가 -->
-
-    <!--저장-->
-
-
+    <!-- 닉네임 수정 -->
     <EditText
         android:id="@+id/profile_name_edit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="24dp"
-        android:hint="닉네임을 수정하세요."
-        android:text="닉네임"
+        android:hint="@string/signup_nickname_hint"
+        android:maxLength="8"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_cardview" />
 
+    <!-- 한줄 소개 수정 -->
     <EditText
         android:id="@+id/profile_intro_edit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
         android:hint="@string/signup_introduce_hint"
-        android:text="@string/mypage_introduce"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_cardview" />
+        app:layout_constraintTop_toBottomOf="@id/profile_name_edit" />
 
-    <Button
-        android:id="@+id/button_rock"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="104dp"
-        android:text="@string/category_rock"
-        app:layout_constraintEnd_toStartOf="@id/button_pop"
-        app:layout_constraintStart_toEndOf="@id/button_hiphop"
-        app:layout_constraintTop_toBottomOf="@id/category_title" />
-
-    <Button
-        android:id="@+id/button_hiphop"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="104dp"
-        android:text="@string/category_hiphop"
-        app:layout_constraintEnd_toStartOf="@id/button_rock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_title" />
-
-    <Button
-        android:id="@+id/button_kpop"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="12dp"
-        android:text="@string/category_kpop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_ballad"
-        app:layout_constraintTop_toBottomOf="@id/button_pop" />
-
-    <Button
-        android:id="@+id/button_pop"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="104dp"
-        android:text="@string/category_pop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_rock"
-        app:layout_constraintTop_toBottomOf="@id/category_title" />
-
-    <Button
-        android:id="@+id/button_jpop"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="16dp"
-        android:text="@string/category_jpop"
-        app:layout_constraintEnd_toStartOf="@id/button_ballad"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_hiphop" />
-
-    <Button
-        android:id="@+id/button_ballad"
-        style="@style/CategoryEditButton"
-        android:layout_marginTop="4dp"
-        android:text="@string/category_rnb"
-        app:layout_constraintEnd_toStartOf="@id/button_kpop"
-        app:layout_constraintStart_toEndOf="@id/button_jpop"
-        app:layout_constraintTop_toBottomOf="@id/button_rock" />
-
-
-    <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/category_grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:columnCount="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_title">
-
-        <!-- 카테고리 버튼들 -->
-
-    </androidx.gridlayout.widget.GridLayout>
-
+    <!-- 카테고리 -->
     <TextView
         android:id="@+id/category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/mypage_category_setting"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/signup_category_title"
+        android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_intro_edit" />
 
+    <GridLayout
+        android:id="@+id/signup_category_grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="@dimen/margin_half"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_title">
+
+        <ToggleButton
+            android:id="@+id/button_rnb"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_rnb"
+            android:textOn="@string/category_rnb" />
+
+        <ToggleButton
+            android:id="@+id/button_hiphop"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_hiphop"
+            android:textOn="@string/category_hiphop" />
+
+        <ToggleButton
+            android:id="@+id/button_pop"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_pop"
+            android:textOn="@string/category_pop" />
+
+        <ToggleButton
+            android:id="@+id/button_rock"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_rock"
+            android:textOn="@string/category_rock" />
+
+        <ToggleButton
+            android:id="@+id/button_jpop"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_jpop"
+            android:textOn="@string/category_jpop" />
+
+        <ToggleButton
+            android:id="@+id/button_kpop"
+            style="@style/CategoryEditButton"
+            android:textOff="@string/category_kpop"
+            android:textOn="@string/category_kpop" />
+
+    </GridLayout>
+
+    <!--저장-->
     <Button
         android:id="@+id/save_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/yellow_300"
+        android:backgroundTint="@color/black"
         android:text="저장하기"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_grid"
-        app:layout_constraintVertical_bias="0.845" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

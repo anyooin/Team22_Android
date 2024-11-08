@@ -67,7 +67,7 @@
     <string name="mypage_save">저장하기</string>
 
     <!--category-->
-    <string name="mypage_category_setting">카테고리 설정</string>
+    <string name="mypage_category_setting">카테고리</string>
     <string name="category_rnb">RNB</string>
     <string name="category_hiphop">HIPHOP</string>
     <string name="category_pop">POP</string>
@@ -77,9 +77,12 @@
     <string name="category_ballad">BALLADE</string>
 
     <!--profile-->
+    <string name="profile_title">마이페이지</string>
+    <string name="profile_edit_title">내 정보 수정</string>
     <string name="user_name">쿠키즈</string>
     <string name="user_id">\@kookoo</string>
     <string name="user_email">\kookoo@naver.com</string>
+    <string name="user_introduce">\"한 줄 소개글\"</string>
 
     <string name="state_message">안녕? 나 쿠키즈!</string>
 
