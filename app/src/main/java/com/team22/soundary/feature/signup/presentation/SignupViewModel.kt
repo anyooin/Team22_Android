@@ -25,12 +25,6 @@ class SignupViewModel @Inject constructor(
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
 
-    private val _selectedCategories = MutableStateFlow<List<String>>(emptyList())
-    val selectedCategories: StateFlow<List<String>> = _selectedCategories.asStateFlow()
-
-    fun saveSelectedCategories(categories: List<String>) {
-        _selectedCategories.value = categories
-    }
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
         viewModelScope.launch {
@@ -41,7 +35,6 @@ class SignupViewModel @Inject constructor(
                         is IllegalStateException -> e.message
                         else -> e.message
                     }
-
                     _loginUiState.value = LoginUiState.Error(errorMessage)
                 }
                 .collect { result ->
@@ -52,11 +45,12 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(token:String,user: User) {
+    fun updateUserInfo(token:String,user: User) : Boolean {
+        var result = true
         viewModelScope.launch {
-            userDetailUpdateUseCase.updateUserInfo(token,user)
-
+            result = userDetailUpdateUseCase.updateUserInfo(token,user)
         }
+        return result
     }
 
     fun checkTokenValidity() {

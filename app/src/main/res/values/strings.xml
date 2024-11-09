@@ -78,7 +78,6 @@
     <string name="category_rnb">RNB</string>
 
     <!--profile-->
-    <string name ="profile_name">쿠</string>
     <string name="user_name">쿠키즈</string>
     <string name="user_id">\@kookoo</string>
     <string name="user_email">\kookoo@naver.com</string>
@@ -93,19 +92,6 @@
     <string name="genre_Jpop">JPOP</string>
 
     <string name="add_friend">친구 추가</string>
-    <string name = "request">신청</string>
-    <string name="delete_friend">삭제 </string>
-    <string name ="accept_request">수락</string>
-    <string name="reject_request">거절</string>
-    <string name="search">검색</string>
-
-    <string name="new_friend">새로운 친구</string>
-    <string name="pending_friend"> 대기 중인 친구 </string>
-
-    <string name = "my_friend_with_count">내 친구 (x/20)</string>
-    <string name = "friend_info">친구 정보</string>
-
-    <string name ="init_search_text">친구의 id값을 입력해주세요.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

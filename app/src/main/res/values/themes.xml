@@ -22,22 +22,37 @@
         <item name="postSplashScreenTheme">@style/Theme.Soundary</item>
     </style>
 
-    <!-- category_button_styles -->
+    <!-- profile  -->
     <style name="CategoryEditButton">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/all_rounded_toggle_button</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@drawable/all_rounded_toggle_text</item>
         <item name="android:layout_margin">@dimen/category_margin</item>
     </style>
 
     <style name="CategoryButton">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/all_rounded_toggle_button</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_margin">@dimen/category_margin</item>
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">gone</item>-->
+    </style>
+
+    <style name="ProfileSharedAlbum">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_margin">2dp</item>
+         <item name="android:visibility">gone</item>-->
+    </style>
+
+    <style name="ProfileImageCardView">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="cardCornerRadius">75dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <!--signup-->
@@ -145,16 +160,6 @@
         <item name="android:layout_height">@dimen/item_size</item>
         <item name="android:visibility">invisible</item>
         <item name="android:src">@drawable/share_gray_circle</item>
-    </style>
-
-    <!-- profile -->
-    <style name="profile_category_style">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/all_rounded_button</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_marginHorizontal">8dp</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
 </resources>

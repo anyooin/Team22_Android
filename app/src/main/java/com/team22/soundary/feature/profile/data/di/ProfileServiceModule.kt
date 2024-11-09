@@ -1,6 +1,7 @@
-package com.team22.soundary.feature.profile.data
+package com.team22.soundary.feature.profile.data.di
 
 import com.team22.soundary.di.OtherRetrofit
+import com.team22.soundary.feature.profile.data.remote.ProfileApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

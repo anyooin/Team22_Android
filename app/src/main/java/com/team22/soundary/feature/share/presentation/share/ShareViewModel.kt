@@ -34,7 +34,7 @@ class ShareViewModel @Inject constructor(
     private val _comment = MutableStateFlow("")
     val comment: StateFlow<String> = _comment.asStateFlow()
 
-    private val _category = MutableStateFlow<Category?>(null)
+    private val _label = MutableStateFlow<String?>(null)
 
     init {
         viewModelScope.launch {
@@ -51,7 +51,7 @@ class ShareViewModel @Inject constructor(
         friendRepository.getFriends().collectLatest {
             _userList.value = it
         }
-        getFilteredFriendList(_category.value)
+        getFilteredFriendList(_label.value)
     }
 
     fun toggleFriendSelection(friendId: String) {
@@ -72,12 +72,12 @@ class ShareViewModel @Inject constructor(
         }
     }
 
-    fun getFilteredFriendList(category: Category?) {
-        _category.value = category
-        _filteredUserList.value = if (category == null) {
+    fun getFilteredFriendList(label: String?) {
+        _label.value = label
+        _filteredUserList.value = if (label == null) {
             _userList.value
         } else {
-            _userList.value.filter { it.category.contains(category) }
+            _userList.value.filter { it.label.contains(label) }
         }
     }
 
@@ -101,6 +101,5 @@ class ShareViewModel @Inject constructor(
         viewModelScope.launch {
             shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
         }
-        Log.d("uin", songId)
     }
 }
