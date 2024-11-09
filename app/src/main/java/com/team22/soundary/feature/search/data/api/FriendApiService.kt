@@ -50,5 +50,5 @@ interface FriendApiService {
     @GET("/api/v1/users")
     suspend fun searchUser(
         @Query("display-id") displayId: String
-    ): Response<UserInfoResponse>
+    ): Response<UserInfoDto>
 }
