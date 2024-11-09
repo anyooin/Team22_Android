@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.search.data
+package com.team22.soundary.feature.search.data.di
 
 import com.team22.soundary.di.OtherRetrofit
 import com.team22.soundary.feature.search.data.api.FriendApiService
