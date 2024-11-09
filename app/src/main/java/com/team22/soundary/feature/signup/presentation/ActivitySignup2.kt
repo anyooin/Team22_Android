@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.messaging.FirebaseMessaging
 import com.team22.soundary.databinding.ActivitySignup2Binding
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
@@ -99,21 +100,26 @@ class ActivitySignup2 : AppCompatActivity() {
     }
 
     private fun setSignupButton(nickname: String, displayId: String, label: List<String>) {
-        var result = true
-        binding.signupButtonSubmit.setOnClickListener {
-            lifecycleScope.launch {
+         binding.signupButtonSubmit.setOnClickListener {
+            var success = true
+            lifecycleScope.launch{
                 // 가입 완료 처리 후 MainActivity로 이동
-                result = viewModel.updateUserInfo(
-                    User(
-                        label = label,
-                        displayId = displayId,
-                        name = nickname!!,
-                        statusMessage = binding.signupEdittextIntro.text.toString(),
-                        image = selectedImageUri!!
+                FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                    if(it.isSuccessful) Log.d("akuby21",it.result)
+
+                    success = viewModel.updateUserInfo(
+                        it.result,
+                        User(
+                            label = label,
+                            displayId = displayId,
+                            name = nickname!!,
+                            statusMessage = binding.signupEdittextIntro.text.toString(),
+                            image = selectedImageUri!!
+                        )
                     )
-                )
+                }
             }
-            if (result) {
+            if (success) {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()

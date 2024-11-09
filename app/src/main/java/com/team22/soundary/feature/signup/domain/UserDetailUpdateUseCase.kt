@@ -16,12 +16,13 @@ class UserDetailUpdateUseCase @Inject constructor(
     private val userService: UserService,
     private val tokenRepository: TokenRepository
 ) {
-    suspend fun updateUserInfo(user: User) : Boolean {
+
+    suspend fun updateUserInfo(token:String, user: User) : Boolean {
         val response = withContext(dispatcher){
             userService.updateMyInfo(
                 UserInfoInitRequestDto(
                     user.label,
-                    "",
+                    token,
                     user.displayId,
                     user.name,
                     user.statusMessage,

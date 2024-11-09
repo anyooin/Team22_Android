@@ -45,10 +45,10 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(user: User) : Boolean {
+    fun updateUserInfo(token:String,user: User) : Boolean {
         var result = true
         viewModelScope.launch {
-            result = userDetailUpdateUseCase.updateUserInfo(user)
+            result = userDetailUpdateUseCase.updateUserInfo(token,user)
         }
         return result
     }
