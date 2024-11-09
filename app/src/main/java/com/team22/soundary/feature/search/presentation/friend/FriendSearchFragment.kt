@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.friend
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.FragmentFriendSearchBinding
+import com.team22.soundary.feature.search.FriendAdapter
+import com.team22.soundary.feature.search.presentation.profile.FriendProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

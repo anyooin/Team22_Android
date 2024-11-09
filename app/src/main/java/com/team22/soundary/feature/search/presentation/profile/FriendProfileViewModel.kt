@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

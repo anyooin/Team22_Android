@@ -1,12 +1,12 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.friend
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.FriendItemNewBinding
+import com.team22.soundary.feature.search.FriendDiffCallback
 
 class NewFriendAdapter(
     private val onItemClick: (User) -> Unit,
