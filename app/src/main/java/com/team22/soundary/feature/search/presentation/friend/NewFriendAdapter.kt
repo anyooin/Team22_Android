@@ -58,7 +58,7 @@ class NewFriendViewHolder(
         binding.userNameTextview.text = friend.name
         binding.profileInitialTextview.text = friend.name.first().toString()
 
-        val firstGenre = friend.category.firstOrNull() ?: "장르 없음"
+        val firstGenre = friend.label.firstOrNull() ?: "장르 없음"
         binding.favoriteGenreTextview.text = firstGenre.toString()
 
         binding.userIdTextview.text = "@${friend.id}"

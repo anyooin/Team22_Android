@@ -54,7 +54,7 @@ class FriendSearchFragment : Fragment() {
         })
 
         pendingFriendsAdapter = PendingFriendAdapter { friend ->
-            navigateToFriendProfile(friend.id)
+            navigateToFriendProfile(friend.displayId)
         }
 
         searchResultAdapter = SearchResultAdapter(
