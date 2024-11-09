@@ -66,23 +66,28 @@
     <string name="mypage_ID">아이디</string>
     <string name="mypage_save">저장하기</string>
 
-
     <!--category-->
-    <string name="mypage_category_setting">카테고리 설정</string>
-    <string name="category_hiphop">HIPHOP</string>
-    <string name="category_rock">ROCK</string>
-    <string name="category_pop">POP</string>
-    <string name="category_jpop">JPOP</string>
-    <string name="category_ballad">BALLADE</string>
-    <string name="category_kpop">KPOP</string>
+    <string name="mypage_category_setting">카테고리</string>
     <string name="category_rnb">RNB</string>
+    <string name="category_hiphop">HIPHOP</string>
+    <string name="category_pop">POP</string>
+    <string name="category_rock">ROCK</string>
+    <string name="category_jpop">JPOP</string>
+    <string name="category_kpop">KPOP</string>
+    <string name="category_ballad">BALLADE</string>
 
     <!--profile-->
+    <string name ="profile_name">쿠</string>
+    <string name="profile_title">마이페이지</string>
+    <string name="profile_edit_title">내 정보 수정</string>
     <string name="user_name">쿠키즈</string>
     <string name="user_id">\@kookoo</string>
     <string name="user_email">\kookoo@naver.com</string>
-
+    <string name="user_introduce">\"한 줄 소개글\"</string>
     <string name="state_message">안녕? 나 쿠키즈!</string>
+
+    <string name="mypage_view_displayid">\@%1$s</string>
+    <string name="mypage_view_statusmessage">\" %1$s \"</string>
 
     <string name="category">선호 카테고리</string>
     <string name="genre_pop">POP</string>
@@ -92,7 +97,21 @@
     <string name="genre_Jpop">JPOP</string>
 
     <string name="add_friend">친구 추가</string>
+    <string name = "request">신청</string>
+    <string name="delete_friend">삭제 </string>
+    <string name ="accept_request">수락</string>
+    <string name="reject_request">거절</string>
+    <string name="search">검색</string>
+
+    <string name="new_friend">새로운 친구</string>
+    <string name="pending_friend"> 대기 중인 친구 </string>
+
+    <string name = "my_friend_with_count">내 친구 (x/20)</string>
+    <string name = "friend_info">친구 정보</string>
+
+    <string name ="init_search_text">친구의 id값을 입력해주세요.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
+
 
