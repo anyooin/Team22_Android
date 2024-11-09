@@ -34,7 +34,6 @@ class FriendSearchViewModel @Inject constructor(
     init {
         loadFriends()
         loadPendingFriends()
-        //startPeriodicFriendsUpdate()
     }
 
     // 친구 신청 메서드
