@@ -110,8 +110,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
                         viewModel.getFilteredFriendList(null)
                     } else {
                         lastCheckedRadioButtonId = checkedId
-                        val category = stringToCategory(selectedRadioButton.text.toString())
-                        viewModel.getFilteredFriendList(category)
+                        viewModel.getFilteredFriendList(selectedRadioButton.text.toString())
                     }
                 }
             }
