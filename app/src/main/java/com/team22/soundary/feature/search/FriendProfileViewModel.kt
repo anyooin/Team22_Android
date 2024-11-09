@@ -1,9 +1,7 @@
 package com.team22.soundary.feature.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
