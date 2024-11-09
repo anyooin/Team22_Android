@@ -35,49 +35,46 @@ class ActivitySignIntro : AppCompatActivity() {
         observeState()
     }
 
-    private fun handleLogin() {
+    private fun handleLogin(){
         UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
             if (error != null) {
                 showErrorDialog(error.message ?: UNKNOWN_ERROR)
-            } else if (token != null) {
+            } else if(token != null){
                 viewModel.login(token.accessToken)
                 Log.d("accessToken:", token.accessToken)
             }
         }
     }
 
-    private fun observeState() {
+    private fun observeState(){
         lifecycleScope.launch {
-            viewModel.loginUiState.collect { state ->
-                when (state) {
+            viewModel.loginUiState.collect{ state ->
+                when(state){
                     is LoginUiState.Initial -> {}
                     is LoginUiState.Success -> {
                         val data = state.data
                         //val intent = Intent(this@ActivitySignIntro,ActivitySignup::class.java)
-                        Log.d("testt", "" + data.role)
-                        val intent = if (REGISTERED_USER_ROLE in data.role) {
+                        Log.d("testt",""+data.role)
+                        val intent = if(REGISTERED_USER_ROLE in data.role){
                             Intent(this@ActivitySignIntro, MainActivity::class.java)
                         } else {
-                            Intent(this@ActivitySignIntro, ActivitySignup::class.java)
-                        }
+                            Intent(this@ActivitySignIntro,ActivitySignup::class.java)
+                    }
 
                         startActivity(intent)
                         finish()
                     }
-
                     is LoginUiState.Loading -> {
                         LoadingDialog(this@ActivitySignIntro).show()
                     }
-
                     is LoginUiState.Error -> {
                         showErrorDialog(state.message ?: UNKNOWN_ERROR)
                     }
-
                     is LoginUiState.Pass -> {
-                        startActivity(
-                            Intent(this@ActivitySignIntro, MainActivity::class.java)
+                    /*    startActivity(
+                            Intent(this@ActivitySignIntro,MainActivity::class.java)
                         )
-                        finish()
+                        finish()*/
                     }
                 }
             }
@@ -93,7 +90,7 @@ class ActivitySignIntro : AppCompatActivity() {
             }
             .show()
 
-    companion object {
+    companion object{
         const val UNKNOWN_ERROR = "unknown error"
         const val REGISTERED_USER_ROLE = "USER"
     }
