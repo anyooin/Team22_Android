@@ -1,8 +1,6 @@
 package com.team22.soundary.core.data.dto
 
 import android.net.Uri
-import android.util.Log
-import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.Song
 import com.team22.soundary.core.domain.model.Token
@@ -32,32 +30,33 @@ data class SentRequestsResponse(
 
 @Serializable
 data class UserInfoDto(
-    @SerialName("display_id") val id : String?,
-    @SerialName("nickname") val name : String?,
-    @SerialName("description") val description : String?,
-    @SerialName("profile_image_url") val profile : String?,
-    @SerialName("roles") val roles : List<String>?
+    @SerialName("display_id") val displayId: String?,
+    @SerialName("nickname") val name: String?,
+    @SerialName("description") val description: String?,
+    @SerialName("profile_image_url") val profile: String? = Uri.EMPTY.toString(),
+    @SerialName("roles") val roles: List<String>?,
+    @SerialName("labels") val labels: List<String>?
 )
 
 @Serializable
 data class FriendInfoDto(
-    @SerialName("id") val id : String?,
-    @SerialName("display_id") val displayId : String?,
-    @SerialName("nickname") val name : String?,
-    @SerialName("profile_image_url") val profile : String?,
+    @SerialName("id") val id: String?,
+    @SerialName("display_id") val displayId: String?,
+    @SerialName("nickname") val name: String?,
+    @SerialName("profile_image_url") val profile: String?,
 )
 
 @Serializable
 data class ReceivedShareListDto(
     @SerialName("total") val total: Int?,
-    @SerialName("total_pages") val totalPage : Int?,
+    @SerialName("total_pages") val totalPage: Int?,
     @SerialName("shared_musics") val shareList: List<ReceivedShareDto>?
 )
 
 @Serializable
 data class SentShareListDto(
     @SerialName("total") val total: Int?,
-    @SerialName("total_pages") val totalPage : Int?,
+    @SerialName("total_pages") val totalPage: Int?,
     @SerialName("shared_musics") val shareList: List<SentShareDto>?
 )
 
@@ -68,7 +67,7 @@ data class ReceivedShareDto(
     @SerialName("track") val track: TrackDto?,
     @SerialName("comment") val comment: String?,
     @Contextual @SerialName("shared_at") val sharedAt: Date?,
-    @SerialName("is_liked") val isLiked : Boolean? = false
+    @SerialName("is_liked") val isLiked: Boolean? = false
 )
 
 @Serializable
@@ -89,13 +88,13 @@ data class FromUserResponse(
 
 @Serializable
 data class TrackListDto(
-    @SerialName("tracks") val trackList : List<TrackDto>?
+    @SerialName("tracks") val trackList: List<TrackDto>?
 )
 
 @Serializable
 data class TrackDto(
-    @SerialName("platform") val platform: String? = null,
-    @SerialName("track_id") val platformTrackId: String? = null,
+    @SerialName("platform") val platform: String? = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String? = null,
     @SerialName("title") val title: String? = null,
     @SerialName("artists") val artist: List<String>? = null,
     @SerialName("duration") val duration: Int? = null,
@@ -108,7 +107,7 @@ data class TokenDto(
     @SerialName("role") val role: String?,
     @SerialName("accessToken") val accessToken: String?,
     @SerialName("refreshToken") val refreshToken: String?,
-    @SerialName("expiresIn") val expiresIn : Int?
+    @SerialName("expiresIn") val expiresIn: Int?
 )
 
 @Serializable
@@ -124,46 +123,36 @@ data class LoginRequestDto(
 )
 
 @Serializable
-data class UserInfoResponse(
-    @SerialName("display_id") val displayId:String?,
-    @SerialName("nickname") val nickname: String?,
-    @SerialName("description") val description: String?,
-    @SerialName("profile_image_url") val profileImageUrl: String?,
-    @SerialName("roles") val roles: List<String>?,
-    @SerialName("labels") val labels: List<String>?,
-
-)
-
-@Serializable
-data class LabelView(
-    @SerialName("labels") val labels:List<String>
-    )
-
-@Serializable
-data class LabelAdd(
-    @SerialName("labels") val labels: List<String>
-)
-
 data class RefreshRequestDto(
     @SerialName("refresh_token") val refreshToken: String
 )
 
 @Serializable
 data class UserInfoInitRequestDto(
-    @SerialName("labels") val category : List<Category>,
-    @SerialName("device_token") val deviceToken : String = "",
-    @SerialName("display_id") val displayId : String,
+    @SerialName("labels") val category: List<String>,
+    @SerialName("device_token") val deviceToken: String = "",
+    @SerialName("display_id") val displayId: String,
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = null,
-    @SerialName("profile_image_url") val profileImage : String? = null
+    @SerialName("profile_image_url") val profileImage: String? = null
 )
 
 @Serializable
 data class UserUpdateRequest(
-    @SerialName("display_id") val displayId : String,
-    @SerialName("nickname") val nickcname: String,
-    @SerialName("description") val description: String? = null,
-    @SerialName("profile_image_url") val profileImage: String? = null
+    @SerialName("display_id") val displayId: String,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("description") val description: String? = "",
+    @SerialName("profile_image_url") val profileImage: String = Uri.EMPTY.toString()
+)
+
+@Serializable
+data class LabelView(
+    @SerialName("labels") val labels: List<String>
+)
+
+@Serializable
+data class LabelAddRequest(
+    @SerialName("labels") val labels: List<String>
 )
 
 @Serializable
@@ -229,11 +218,12 @@ fun FromUserResponse.toVO(): User =
 
 fun UserInfoDto.toVO(): User {
     return User(
-        id = this.id ?: "",
+        displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile),
+        image = Uri.parse(this.profile ?: ""),
         statusMessage = this.description ?: "",
-        role = this.roles ?: emptyList()
+        role = this.roles ?: emptyList(),
+        label = this.labels ?: emptyList()
     )
 }
 
@@ -242,23 +232,13 @@ fun FriendInfoDto.toVO(): User {
         id = this.id ?: "",
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile),
+        image = Uri.parse(this.profile ?: ""),
     )
 }
 
 
-fun TokenDto.toVO() : Token =
+fun TokenDto.toVO(): Token =
     Token(
         this.accessToken ?: "",
         this.refreshToken ?: ""
     )
-
-fun UserInfoResponse.toVO(): User {
-    return User(
-        id = this.displayId ?: "",
-        name = this.nickname ?: "",
-        image = Uri.parse(this.profileImageUrl),
-        label = this.labels ?: emptyList(),
-        statusMessage = this.description ?: "",
-    )
-}

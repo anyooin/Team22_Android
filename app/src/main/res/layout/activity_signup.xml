@@ -78,16 +78,16 @@
         app:layout_constraintTop_toBottomOf="@id/signup_category_title">
 
         <ToggleButton
+            android:id="@+id/signup_togglebutton_category_rnb"
+            style="@style/SignupCategory"
+            android:textOff="@string/category_rnb"
+            android:textOn="@string/category_rnb" />
+
+        <ToggleButton
             android:id="@+id/signup_togglebutton_category_hiphop"
             style="@style/SignupCategory"
             android:textOff="@string/category_hiphop"
             android:textOn="@string/category_hiphop" />
-
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_rock"
-            style="@style/SignupCategory"
-            android:textOff="@string/category_rock"
-            android:textOn="@string/category_rock" />
 
         <ToggleButton
             android:id="@+id/signup_togglebutton_category_pop"
@@ -96,16 +96,16 @@
             android:textOn="@string/category_pop" />
 
         <ToggleButton
+            android:id="@+id/signup_togglebutton_category_rock"
+            style="@style/SignupCategory"
+            android:textOff="@string/category_rock"
+            android:textOn="@string/category_rock" />
+
+        <ToggleButton
             android:id="@+id/signup_togglebutton_category_jpop"
             style="@style/SignupCategory"
             android:textOff="@string/category_jpop"
             android:textOn="@string/category_jpop" />
-
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_ballad"
-            style="@style/SignupCategory"
-            android:textOff="@string/category_ballad"
-            android:textOn="@string/category_ballad" />
 
         <ToggleButton
             android:id="@+id/signup_togglebutton_category_kpop"
@@ -113,11 +113,6 @@
             android:textOff="@string/category_kpop"
             android:textOn="@string/category_kpop" />
 
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_rnb"
-            style="@style/SignupCategory"
-            android:textOff="@string/category_rnb"
-            android:textOn="@string/category_rnb" />
     </GridLayout>
 
     <!-- 약관 동의 체크박스 -->

@@ -1,6 +1,6 @@
 package com.team22.soundary.feature.profile.domain.di
 
-import com.team22.soundary.feature.profile.data.ProfileRepository
+import com.team22.soundary.feature.profile.domain.ProfileRepository
 import com.team22.soundary.feature.profile.data.ProfileRepositoryImpl
 import dagger.Binds
 import dagger.Module

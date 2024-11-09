@@ -6,7 +6,6 @@ import com.team22.soundary.core.data.dto.FriendsResponse
 import com.team22.soundary.core.data.dto.ReceivedRequestsResponse
 import com.team22.soundary.core.data.dto.SentRequestsResponse
 import com.team22.soundary.core.data.dto.UserInfoDto
-import com.team22.soundary.core.data.dto.UserInfoResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -50,5 +49,5 @@ interface FriendApiService {
     @GET("/api/v1/users")
     suspend fun searchUser(
         @Query("display-id") displayId: String
-    ): Response<UserInfoResponse>
+    ): Response<UserInfoDto>
 }
