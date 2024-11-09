@@ -47,7 +47,7 @@ class BottomSheetAdapter(
         listener: FriendItemClickListener
     ) : BaseViewHolder(binding.root, listener) {
         override fun bind(userItem: User, isSelected: Boolean) {
-            binding.shareFriendImage.setImageResource(R.drawable.stalker)
+            binding.shareFriendImage.setImageURI(userItem.image)
             binding.shareFriendTextview.text = userItem.name
             binding.shareGrayBackground.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
             setClickListener(userItem)

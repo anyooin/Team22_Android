@@ -4,6 +4,7 @@ import android.net.Uri
 
 data class Song(
     val id: String = "",
+    val trackId: String = "",
     val title: String = "",
     val artist: List<String> = emptyList(),
     val preview: Uri = Uri.EMPTY,

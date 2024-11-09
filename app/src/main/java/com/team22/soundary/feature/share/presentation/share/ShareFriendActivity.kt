@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -89,12 +90,13 @@ class ShareFriendActivity : AppCompatActivity() {
     }
 
     private fun setSendButton() {
-        val songId: String = intent.extras?.getString(KEY_ID) ?: ""
+        val platformTrackId: String = intent.extras?.getString(KEY_PLATFORM_TRACK_ID) ?: ""
+        val trackId = intent.extras?.getString(KEY_TRACK_ID) ?: ""
         binding.shareSendButton.text = viewModel.getButtonText()
         binding.shareSendButton.setOnClickListener {
             if(viewModel.isAnyFriendSelected()) {
                 viewModel.setComment(binding.shareCommentEdittext.text.toString())
-                viewModel.shareSongToFriends(songId)
+                viewModel.shareSongToFriends(platformTrackId, trackId)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish() // FLAG_ACTIVITY_CLEAR_TOP 사용?
@@ -105,7 +107,8 @@ class ShareFriendActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val KEY_ID = "id"
+        const val KEY_PLATFORM_TRACK_ID = "platformTrackId"
+        const val KEY_TRACK_ID = "trackId"
         const val KEY_IMAGE = "image"
         const val KEY_TITLE = "title"
         const val KEY_SINGER = "singer"

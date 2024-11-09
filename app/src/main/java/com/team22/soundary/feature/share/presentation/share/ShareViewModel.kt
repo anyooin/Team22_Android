@@ -97,9 +97,9 @@ class ShareViewModel @Inject constructor(
         return _selectedFriendIds.value.isNotEmpty()
     }
 
-    fun shareSongToFriends(songId: String) {
+    fun shareSongToFriends(platformTrackId: String, trackId: String) {
         viewModelScope.launch {
-            shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
+            shareRepository.shareMusic(platformTrackId, trackId, _comment.value, _selectedFriendIds.value.toList())
         }
     }
 }

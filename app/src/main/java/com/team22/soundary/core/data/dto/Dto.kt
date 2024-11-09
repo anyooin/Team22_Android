@@ -87,14 +87,8 @@ data class FromUserResponse(
 )
 
 @Serializable
-data class TrackListDto(
-    @SerialName("tracks") val trackList: List<TrackDto>?
-)
-
-@Serializable
 data class TrackDto(
-    @SerialName("platform") val platform: String? = "SPOTIFY",
-    @SerialName("platform_track_id") val platformTrackId: String? = null,
+    @SerialName("track_id") val trackId: String? = null,
     @SerialName("title") val title: String? = null,
     @SerialName("artists") val artist: List<String>? = null,
     @SerialName("duration") val duration: Int? = null,
@@ -155,20 +149,71 @@ data class LabelAddRequest(
     @SerialName("labels") val labels: List<String>
 )
 
+// share 부분
+
 @Serializable
-data class ShareMusicRequest(
-    @SerialName("track") val track: TrackIdentifierDto,
-    @SerialName("comment") val comment: String,
-    @SerialName("target_user_ids") val userList: List<String>
+data class SearchTrackResponse(
+    @SerialName("tracks") val trackList: List<SearchTrackResponseDto>?,
 )
 
+@Serializable
+data class SearchTrackResponseDto(
+    @SerialName("platform") val platform: String? = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("duration") val duration: Int? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null
+)
+
+
+@Serializable
+data class MostSharedTracksResponse(
+    @SerialName("tracks") val trackList: List<MostSharedTrackResponseDto>?,
+)
+
+@Serializable
+data class MostSharedTrackResponseDto(
+    @SerialName("track_id") val trackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null,
+    @SerialName("duration_in_seconds") val duration: Int? = null
+)
+
+@Serializable
+data class MostLikedTracksResponse(
+    @SerialName("tracks") val trackList: List<MostLikedTrackResponseDto>?,
+)
+
+@Serializable
+data class MostLikedTrackResponseDto(
+    @SerialName("track_id") val trackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null,
+    @SerialName("duration_in_seconds") val duration: Int? = null
+)
+
+@Serializable
+data class ShareMusicRequest(
+    @SerialName("track") val track: PlatformTrackIdentifierDto? = null,
+    @SerialName("comment") val comment: String,
+    @SerialName("target_user_ids") val userList: List<String>,
+    @SerialName("track_id") val trackId: String? = null,
+)
+
+// friend 부분
 @Serializable
 data class FriendRequestDto(
     @SerialName("target_display_id") val displayId: String
 )
 
 @Serializable
-data class TrackIdentifierDto(
+data class PlatformTrackIdentifierDto(
     @SerialName("platform") val platform: String = "SPOTIFY",
     @SerialName("platform_track_id") val platformTrackId: String
 )
@@ -202,11 +247,38 @@ fun ReceivedShareDto.toVO(): Share {
 
 fun TrackDto.toVO(): Song =
     Song(
-        this.platformTrackId ?: "",
-        this.title ?: "",
-        this.artist ?: emptyList(),
-        Uri.parse(this.previewMp3Url ?: ""),
-        Uri.parse(this.albumCoverUrl ?: "")
+        id = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun SearchTrackResponseDto.toVO(): Song =
+    Song(
+        id = this.platformTrackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun MostSharedTrackResponseDto.toVO(): Song =
+    Song(
+        trackId = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun MostLikedTrackResponseDto.toVO(): Song =
+    Song(
+        trackId = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
     )
 
 fun FromUserResponse.toVO(): User =
