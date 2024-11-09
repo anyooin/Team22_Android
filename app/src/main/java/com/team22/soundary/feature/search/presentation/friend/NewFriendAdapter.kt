@@ -1,12 +1,12 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.friend
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.FriendItemNewBinding
+import com.team22.soundary.feature.search.FriendDiffCallback
 
 class NewFriendAdapter(
     private val onItemClick: (User) -> Unit,
@@ -58,7 +58,7 @@ class NewFriendViewHolder(
         binding.userNameTextview.text = friend.name
         binding.profileInitialTextview.text = friend.name.first().toString()
 
-        val firstGenre = friend.category.firstOrNull() ?: "장르 없음"
+        val firstGenre = friend.label.firstOrNull() ?: "장르 없음"
         binding.favoriteGenreTextview.text = firstGenre.toString()
 
         binding.userIdTextview.text = "@${friend.id}"

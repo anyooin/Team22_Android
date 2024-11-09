@@ -1,4 +1,4 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.friend
 
 import android.os.Bundle
 import android.text.Editable

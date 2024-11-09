@@ -1,5 +1,6 @@
-package com.team22.soundary.feature.search
+package com.team22.soundary.feature.search.presentation.friend
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.feature.search.FriendDiffCallback
 
 class PendingFriendAdapter(
     private val onItemClick: (User) -> Unit
