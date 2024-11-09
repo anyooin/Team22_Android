@@ -1,4 +1,3 @@
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,16 +5,21 @@
     android:background="@android:color/white"
     android:padding="@dimen/padding_normal">
 
+    <TextView
+        android:id="@+id/profile_top_textview"
+        style="@style/shareTopTextStyle"
+        android:text="@string/profile_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- 프로필 이미지 및 정보 - CardView로 감쌈 -->
     <androidx.cardview.widget.CardView
         android:id="@+id/profile_cardview"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="75dp"
-        app:cardElevation="0dp"
+        style="@style/ProfileImageCardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/profile_top_textview">
 
         <ImageView
             android:id="@+id/profile_imageview"
@@ -26,9 +30,6 @@
     </androidx.cardview.widget.CardView>
 
     <!-- 연필 아이콘 -->
-
-    <!-- 프로필 이름 -->
-
     <ImageButton
         android:id="@+id/edit_button"
         android:layout_width="wrap_content"
@@ -36,13 +37,14 @@
         android:layout_marginEnd="12dp"
         android:src="@drawable/mypage_edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/profile_cardview" />
+        app:layout_constraintTop_toTopOf="@id/profile_top_textview" />
 
+    <!-- 프로필 이름 -->
     <TextView
         android:id="@+id/profile_textview_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/mypage_name"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -53,13 +55,12 @@
 
     <!-- 이메일 -->
     <TextView
-        android:id="@+id/profile_textview_email"
+        android:id="@+id/profile_textview_displayid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="@string/mypage_email"
         android:textColor="@color/gray_500"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_textview_name" />
@@ -69,115 +70,124 @@
         android:id="@+id/profile_textview_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="@string/mypage_introduce"
-        android:textColor="@color/gray_500"
-        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_textview_email" />
+        app:layout_constraintTop_toBottomOf="@id/profile_textview_displayid" />
+
+    <View
+        android:id="@+id/split_line1"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="@dimen/padding_normal"
+        android:background="@color/gray_500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_textview_intro" />
 
     <!-- 카테고리 설정 -->
     <TextView
         android:id="@+id/category_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_normal"
         android:layout_marginTop="@dimen/padding_normal"
         android:text="@string/mypage_category_setting"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_textview_intro" />
+        app:layout_constraintTop_toBottomOf="@id/split_line1" />
 
     <!-- 카테고리 버튼들 -->
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/category_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_label"
-        app:columnCount="4">
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@id/category_label"
+        app:layout_constraintTop_toBottomOf="@id/category_label">
 
         <Button
-            android:id = "@+id/hiphop"
-            style="@style/CategoryButton"
-            android:text="@string/category_hiphop" />
-
-        <Button
-            android:id = "@+id/rock"
-            style="@style/CategoryButton"
-            android:text="@string/category_rock" />
-
-        <Button
-            android:id = "@+id/pop"
-            style="@style/CategoryButton"
-            android:text="@string/category_pop" />
-
-        <Button
-            android:id = "@+id/jpop"
-            style="@style/CategoryButton"
-            android:text="@string/category_jpop" />
-
-        <Button
-            android:id = "@+id/rnb"
+            android:id="@+id/rnb"
             style="@style/CategoryButton"
             android:text="@string/category_rnb" />
 
         <Button
-            android:id = "@+id/kpop"
+            android:id="@+id/hiphop"
+            style="@style/CategoryButton"
+            android:text="@string/category_hiphop" />
+
+        <Button
+            android:id="@+id/pop"
+            style="@style/CategoryButton"
+            android:text="@string/category_pop" />
+
+        <Button
+            android:id="@+id/rock"
+            style="@style/CategoryButton"
+            android:text="@string/category_rock" />
+
+        <Button
+            android:id="@+id/jpop"
+            style="@style/CategoryButton"
+            android:text="@string/category_jpop" />
+
+        <Button
+            android:id="@+id/kpop"
             style="@style/CategoryButton"
             android:text="@string/category_kpop" />
 
     </androidx.gridlayout.widget.GridLayout>
+
+    <View
+        android:id="@+id/split_line2"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="@dimen/padding_normal"
+        android:background="@color/gray_500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_grid" />
 
     <!-- 공유한 노래 목록 -->
     <TextView
         android:id="@+id/shared_songs_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/padding_normal"
         android:text="@string/mypage_share_song"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/category_grid" />
+        app:layout_constraintTop_toBottomOf="@id/split_line2" />
 
     <!-- 공유한 앨범 이미지들 -->
     <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/album_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_half"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shared_songs_label"
-        app:columnCount="3">
+        app:columnCount="3"
+        app:layout_constraintStart_toStartOf="@id/shared_songs_label"
+        app:layout_constraintTop_toBottomOf="@id/shared_songs_label">
 
         <ImageView
             android:id="@+id/image_one"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album1"
-            android:visibility="gone"/>
+            style="@style/ProfileSharedAlbum"
+            android:src="@drawable/mypage_album1" />
 
         <ImageView
             android:id="@+id/image_two"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album2"
-            android:visibility="gone"/>
+            style="@style/ProfileSharedAlbum"
+            android:src="@drawable/mypage_album2" />
 
         <ImageView
             android:id="@+id/image_three"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="@dimen/margin_half"
-            android:src="@drawable/mypage_album3"
-            android:visibility="gone"/>
+            style="@style/ProfileSharedAlbum"
+            android:src="@drawable/mypage_album3" />
+
     </androidx.gridlayout.widget.GridLayout>
 
     <!-- 탈퇴하기 버튼 -->
@@ -185,11 +195,11 @@
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="112dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@color/red"
         android:text="@string/mypage_out"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shared_songs_label" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
