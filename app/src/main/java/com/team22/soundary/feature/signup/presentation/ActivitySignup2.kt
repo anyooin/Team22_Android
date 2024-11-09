@@ -38,16 +38,9 @@ class ActivitySignup2 : AppCompatActivity() {
         val nickname = intent.extras?.getString(KEY_NICKNAME) ?: ""
         val displayId = intent.extras?.getString(KEY_DISPLAY_ID) ?: ""
         val label = intent.extras?.getStringArrayList(KEY_LABEL) ?: emptyList()
-//        val categoryOrdinalList = intent.extras?.getIntArray("category")
-//        Log.d("aaaaasddfsafqf",""+categoryOrdinalList)
-//        val categoryList = categoryOrdinalList?.map {
-//            Log.d("asdfdas",""+it)
-//            getCategoryByOrdinal(it)
-//        }
 
         if (selectedImageUri == null) {
-            selectedImageUri =
-                Uri.parse("android.resource://$packageName/${R.drawable.all_logo_image}")
+            selectedImageUri = Uri.parse("")
         }
 
         // 갤러리 접근 권한 요청
@@ -78,13 +71,10 @@ class ActivitySignup2 : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            val selectedImageUri: Uri? = data.data
-            if (selectedImageUri != null) {
-                // 선택된 이미지를 ImageView에 표시
-                binding.signupImageviewProfileimage.setImageURI(selectedImageUri)
-            } else {
-                Toast.makeText(this, "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
+            selectedImageUri = data.data
+            binding.signupImageviewProfileimage.setImageURI(selectedImageUri)
+        } else {
+            Toast.makeText(this, "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -115,7 +105,6 @@ class ActivitySignup2 : AppCompatActivity() {
                 // 가입 완료 처리 후 MainActivity로 이동
                 result = viewModel.updateUserInfo(
                     User(
-                        //category = categoryList!!,
                         label = label,
                         displayId = displayId,
                         name = nickname!!,
@@ -136,8 +125,6 @@ class ActivitySignup2 : AppCompatActivity() {
             }
         }
     }
-
-    private fun getCategoryByOrdinal(ordinal: Int): Category = Category.entries[ordinal]
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 100

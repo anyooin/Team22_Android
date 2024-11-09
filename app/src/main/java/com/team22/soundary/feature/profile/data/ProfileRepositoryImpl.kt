@@ -18,18 +18,17 @@ import javax.inject.Inject
 class ProfileRepositoryImpl @Inject constructor(
     @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val apiService: ProfileApiService
-): ProfileRepository {
-    override suspend fun getProfiles(): Flow<User> = flow{
+) : ProfileRepository {
+    override suspend fun getProfiles(): Flow<User> = flow {
         val response = withContext(dispatcher) {
             apiService.getProfile()
         }
 
         if (response.isSuccessful) {
             emit(response.body()?.toVO() ?: User())
-            if(response.body() == null) {
+            if (response.body() == null) {
                 Log.d("uin", "error")
-            }
-            else {
+            } else {
                 Log.d("uin", "ok" + response.body()!!.description)
             }
 
@@ -38,33 +37,18 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addLabels(labels:List<String>) {
-        val response = withContext(dispatcher) {
-            apiService.addLabels(LabelAddRequest(labels))
-        }
-
-        if (!response.isSuccessful) {
-            throw Exception("Error: ${response.message()}")
-        }
-    }
-
-    override suspend fun deleteLabel(label: String) {
-        val response = withContext(dispatcher) {
-            apiService.deleteLabel(label)
-        }
-
-        if (!response.isSuccessful) {
-            throw Exception("Error: ${response.message()}")
-        }
-    }
-
-    override suspend fun editedProfile(displayId: String, nickname: String, description: String?, profileUri: Uri?) {
+    override suspend fun editProfile(
+        displayId: String,
+        nickname: String,
+        description: String?,
+        profileUri: Uri
+    ) {
         // Uri를 String으로 변환하여 UserUpdateRequest 객체 생성
         val userUpdateRequest = UserUpdateRequest(
             displayId = displayId,
-            nickcname = nickname,
+            nickname = nickname,
             description = description,
-            profileImage = profileUri?.toString()
+            profileImage = profileUri.toString()
         )
 
         val response = withContext(dispatcher) {
@@ -80,8 +64,18 @@ class ProfileRepositoryImpl @Inject constructor(
         val response = withContext(dispatcher) {
             apiService.deleteUserAccount()
         }
-        if(!response.isSuccessful) {
+        if (!response.isSuccessful) {
             throw Exception("회원 탈퇴 실패: ${response.message()}")
+        }
+    }
+
+    override suspend fun setLabels(labels: List<String>) {
+        val response = withContext(dispatcher) {
+            apiService.setLabels(LabelAddRequest(labels))
+        }
+
+        if (!response.isSuccessful) {
+            throw Exception("Error: ${response.message()}")
         }
     }
 

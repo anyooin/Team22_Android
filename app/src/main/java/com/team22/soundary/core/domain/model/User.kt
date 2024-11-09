@@ -11,7 +11,6 @@ data class User(
     val statusMessage: String = "",
     val category: List<Category> = emptyList(),
     val label : List<String> = emptyList(),
-
     var status: String = "",
     val role : List<String> = emptyList()
 )

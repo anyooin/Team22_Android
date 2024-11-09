@@ -83,8 +83,10 @@
     <string name="user_id">\@kookoo</string>
     <string name="user_email">\kookoo@naver.com</string>
     <string name="user_introduce">\"한 줄 소개글\"</string>
-
     <string name="state_message">안녕? 나 쿠키즈!</string>
+
+    <string name="mypage_view_displayid">\@%1$s</string>
+    <string name="mypage_view_statusmessage">\" %1$s \"</string>
 
     <string name="category">선호 카테고리</string>
     <string name="genre_pop">POP</string>

@@ -1,6 +1,7 @@
 package com.team22.soundary.feature.profile.fragment
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -8,20 +9,28 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.Toast
+import android.widget.ToggleButton
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team22.soundary.databinding.FragmentMypageEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.team22.soundary.core.domain.model.getCategoryMap
+import com.team22.soundary.core.domain.model.stringListToEnumList
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -30,17 +39,11 @@ class ProfileEditedFragment : Fragment() {
     private val binding get() = _binding!!
     private val profileViewModel: ProfileViewModel by viewModels()
 
-    private val selectedCategories = mutableSetOf<String>()
-    private var selectedImageUri: Uri? = null
+    private val selectedCategoryList = mutableSetOf<String>()
+    private var selectedImageUri: Uri? = Uri.EMPTY
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                accessGallery() // 권한이 허용된 경우 갤러리에 접근
-            } else {
-                Toast.makeText(requireContext(), "갤러리 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,37 +56,97 @@ class ProfileEditedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupCategoryButtons()
+
         setProfileInfo()
-        setupProfileImageClick()
+        setupCategoryButtons(binding.profileCategoryGrid)
         setSaveButton()
+        setGalleryLauncher()
+        setPermissionLauncher()
+        setupProfileImageClick()
     }
 
-    private fun setupCategoryButtons() {
-        val categoryButtons = listOf(
-            binding.buttonHiphop,
-            binding.buttonRock,
-            binding.buttonPop,
-            binding.buttonJpop,
-            binding.buttonKpop,
-            binding.buttonKpop
-        )
-
-        categoryButtons.forEach { button ->
-            button.setOnClickListener {
-                val category = button.text.toString()
-                toggleCategorySelection(button, category)
+    private fun setProfileInfo() {
+        lifecycleScope.launch {
+            profileViewModel.userInfo.collect { user ->
+                setProfileImage(user.image)
+                binding.profileNameEdit.setText(user.name)
+                binding.profileIntroEdit.setText(user.statusMessage)
             }
         }
     }
 
-    private fun toggleCategorySelection(button: View, category: String) {
-        if (selectedCategories.contains(category)) {
-            selectedCategories.remove(category)
-        } else {
-            selectedCategories.add(category)
-            (button as Button).setTextColor(Color.BLACK)
+    private fun setProfileImage(image : Uri) {
+        if(image != Uri.EMPTY) {
+            Glide.with(requireContext())
+                .load(image)
+                .into(binding.profileImageview)
+            selectedImageUri = image
         }
+    }
+
+    private fun setupCategoryButtons(gridLayout: GridLayout) {
+        for (i in 0 until gridLayout.childCount) {
+            val child = gridLayout.getChildAt(i)
+
+            if (child is ToggleButton) {
+                child.setOnClickListener {
+                    if (child.isChecked) {
+                        if (selectedCategoryList.size < 3) {
+                            selectedCategoryList.add(child.text.toString())
+                        } else {
+                            child.isChecked = false
+                            Toast.makeText(requireContext(), "최대 3개까지 선택 가능합니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        selectedCategoryList.remove(child.text.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setSaveButton() {
+        binding.saveButton.setOnClickListener {
+            val nickname = binding.profileNameEdit.text.toString()
+            if (nickname.isEmpty()) {
+                Toast.makeText(requireContext(), "닉네임은 필수 입력칸입니다.", Toast.LENGTH_SHORT).show()
+            } else if (selectedCategoryList.isEmpty()) {
+                Toast.makeText(requireContext(), "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                lifecycleScope.launch {
+                    profileViewModel.editProfile(
+                        nickname = binding.profileNameEdit.text.toString(),
+                        intro = binding.profileIntroEdit.text.toString(),
+                        profile = selectedImageUri ?: Uri.EMPTY
+                    )
+                    profileViewModel.setLabel(selectedCategoryList.toList())
+                    parentFragmentManager.popBackStack()
+                }
+            }
+        }
+    }
+
+    private fun setGalleryLauncher() {
+        galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                selectedImageUri = result.data?.data
+                binding.profileImageview.setImageURI(selectedImageUri)
+            } else {
+                Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setPermissionLauncher() {
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    galleryLauncher.launch(intent) // 권한이 허용된 경우 갤러리에 접근
+                } else {
+                    Toast.makeText(requireContext(), "갤러리 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun setupProfileImageClick() {
@@ -102,57 +165,12 @@ class ProfileEditedFragment : Fragment() {
         when {
             ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
                 // 권한이 이미 허용된 경우
-                accessGallery()
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                galleryLauncher.launch(intent)
             }
             else -> {
                 // 권한 요청
-                requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
-
-    // 갤러리에 접근하는 함수
-    private fun accessGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, GALLERY_REQUEST_CODE)
-    }
-
-    // 갤러리에서 이미지 선택 후 처리
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            selectedImageUri = data.data
-            if (selectedImageUri != null) {
-                binding.profileImageview.setImageURI(selectedImageUri)
-            } else {
-                Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun setProfileInfo() {
-        lifecycleScope.launch {
-            profileViewModel.userInfo.collect {
-                binding.profileIntroEdit.setText(it.statusMessage)
-                binding.profileNameEdit.setText(it.name)
-                Glide.with(requireContext())
-                    .load(it.image)
-                    .into(binding.profileImageview)
-            }
-        }
-    }
-
-    private fun setSaveButton() {
-        binding.saveButton.setOnClickListener {
-            lifecycleScope.launch {
-                profileViewModel.setProfile(
-                    name = binding.profileNameEdit.text.toString(),
-                    intro = binding.profileIntroEdit.text.toString(),
-                    profile = selectedImageUri ?: Uri.EMPTY
-                )
-                profileViewModel.addLabel(selectedCategories.toList())
-                parentFragmentManager.popBackStack()
+                permissionLauncher.launch(permission)
             }
         }
     }
@@ -161,9 +179,6 @@ class ProfileEditedFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
 
     companion object {
         const val GALLERY_REQUEST_CODE = 101
