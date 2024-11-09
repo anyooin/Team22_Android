@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.search.presentation.friend
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -43,6 +44,7 @@ class NewFriendViewHolder(
         binding.friendDeclineButton.setOnClickListener {
             currentFriend?.let { friend ->
                 onDeclineClick?.invoke(friend)
+                Log.d("NewFriendViewHolder", "Decline clicked for user: ${friend.displayId}")
             }
         }
 
@@ -61,6 +63,6 @@ class NewFriendViewHolder(
         val firstGenre = friend.label.firstOrNull() ?: "장르 없음"
         binding.favoriteGenreTextview.text = firstGenre
 
-        binding.userIdTextview.text = "@${friend.id}"
+        binding.userIdTextview.text = "@${friend.displayId}"
     }
 }

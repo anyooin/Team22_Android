@@ -42,7 +42,6 @@ class FriendSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize adapters
         newFriendsAdapter = createNewFriendAdapter(onAcceptClick = { friend ->
             friendSearchViewModel.acceptFriend(friend)
         }, onDeclineClick = { friend ->

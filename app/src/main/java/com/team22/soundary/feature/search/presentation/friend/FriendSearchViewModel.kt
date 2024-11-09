@@ -1,6 +1,7 @@
 package com.team22.soundary.feature.search.presentation.friend
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.data.dto.FriendRequestDto
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendSearchViewModel @Inject constructor(
-    private val friendRepository: FriendRepository
+    private val friendRepository: FriendRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _newFriends = MutableStateFlow<List<User>>(emptyList())
@@ -53,14 +55,13 @@ class FriendSearchViewModel @Inject constructor(
     fun loadFriends() {
         viewModelScope.launch {
             friendRepository.getFriends().collectLatest {
-                _myFriends.value = it
+                savedStateHandle["myFriends"] = it
             }
             friendRepository.getReceivedRequests().collectLatest {
-                _newFriends.value = it
+                savedStateHandle["newFriends"] = it
             }
             friendRepository.getSentRequests().collectLatest {
-                _pendingFriends.value = it
-                Log.d("akuby21",""+it)
+                savedStateHandle["pendingFriends"] = it
             }
         }
     }

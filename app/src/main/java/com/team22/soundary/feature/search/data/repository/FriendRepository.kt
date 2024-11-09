@@ -115,12 +115,20 @@ class FriendRepository @Inject constructor(
     suspend fun rejectReceivedRequest(targetUserId: String): Boolean {
         return try {
             val response = friendApiService.rejectReceivedRequest(targetUserId)
-            response.isSuccessful
+            if (response.isSuccessful) {
+                Log.d("FriendRepository", "Request rejected for user: $targetUserId")
+                true
+            } else {
+                Log.d("FriendRepository", "Failed to reject request: ${response.code()} - ${response.message()}")
+                false
+            }
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("FriendRepository", "Exception in rejectReceivedRequest: $e")
             false
         }
     }
+
     // 친구 상태 업데이트 메서드 (친구 수락 시에만 적용)
     suspend fun updateFriendStatus(friendId: String, newStatus: String): Boolean {
         return try {
