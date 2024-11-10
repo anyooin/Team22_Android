@@ -13,7 +13,7 @@ import java.util.Date
 // 친구 목록 응답 DTO
 @Serializable
 data class FriendsResponse(
-    @SerialName("friends") val friends: List<FriendInfoDto>?
+    @SerialName("friends") val friends: List<FriendProfileDto>?
 )
 
 // 받은 친구 요청 목록 응답 DTO
@@ -43,9 +43,17 @@ data class FriendInfoDto(
     @SerialName("id") val id: String?,
     @SerialName("display_id") val displayId: String?,
     @SerialName("nickname") val name: String?,
-    @SerialName("profile_image_url") val profile: String?,
+    @SerialName("profile_image_url") val profile: String?
 )
 
+@Serializable
+data class FriendProfileDto(
+    @SerialName("id") val id: String?,
+    @SerialName("display_id") val displayId: String?,
+    @SerialName("nickname") val name: String?,
+    @SerialName("profile_image_url") val profile: String?,
+    @SerialName("labels") val labels: List<String>?
+)
 @Serializable
 data class ReceivedShareListDto(
     @SerialName("total") val total: Int?,
@@ -304,10 +312,18 @@ fun FriendInfoDto.toVO(): User {
         id = this.id ?: "",
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: ""),
+        image = Uri.parse(this.profile ?: "")
     )
 }
-
+fun FriendProfileDto.toVO(): User {
+    return User(
+        id = this.id ?: "",
+        displayId = this.displayId ?: "",
+        name = this.name ?: "",
+        image = Uri.parse(this.profile ?: ""),
+        label = this.labels ?: emptyList()
+    )
+}
 
 fun TokenDto.toVO(): Token =
     Token(
