@@ -47,7 +47,6 @@ class ShareViewModel @Inject constructor(
     }
 
     private suspend fun initFriendList() {
-
         friendRepository.getFriends().collectLatest {
             _userList.value = it
         }

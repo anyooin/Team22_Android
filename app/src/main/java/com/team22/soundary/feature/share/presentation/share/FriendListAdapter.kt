@@ -1,18 +1,21 @@
 package com.team22.soundary.feature.share.presentation.share
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.ShareFriendItemNoImageBinding
 import com.team22.soundary.databinding.ShareFriendItemWithImageBinding
 
-class FriendListAdapter :
-    ListAdapter<User, RecyclerView.ViewHolder>(FriendItemDiffCallback()) {
+class FriendListAdapter(
+    private val context: Context
+) : ListAdapter<User, RecyclerView.ViewHolder>(FriendItemDiffCallback()) {
     class ViewHolderNoImage(
         private val binding: ShareFriendItemNoImageBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -25,11 +28,14 @@ class FriendListAdapter :
     }
 
     class ViewHolderWithImage(
+        private val context: Context,
         private val binding: ShareFriendItemWithImageBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(userItem: User) {
-            binding.shareFriendImage.setImageResource(R.drawable.stalker)
+            Glide.with(context)
+                .load(userItem.imageId)
+                .into(binding.shareFriendImage)
             binding.shareFriendTextview.text = userItem.name
             binding.shareGrayBackground.visibility = View.INVISIBLE
         }
@@ -52,7 +58,7 @@ class FriendListAdapter :
                     parent,
                     false
                 )
-                return ViewHolderWithImage(binding)
+                return ViewHolderWithImage(context, binding)
             }
 
             else -> throw IllegalArgumentException()
@@ -67,7 +73,7 @@ class FriendListAdapter :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).image == Uri.EMPTY) {
+        return if (getItem(position).imageId == "") {
             NO_IMAGE
         } else {
             WITH_IMAGE

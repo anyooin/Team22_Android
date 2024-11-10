@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.presentation
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,12 +46,20 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(token:String,user: User) : Boolean {
+    fun updateUserInfo(token:String, user: User) : Boolean {
         var result = true
         viewModelScope.launch {
             result = userDetailUpdateUseCase.updateUserInfo(token,user)
         }
         return result
+    }
+
+    fun uploadImage(uri : Uri?) : String {
+        var imageKey = ""
+        viewModelScope.launch {
+            imageKey = userDetailUpdateUseCase.uploadImage(uri)
+        }
+        return imageKey
     }
 
     fun checkTokenValidity() {

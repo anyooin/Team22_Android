@@ -289,9 +289,15 @@ class MainFragment : Fragment() {
                             binding.likeButton.setImageResource(uiState.data.likeBackground)
                             binding.dayTextView.text =
                                 uiState.data.share.sharedDate.getDiff()
-                            uiState.data.share.friend.image?.let {
+//                            uiState.data.share.friend.image?.let {
+//                                Glide.with(requireContext())
+//                                    .load(it)
+//                                    .circleCrop()
+//                                    .into(binding.friendPicImageView)
+//                            }
+                            if(uiState.data.share.friend.imageId != "") {
                                 Glide.with(requireContext())
-                                    .load(it)
+                                    .load(uiState.data.share.friend.imageId)
                                     .circleCrop()
                                     .into(binding.friendPicImageView)
                             }

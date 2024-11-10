@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.retrofit.serialization)
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation(libs.kakao.sdk)
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.datastore.preferences)

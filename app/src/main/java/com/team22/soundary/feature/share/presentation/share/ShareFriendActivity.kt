@@ -60,7 +60,7 @@ class ShareFriendActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        adapter = FriendListAdapter()
+        adapter = FriendListAdapter(this)
         binding.shareFriendRecyclerview.adapter = adapter
         binding.shareFriendRecyclerview.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

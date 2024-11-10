@@ -144,7 +144,7 @@ data class UserUpdateRequest(
     @SerialName("display_id") val displayId: String,
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = "",
-    @SerialName("profile_image_url") val profileImage: String = Uri.EMPTY.toString()
+    @SerialName("profile_image_url") val profileImage: String = ""
 )
 
 @Serializable
@@ -231,6 +231,11 @@ data class ShareMusicResponse(
     @SerialName("shared_music_id") val platformTrackId: String?
 )
 
+@Serializable
+data class ImageUpLoadResponse(
+    @SerialName("uploaded_image_url") val imageId: String?
+)
+
 fun SentShareDto.toVO(): Share {
     return Share(
         this.id ?: "",
@@ -292,7 +297,7 @@ fun MostLikedTrackResponseDto.toVO(): Song =
 fun FromUserResponse.toVO(): User =
     User(
         name = this.displayName ?: "",
-        image = Uri.parse(this.profileImageUrl ?: "")
+        imageId = this.profileImageUrl ?: ""
     )
 
 
@@ -300,7 +305,7 @@ fun UserInfoDto.toVO(): User {
     return User(
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: ""),
+        imageId = this.profile ?: "",
         statusMessage = this.description ?: "",
         role = this.roles ?: emptyList(),
         label = this.labels ?: emptyList()
@@ -312,7 +317,7 @@ fun FriendInfoDto.toVO(): User {
         id = this.id ?: "",
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: "")
+        imageId = this.profile ?: ""
     )
 }
 fun FriendProfileDto.toVO(): User {
@@ -320,7 +325,7 @@ fun FriendProfileDto.toVO(): User {
         id = this.id ?: "",
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: ""),
+        imageId = this.profile ?: "",
         label = this.labels ?: emptyList()
     )
 }

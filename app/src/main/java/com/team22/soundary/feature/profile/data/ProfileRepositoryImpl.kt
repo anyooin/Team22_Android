@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -37,23 +38,42 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun uploadImage(multipart : MultipartBody.Part) : String {
+        val response = withContext(dispatcher){
+            apiService.uploadImageToServer(multipart)
+        }
+
+        return when {
+            response.isSuccessful -> {
+                Log.d("uin", "성공")
+                response.body()?.imageId ?: ""
+            }
+            else -> {
+                Log.d("uin", "취소")
+                ""
+            }
+        }
+    }
+
     override suspend fun editProfile(
         displayId: String,
         nickname: String,
         description: String?,
-        profileUri: Uri
+        imageId: String
     ) {
         // Uri를 String으로 변환하여 UserUpdateRequest 객체 생성
         val userUpdateRequest = UserUpdateRequest(
             displayId = displayId,
             nickname = nickname,
             description = description,
-            profileImage = profileUri.toString()
+            profileImage = imageId
         )
 
         val response = withContext(dispatcher) {
             apiService.putProfile(userUpdateRequest)
         }
+
+        Log.d("uin", "수정한 이미지 : " + imageId)
 
         if (!response.isSuccessful) {
             throw Exception("Error: ${response.message()}")

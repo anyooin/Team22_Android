@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.data.remote
 
+import com.team22.soundary.core.data.dto.ImageUpLoadResponse
 import com.team22.soundary.core.data.dto.LabelAddRequest
 import com.team22.soundary.core.data.dto.UserInfoInitRequestDto
 import retrofit2.Response
@@ -12,6 +13,13 @@ interface UserService {
     suspend fun updateMyInfo(
         @Body userInfoInitRequestDto: UserInfoInitRequestDto
     ): Response<Unit>
+
+    @POST("/api/v1/images")
+    suspend fun uploadImageToServer(
+        @Body image: String
+    ): Response<ImageUpLoadResponse>
+
+
 }
 
 

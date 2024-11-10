@@ -47,9 +47,11 @@ class FriendProfileFragment : Fragment() {
                     binding.userEmailTextview.text = getString(R.string.mypage_view_displayid , it.displayId)
                     binding.statusMessageTextview.text = getString(R.string.mypage_view_statusmessage , it.statusMessage)
                     // Glide를 사용하여 프로필 이미지 로드
-                    Glide.with(this@FriendProfileFragment)
-                        .load(it.image.toString())
-                        .into(binding.profileImageview)
+                    if(it.imageId != "") {
+                        Glide.with(this@FriendProfileFragment)
+                            .load(it.imageId)
+                            .into(binding.profileImageview)
+                    }
                     setCategory(it.label)
                 }
             }

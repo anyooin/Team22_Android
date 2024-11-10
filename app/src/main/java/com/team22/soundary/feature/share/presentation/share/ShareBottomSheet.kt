@@ -78,7 +78,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
     }
 
     private fun setRecyclerView(view: View) {
-        adapter = BottomSheetAdapter(object : FriendItemClickListener {
+        adapter = BottomSheetAdapter(requireContext(), object : FriendItemClickListener {
             override fun onClick(v: View, selectItem: User) {
                 viewModel.toggleFriendSelection(selectItem.id)
             }

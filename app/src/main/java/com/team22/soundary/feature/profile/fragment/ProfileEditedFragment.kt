@@ -28,6 +28,7 @@ import com.team22.soundary.databinding.FragmentMypageEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.team22.soundary.core.domain.model.createImageMultipart
 import com.team22.soundary.core.domain.model.getCategoryMap
 import com.team22.soundary.core.domain.model.stringListToEnumList
 import kotlinx.coroutines.flow.collectLatest
@@ -40,6 +41,7 @@ class ProfileEditedFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by viewModels()
 
     private val selectedCategoryList = mutableSetOf<String>()
+    private var selectedImageString: String = ""
     private var selectedImageUri: Uri? = Uri.EMPTY
 
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
@@ -63,24 +65,25 @@ class ProfileEditedFragment : Fragment() {
         setGalleryLauncher()
         setPermissionLauncher()
         setupProfileImageClick()
+        popFragment()
     }
 
     private fun setProfileInfo() {
         lifecycleScope.launch {
             profileViewModel.userInfo.collect { user ->
-                setProfileImage(user.image)
+                setProfileImage(user.imageId)
                 binding.profileNameEdit.setText(user.name)
                 binding.profileIntroEdit.setText(user.statusMessage)
             }
         }
     }
 
-    private fun setProfileImage(image : Uri) {
-        if(image != Uri.EMPTY) {
+    private fun setProfileImage(image: String) {
+        if (image != "") {
             Glide.with(requireContext())
                 .load(image)
                 .into(binding.profileImageview)
-            selectedImageUri = image
+            selectedImageString = image
         }
     }
 
@@ -95,7 +98,11 @@ class ProfileEditedFragment : Fragment() {
                             selectedCategoryList.add(child.text.toString())
                         } else {
                             child.isChecked = false
-                            Toast.makeText(requireContext(), "최대 3개까지 선택 가능합니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "최대 3개까지 선택 가능합니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
                         selectedCategoryList.remove(child.text.toString())
@@ -113,13 +120,27 @@ class ProfileEditedFragment : Fragment() {
             } else if (selectedCategoryList.isEmpty()) {
                 Toast.makeText(requireContext(), "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                lifecycleScope.launch {
-                    profileViewModel.editProfile(
-                        nickname = binding.profileNameEdit.text.toString(),
-                        intro = binding.profileIntroEdit.text.toString(),
-                        profile = selectedImageUri ?: Uri.EMPTY
-                    )
-                    profileViewModel.setLabel(selectedCategoryList.toList())
+                if (selectedImageUri != Uri.EMPTY) {
+                    selectedImageString = profileViewModel.uploadImage(createImageMultipart(requireContext(), selectedImageUri))
+                    Log.d("uin", "새로운 이미지" + selectedImageString)
+                }
+
+                profileViewModel.editProfile(
+                    nickname = binding.profileNameEdit.text.toString(),
+                    intro = binding.profileIntroEdit.text.toString(),
+                    imageId = selectedImageString
+                )
+                profileViewModel.setLabel(selectedCategoryList.toList())
+                //parentFragmentManager.popBackStack()
+
+            }
+        }
+    }
+
+    private fun popFragment() {
+        lifecycleScope.launch {
+            profileViewModel.result.collectLatest { result ->
+                if (result) {
                     parentFragmentManager.popBackStack()
                 }
             }
@@ -127,24 +148,28 @@ class ProfileEditedFragment : Fragment() {
     }
 
     private fun setGalleryLauncher() {
-        galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
-                selectedImageUri = result.data?.data
-                binding.profileImageview.setImageURI(selectedImageUri)
-            } else {
-                Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+        galleryLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK && result.data != null) {
+                    selectedImageUri = result.data?.data
+                    binding.profileImageview.setImageURI(selectedImageUri)
+                } else {
+                    Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
-        }
     }
 
     private fun setPermissionLauncher() {
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (isGranted) {
-                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    val intent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     galleryLauncher.launch(intent) // 권한이 허용된 경우 갤러리에 접근
                 } else {
-                    Toast.makeText(requireContext(), "갤러리 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "갤러리 접근 권한이 필요합니다.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
     }
@@ -163,11 +188,16 @@ class ProfileEditedFragment : Fragment() {
 
     private fun requestPermissionIfNeeded(permission: String) {
         when {
-            ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED -> {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                permission
+            ) == PackageManager.PERMISSION_GRANTED -> {
                 // 권한이 이미 허용된 경우
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 galleryLauncher.launch(intent)
             }
+
             else -> {
                 // 권한 요청
                 permissionLauncher.launch(permission)

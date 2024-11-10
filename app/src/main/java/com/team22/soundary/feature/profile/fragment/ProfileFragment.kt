@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 profileViewModel.userInfo.collectLatest { user ->
-                    setProfileImage(user.image)
+                    setProfileImage(user.imageId)
                     binding.profileTextviewName.text = user.name
                     binding.profileTextviewDisplayid.text = getString(R.string.mypage_view_displayid , user.displayId)
                     binding.profileTextviewIntro.text = getString(R.string.mypage_view_statusmessage , user.statusMessage)
@@ -72,8 +72,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun setProfileImage(image : Uri) {
-        if(image != Uri.EMPTY) {
+    private fun setProfileImage(image : String) {
+        if(image != "") {
             Glide.with(requireContext())
                 .load(image)
                 .into(binding.profileImageview)

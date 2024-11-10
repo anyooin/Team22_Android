@@ -5,11 +5,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Android 11 이상 -->
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
 
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
@@ -28,7 +25,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Soundary"
-        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <service android:name=".FCMService"
@@ -42,7 +38,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".feature.signup.presentation.ActivitySignIntro"
             android:exported="true"
@@ -76,7 +74,8 @@
             android:exported="true" />
         <activity
             android:name=".feature.signup.presentation.ActivitySignup2"
-            android:exported="true"></activity>
+            android:exported="true">
+        </activity>
         <activity
             android:name=".feature.share.presentation.share.ShareFriendActivity"
             android:exported="false"
