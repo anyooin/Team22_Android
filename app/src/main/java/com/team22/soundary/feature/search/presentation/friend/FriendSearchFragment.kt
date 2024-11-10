@@ -25,7 +25,6 @@ class FriendSearchFragment : Fragment() {
     private lateinit var newFriendsAdapter: NewFriendAdapter
     private lateinit var myFriendsAdapter: FriendAdapter
     private lateinit var pendingFriendsAdapter: PendingFriendAdapter
-    private lateinit var searchResultAdapter: SearchResultAdapter
     private var _binding: FragmentFriendSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -43,32 +42,11 @@ class FriendSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        newFriendsAdapter = createNewFriendAdapter(onAcceptClick = { friend ->
-            friendSearchViewModel.acceptFriend(friend)
-        }, onDeclineClick = { friend ->
-            friendSearchViewModel.declineFriend(friend)
-        })
-
-        myFriendsAdapter = createFriendAdapter(onDeleteClick = { friend ->
-            friendSearchViewModel.deleteFriend(friend)
-        })
-
-        pendingFriendsAdapter = PendingFriendAdapter { friend ->
-            navigateToFriendProfile(friend.displayId)
-        }
-
-        searchResultAdapter = SearchResultAdapter(
-            onRequestFriendClick = { user ->
-                Log.d("FriendSearchFragment", "requestFriend called for user: ${user.displayId}")
-                friendSearchViewModel.requestFriend(user)
-                Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
-            },
-            isFriendRequested = { user -> friendSearchViewModel.isFriend(user) }
-        )
-
+        newFriendsAdapter = createNewFriendAdapter()
+        myFriendsAdapter = createFriendAdapter()
+        pendingFriendsAdapter = createPendingFriendAdapter()
 
         setupRecyclerViews()
-
         observeViewModel()
     }
 
@@ -96,12 +74,6 @@ class FriendSearchFragment : Fragment() {
                 pendingFriendsAdapter.submitList(pendingFriends)
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            friendSearchViewModel.searchResultList.collectLatest { searchResults ->
-                searchResultAdapter.submitList(searchResults)
-            }
-        }
     }
 
     private fun updateFriendsCount(count: Int) {
@@ -127,20 +99,22 @@ class FriendSearchFragment : Fragment() {
         }
     }
 
-    private fun createFriendAdapter(
-        onDeleteClick: ((User) -> Unit)? = null
-    ) = FriendAdapter(
+    private fun createFriendAdapter() = FriendAdapter(
+        context = requireContext(),
         onItemClick = { friend -> navigateToFriendProfile(friend.displayId) },
-        onDeleteClick = onDeleteClick
+        onDeleteClick = { friend -> friendSearchViewModel.deleteFriend(friend) }
     )
 
-    private fun createNewFriendAdapter(
-        onAcceptClick: ((User) -> Unit)? = null,
-        onDeclineClick: ((User) -> Unit)? = null,
-    ) = NewFriendAdapter(
+    private fun createNewFriendAdapter() = NewFriendAdapter(
+        context = requireContext(),
         onItemClick = { friend -> navigateToFriendProfile(friend.displayId) },
-        onAcceptClick = onAcceptClick,
-        onDeclineClick = onDeclineClick,
+        onAcceptClick = { friend -> friendSearchViewModel.acceptFriend(friend) },
+        onDeclineClick = { friend -> friendSearchViewModel.declineFriend(friend) }
+    )
+
+    private fun createPendingFriendAdapter() = PendingFriendAdapter(
+        context = requireContext(),
+        onItemClick = { friend -> navigateToFriendProfile(friend.displayId) }
     )
 
     private fun setupRecyclerViews() {
@@ -155,14 +129,19 @@ class FriendSearchFragment : Fragment() {
         }
 
         binding.pendingFriendsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = pendingFriendsAdapter
         }
 
-
-        binding.pendingFriendsHeader.setOnClickListener {
-            binding.pendingFriendsRecyclerView.visibility =
-                if (binding.pendingFriendsRecyclerView.visibility == View.GONE) View.VISIBLE else View.GONE
+        binding.pendingFriendsButton.setOnClickListener {
+            if(binding.pendingFriendsRecyclerView.visibility == View.GONE) {
+                binding.pendingFriendsRecyclerView.visibility = View.VISIBLE
+                binding.pendingFriendsHeader.text = getString(R.string.pending_friend_close)
+            } else {
+                binding.pendingFriendsRecyclerView.visibility = View.GONE
+                binding.pendingFriendsHeader.text =  getString(R.string.pending_friend_open)
+            }
         }
 
         binding.searchEditText.setOnClickListener {

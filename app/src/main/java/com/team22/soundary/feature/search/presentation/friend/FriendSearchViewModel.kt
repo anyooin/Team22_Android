@@ -73,7 +73,7 @@ class FriendSearchViewModel @Inject constructor(
         viewModelScope.launch {
             friendRepository.getSentRequests().collectLatest {
                 _pendingFriends.value = it
-                Log.d("FriendSearchViewModel", "Updated pendingFriends list: $it")
+                Log.d("uin", "Updated pendingFriends list: $it")
             }
         }
     }

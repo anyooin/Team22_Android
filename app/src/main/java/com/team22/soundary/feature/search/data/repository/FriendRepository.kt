@@ -116,15 +116,15 @@ class FriendRepository @Inject constructor(
         return try {
             val response = friendApiService.rejectReceivedRequest(targetUserId)
             if (response.isSuccessful) {
-                Log.d("FriendRepository", "Request rejected for user: $targetUserId")
+                Log.d("uin", "Request rejected for user: $targetUserId")
                 true
             } else {
-                Log.d("FriendRepository", "Failed to reject request: ${response.code()} - ${response.message()}")
+                Log.d("uin", "Failed to reject request: ${response.code()} - ${response.message()}")
                 false
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("FriendRepository", "Exception in rejectReceivedRequest: $e")
+            Log.e("uin", "Exception in rejectReceivedRequest: $e")
             false
         }
     }

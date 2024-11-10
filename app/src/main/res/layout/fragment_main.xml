@@ -116,17 +116,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_textView" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/friend_pic_imageView"-->
-<!--        android:layout_width="@dimen/friend_pic_size"-->
-<!--        android:layout_height="@dimen/friend_pic_size"-->
-<!--        android:layout_marginTop="@dimen/margin_half"-->
-<!--        android:layout_marginBottom="@dimen/margin_half"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/friend_name_textView"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/message_textView"-->
-<!--        android:scaleType="center"-->
-<!--        android:src="@drawable/ic_launcher_background"/>-->
-
     <androidx.cardview.widget.CardView
         android:id="@+id/friend_pic_cardview"
         android:layout_width="@dimen/friend_pic_size"
@@ -137,15 +126,32 @@
         app:cardElevation="2dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toStartOf="@id/friend_name_textView"
-        app:layout_constraintTop_toBottomOf="@+id/message_textView">
+        app:layout_constraintTop_toBottomOf="@+id/message_textView"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/friend_pic_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/all_logo_image" />
+            android:src="@drawable/app_icon" />
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/friend_pic_textView"
+        android:layout_width="@dimen/friend_pic_size"
+        android:layout_height="@dimen/friend_pic_size"
+        android:layout_marginTop="@dimen/margin_half"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:background="@drawable/profile_background"
+        android:gravity="center"
+        android:text="@string/share_user_name_first_word"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/friend_name_textView"
+        app:layout_constraintTop_toBottomOf="@+id/message_textView"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/friend_name_textView"

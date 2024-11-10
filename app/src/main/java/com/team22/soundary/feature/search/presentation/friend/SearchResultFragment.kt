@@ -37,6 +37,7 @@ class SearchResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchResultAdapter = SearchResultAdapter(
+            context = requireContext(),
             onRequestFriendClick = { user ->
                 friendSearchViewModel.requestFriend(user)
                 Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()

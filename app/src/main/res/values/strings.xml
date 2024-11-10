@@ -103,8 +103,10 @@
     <string name="reject_request">거절</string>
     <string name="search">검색</string>
 
-    <string name="new_friend">새로운 친구</string>
-    <string name="pending_friend"> 대기 중인 친구 </string>
+    <string name="new_friend">내게 온 친구 신청</string>
+    <string name="pending_friend_open">대기 중인 친구 열기</string>
+    <string name="pending_friend_close">대기 중인 친구 닫기</string>
+    <string name="friend_label">ROCK, HIPHOP, JPOP</string>
 
     <string name = "my_friend_with_count">내 친구 (x/20)</string>
     <string name = "friend_info">친구 정보</string>

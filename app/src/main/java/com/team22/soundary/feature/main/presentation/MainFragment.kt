@@ -289,19 +289,19 @@ class MainFragment : Fragment() {
                             binding.likeButton.setImageResource(uiState.data.likeBackground)
                             binding.dayTextView.text =
                                 uiState.data.share.sharedDate.getDiff()
-//                            uiState.data.share.friend.image?.let {
-//                                Glide.with(requireContext())
-//                                    .load(it)
-//                                    .circleCrop()
-//                                    .into(binding.friendPicImageView)
-//                            }
                             if(uiState.data.share.friend.imageId != "") {
+                                binding.friendPicCardview.visibility = View.VISIBLE
+                                binding.friendNameTextView.visibility = View.INVISIBLE
                                 Glide.with(requireContext())
                                     .load(uiState.data.share.friend.imageId)
                                     .circleCrop()
                                     .into(binding.friendPicImageView)
+                            } else {
+                                binding.friendPicCardview.visibility = View.INVISIBLE
+                                binding.friendNameTextView.visibility = View.VISIBLE
+                                binding.friendNameTextView.text = uiState.data.share.friend.name[0].toString()
                             }
-                            uiState.data.share.song.coverImage?.let {
+                            uiState.data.share.song.coverImage.let {
                                 Glide.with(requireContext())
                                     .load(it)
                                     .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
@@ -339,7 +339,8 @@ class MainFragment : Fragment() {
         binding.likeButton.isGone = !binding.likeButton.isGone
         binding.shareImageButton.isGone = !binding.shareImageButton.isGone
         binding.friendNameTextView.isGone = !binding.friendNameTextView.isGone
-        binding.friendPicImageView.isGone = !binding.friendPicImageView.isGone
+        binding.friendPicCardview.isGone = !binding.friendPicCardview.isGone
+        binding.friendPicTextView.isGone = !binding.friendPicTextView.isGone
         binding.dayTextView.isGone = !binding.dayTextView.isGone
         binding.instructionTextView.isGone = !binding.instructionTextView.isGone
         binding.mainProgressBar.isGone = !binding.mainProgressBar.isGone
