@@ -143,5 +143,4 @@ class ActivitySignup2 : AppCompatActivity() {
         const val KEY_DISPLAY_ID = "displayId"
         const val KEY_LABEL = "label"
     }
-
 }
