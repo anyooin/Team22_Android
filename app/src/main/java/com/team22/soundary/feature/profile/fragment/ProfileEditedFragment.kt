@@ -120,15 +120,11 @@ class ProfileEditedFragment : Fragment() {
             } else if (selectedCategoryList.isEmpty()) {
                 Toast.makeText(requireContext(), "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                if (selectedImageUri != Uri.EMPTY) {
-                    selectedImageString = profileViewModel.uploadImage(createImageMultipart(requireContext(), selectedImageUri))
-                    Log.d("uin", "새로운 이미지" + selectedImageString)
-                }
-
+                Log.d("uin", "수정시 이미지값" + profileViewModel.imageId.value)
                 profileViewModel.editProfile(
                     nickname = binding.profileNameEdit.text.toString(),
                     intro = binding.profileIntroEdit.text.toString(),
-                    imageId = selectedImageString
+                    imageId = profileViewModel.imageId.value
                 )
                 profileViewModel.setLabel(selectedCategoryList.toList())
                 //parentFragmentManager.popBackStack()
@@ -153,6 +149,9 @@ class ProfileEditedFragment : Fragment() {
                 if (result.resultCode == RESULT_OK && result.data != null) {
                     selectedImageUri = result.data?.data
                     binding.profileImageview.setImageURI(selectedImageUri)
+                    if (selectedImageUri != Uri.EMPTY) {
+                        profileViewModel.uploadImage(createImageMultipart(requireContext(), selectedImageUri))
+                    }
                 } else {
                     Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT)
                         .show()

@@ -45,7 +45,11 @@ class ProfileRepositoryImpl @Inject constructor(
 
         return when {
             response.isSuccessful -> {
-                Log.d("uin", "성공")
+                if( response.body() == null) {
+                    Log.d("uin", "성공 : 바디가 비어있음" + response.body()?.imageId)
+                } else {
+                    Log.d("uin", "성공 : 바디값" + response.body()?.imageId)
+                }
                 response.body()?.imageId ?: ""
             }
             else -> {

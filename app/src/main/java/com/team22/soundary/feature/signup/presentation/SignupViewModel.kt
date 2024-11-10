@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.io.IOException
 import javax.inject.Inject
 
@@ -25,6 +26,9 @@ class SignupViewModel @Inject constructor(
 ) : ViewModel() {
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
+
+    private val _imageId = MutableStateFlow<String>("")
+    val imageId : StateFlow<String> = _imageId.asStateFlow()
 
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
@@ -46,20 +50,23 @@ class SignupViewModel @Inject constructor(
         }
     }
 
+    fun uploadImage(multipart : MultipartBody.Part) {
+        viewModelScope.launch {
+            try {
+                _imageId.value = userDetailUpdateUseCase.uploadImage(multipart)
+                Log.d("uin", "이미지 : " + _imageId.value)
+            } catch (e: Exception) {
+                Log.e("uin", "Error uploading image: ${e.message}")
+            }
+        }
+    }
+
     fun updateUserInfo(token:String, user: User) : Boolean {
         var result = true
         viewModelScope.launch {
             result = userDetailUpdateUseCase.updateUserInfo(token,user)
         }
         return result
-    }
-
-    fun uploadImage(uri : Uri?) : String {
-        var imageKey = ""
-        viewModelScope.launch {
-            imageKey = userDetailUpdateUseCase.uploadImage(uri)
-        }
-        return imageKey
     }
 
     fun checkTokenValidity() {

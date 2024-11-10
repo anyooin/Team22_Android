@@ -33,6 +33,9 @@ class ProfileViewModel @Inject constructor(
     private val _result = MutableStateFlow<Boolean>(false)
     val result : StateFlow<Boolean> = _result.asStateFlow()
 
+    private val _imageId = MutableStateFlow<String>("")
+    val imageId : StateFlow<String> = _imageId.asStateFlow()
+
     init {
         getProfile()
         getSentShare()
@@ -74,16 +77,15 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun uploadImage(multipart : MultipartBody.Part) : String {
-        var imageKey = ""
+    fun uploadImage(multipart : MultipartBody.Part) {
         viewModelScope.launch {
             try {
-                imageKey = profileRepository.uploadImage(multipart)
+                _imageId.value = profileRepository.uploadImage(multipart)
+                Log.d("uin", "이미지 : " + _imageId.value)
             } catch (e: Exception) {
                 Log.e("uin", "Error uploading image: ${e.message}")
             }
         }
-        return imageKey
     }
 
     fun editProfile(nickname: String, intro: String, imageId: String) {

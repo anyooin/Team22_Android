@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,8 +30,7 @@ annotation class OtherRetrofit
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private val contentType = MediaType.parse("application/json")
-    private const val BASE_URL = "https://api.soundary.kro.kr"
+    private val contentType = "application/json".toMediaTypeOrNull()
     private val json = Json {
         encodeDefaults = true
         ignoreUnknownKeys = true
@@ -38,6 +38,7 @@ object RetrofitModule {
             contextual(Date::class, DateAsStringSerializer)
         }
     }
+
     @OtherRetrofit
     @Provides
     @Singleton

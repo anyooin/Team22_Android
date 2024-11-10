@@ -24,6 +24,7 @@ import com.team22.soundary.R
 import com.team22.soundary.core.data.TokenRepositoryImpl
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.core.domain.model.createImageMultipart
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -59,6 +60,9 @@ class ActivitySignup2 : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK && result.data != null) {
                     selectedImageUri = result.data?.data
                     binding.signupImageviewProfileimage.setImageURI(selectedImageUri)
+                    if (selectedImageUri != Uri.EMPTY) {
+                        viewModel.uploadImage(createImageMultipart(this, selectedImageUri))
+                    }
                 } else {
                     Toast.makeText(this, "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -117,10 +121,7 @@ class ActivitySignup2 : AppCompatActivity() {
                 // 가입 완료 처리 후 MainActivity로 이동
                 FirebaseMessaging.getInstance().token.addOnCompleteListener {
                     if (it.isSuccessful) Log.d("akuby21", it.result)
-
-                    if(selectedImageUri != Uri.EMPTY) {
-                        imageKey = viewModel.uploadImage(selectedImageUri)
-                    }
+                    Log.d("uin", "수정시 이미지값" + viewModel.imageId.value)
 
                     success = viewModel.updateUserInfo(
                         it.result,
@@ -129,7 +130,7 @@ class ActivitySignup2 : AppCompatActivity() {
                             displayId = displayId,
                             name = nickname,
                             statusMessage = binding.signupEdittextIntro.text.toString(),
-                            imageId = imageKey
+                            imageId = viewModel.imageId.value
                         )
                     )
                 }

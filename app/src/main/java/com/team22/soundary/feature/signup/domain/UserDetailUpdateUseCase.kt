@@ -11,6 +11,7 @@ import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.signup.data.remote.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UserDetailUpdateUseCase @Inject constructor(
@@ -18,17 +19,24 @@ class UserDetailUpdateUseCase @Inject constructor(
     private val userService: UserService,
     private val tokenRepository: TokenRepository
 ) {
-
-    suspend fun uploadImage(uri : Uri?) : String {
+    suspend fun uploadImage(multipart : MultipartBody.Part) : String {
         val response = withContext(dispatcher){
-            userService.uploadImageToServer(uri.toString())
+            userService.uploadImageToServer(multipart)
         }
 
         return when {
             response.isSuccessful -> {
+                if( response.body() == null) {
+                    Log.d("uin", "성공 : 바디가 비어있음" + response.body()?.imageId)
+                } else {
+                    Log.d("uin", "성공 : 바디값" + response.body()?.imageId)
+                }
                 response.body()?.imageId ?: ""
             }
-            else -> ""
+            else -> {
+                Log.d("uin", "취소")
+                ""
+            }
         }
     }
 
