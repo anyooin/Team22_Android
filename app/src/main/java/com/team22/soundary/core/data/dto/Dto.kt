@@ -296,7 +296,8 @@ fun MostLikedTrackResponseDto.toVO(): Song =
 
 fun FromUserResponse.toVO(): User =
     User(
-        name = this.displayName ?: "",
+        displayId = this.displayName ?: "",
+        name = this.name ?: "",
         imageId = this.profileImageUrl ?: ""
     )
 

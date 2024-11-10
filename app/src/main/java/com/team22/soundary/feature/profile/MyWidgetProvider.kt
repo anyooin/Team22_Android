@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.team22.soundary.R
 import com.team22.soundary.feature.main.data.ReceivedShareRepositoryImpl
 import com.team22.soundary.feature.main.domain.ReceivedShareRepository
@@ -68,8 +69,22 @@ class MyWidgetProvider : AppWidgetProvider() {
                     receivedShareRepository?.getShareList()?.firstOrNull()
                 }
 
+                val friendImageUrl = receivedShare?.first()?.friend?.imageId // URL 경로
+                var friendImageBitmap: Bitmap? = null
+
+                if (friendImageUrl != "") {
+                    friendImageBitmap = withContext(Dispatchers.IO) {
+                        Glide.with(context!!)
+                            .asBitmap()
+                            .load(friendImageUrl)
+                            .apply(RequestOptions.circleCropTransform())
+                            .submit()
+                            .get() // 비동기로 URL의 이미지를 Bitmap으로 가져옴
+                    }
+                }
+
                 val bitmap =
-                    ImageUtil().getBitmapFromUri(context!!,receivedShare?.first()?.song?.coverImage ?: Uri.EMPTY)
+                    ImageUtil().getBitmapFromUri(receivedShare?.first()?.song?.coverImage ?: Uri.EMPTY)
 
                 withContext(Dispatchers.Main) {
                     // 위젯 업데이트
@@ -78,12 +93,20 @@ class MyWidgetProvider : AppWidgetProvider() {
                             context?.packageName,
                             R.layout.widget_main
                         ).apply {
-
                             this.setImageViewBitmap(R.id.profile_frame, bitmap)
-                            this.setTextViewText(
-                                R.id.text_circle_background,
-                                receivedShare?.first()?.friend?.name?.get(0)?.toString() ?: ""
-                            )
+                            if(friendImageBitmap == null) {
+                                this.setViewVisibility(R.id.text_circle_background, View.VISIBLE)
+                                this.setViewVisibility(R.id.friend_image, View.INVISIBLE)
+                                this.setTextViewText(
+                                    R.id.text_circle_background,
+                                    receivedShare?.first()?.friend?.name?.get(0)?.toString() ?: ""
+                                )
+                            } else {
+                                this.setViewVisibility(R.id.text_circle_background, View.INVISIBLE)
+                                this.setViewVisibility(R.id.friend_image, View.VISIBLE)
+                                this.setImageViewBitmap(R.id.friend_image, friendImageBitmap)
+                            }
+
                         }
 
                         appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -92,8 +115,6 @@ class MyWidgetProvider : AppWidgetProvider() {
             }
         }
     }
-
-
 
     private fun updateAppWidget(
         context: Context,
