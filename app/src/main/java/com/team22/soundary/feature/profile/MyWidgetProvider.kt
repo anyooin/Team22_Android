@@ -66,22 +66,27 @@ class MyWidgetProvider : AppWidgetProvider() {
                 }
 
                 val receivedShare = runBlocking {
-                    receivedShareRepository?.getShareList()?.firstOrNull()
+                    receivedShareRepository.getShareList().firstOrNull()
                 }
 
-                val friendImageUrl = receivedShare?.first()?.friend?.imageId // URL 경로
-                var friendImageBitmap: Bitmap? = null
-
-                if (friendImageUrl != "") {
-                    friendImageBitmap = withContext(Dispatchers.IO) {
-                        Glide.with(context!!)
-                            .asBitmap()
-                            .load(friendImageUrl)
-                            .apply(RequestOptions.circleCropTransform())
-                            .submit()
-                            .get() // 비동기로 URL의 이미지를 Bitmap으로 가져옴
-                    }
-                }
+//                val friendImageUrl = receivedShare?.first()?.friend?.imageId // URL 경로
+//                var friendImageBitmap: Bitmap? = null
+//
+//                if (friendImageUrl != "") {
+//                    friendImageBitmap = withContext(Dispatchers.IO) {
+//                        Glide.with(context!!)
+//                            .asBitmap()
+//                            .load(friendImageUrl)
+//                            .apply(RequestOptions.circleCropTransform())
+//                            .submit()
+//                            .get() // 비동기로 URL의 이미지를 Bitmap으로 가져옴
+//                    }
+//                }
+//
+//
+//                val friendImageBitmap =
+//                ImageUtil().getBitmapFromStringUrl(receivedShare?.first()?.friend?.imageId ?: "")
+                val friendImageBitmap = null
 
                 val bitmap =
                     ImageUtil().getBitmapFromUri(receivedShare?.first()?.song?.coverImage ?: Uri.EMPTY)
@@ -104,9 +109,8 @@ class MyWidgetProvider : AppWidgetProvider() {
                             } else {
                                 this.setViewVisibility(R.id.text_circle_background, View.INVISIBLE)
                                 this.setViewVisibility(R.id.friend_image, View.VISIBLE)
-                                this.setImageViewBitmap(R.id.friend_image, friendImageBitmap)
+                                this.setImageViewBitmap(R.id.friend_image, friendImageBitmap) // 이부분이 오류인듯
                             }
-
                         }
 
                         appWidgetManager.updateAppWidget(appWidgetId, views)

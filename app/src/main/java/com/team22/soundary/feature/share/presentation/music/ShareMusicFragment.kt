@@ -20,6 +20,7 @@ import com.team22.soundary.feature.share.presentation.share.ShareFriendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -90,7 +91,7 @@ class ShareMusicFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         lifecycleScope.launch {
-            viewModel.songList.collect {
+            viewModel.songList.collectLatest {
                 adapter.submitList(it)
             }
         }
@@ -98,7 +99,7 @@ class ShareMusicFragment : Fragment() {
 
     private fun setEditText() {
         binding.shareSearchEdittext.addTextChangedListener {
-            val text: String = binding.shareSearchEdittext.text.toString()
+            val text: String = binding.shareSearchEdittext.text.toString().trim()
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.changeSongListBySearch(text)
             }

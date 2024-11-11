@@ -53,6 +53,9 @@ class BasicFriendViewHolder(
     fun bind(friend: User) {
         currentFriend = friend
         binding.userNameTextview.text = friend.name
+        binding.userIdTextview.text = "@${friend.displayId}"
+        binding.favoriteGenreTextview.text = friend.label.joinToString(", ")
+
         if(friend.imageId != "") {
             binding.profileInitialImageview.visibility = View.VISIBLE
             binding.profileInitialTextview.visibility = View.INVISIBLE
@@ -65,9 +68,6 @@ class BasicFriendViewHolder(
             binding.profileInitialTextview.visibility = View.VISIBLE
             binding.profileInitialTextview.text = friend.name[0].toString()
         }
-        binding.favoriteGenreTextview.text = friend.label.firstOrNull() ?: "장르 없음"
-
-        binding.userIdTextview.text = "@${friend.displayId}"
     }
 }
 

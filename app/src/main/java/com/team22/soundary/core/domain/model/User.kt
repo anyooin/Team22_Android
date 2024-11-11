@@ -23,7 +23,6 @@ data class User(
     val imageId: String = "",
     val statusMessage: String = "",
     val label : List<String> = emptyList(),
-    var status: String = "",
     val role : List<String> = emptyList()
 )
 

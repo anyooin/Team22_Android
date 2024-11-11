@@ -50,6 +50,13 @@ class FriendSearchFragment : Fragment() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            friendSearchViewModel.loadFriends()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -90,13 +97,6 @@ class FriendSearchFragment : Fragment() {
             .replace(R.id.frame, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        lifecycleScope.launch {
-            friendSearchViewModel.loadFriends()
-        }
     }
 
     private fun createFriendAdapter() = FriendAdapter(

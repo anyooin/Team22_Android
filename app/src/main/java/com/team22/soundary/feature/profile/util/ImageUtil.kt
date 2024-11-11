@@ -52,17 +52,18 @@ class ImageUtil {
         }
     }
 
-//    fun getBitmapFromUri(context: Context, uri: Comparable<Any>): Bitmap? {
-//        return try {
-//            val url = URL(uri.toString())
-//            val connection = url.openConnection() as HttpURLConnection
-//            connection.doInput = true
-//            connection.connect()
-//            val input = connection.inputStream
-//            getCircularBitmap(BitmapFactory.decodeStream(input))
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//            null
-//        }
-//    }
+    fun getBitmapFromStringUrl(stringUrl: String): Bitmap? {
+        return if (stringUrl == "") null
+        else try {
+            val url = URL(stringUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+            getCircularBitmap(BitmapFactory.decodeStream(input))
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
 }

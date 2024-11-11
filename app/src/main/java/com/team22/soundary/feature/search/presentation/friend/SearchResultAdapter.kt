@@ -14,7 +14,8 @@ import com.team22.soundary.feature.search.FriendDiffCallback
 class SearchResultAdapter(
     private val context: Context,
     private val onRequestFriendClick: (User) -> Unit,
-    private val isFriendRequested: (User) -> Boolean
+    private val isFriendRequested: (User) -> Boolean,
+    private val isFriendWithMe: (User) -> Boolean
 ) : ListAdapter<User, SearchResultAdapter.SearchResultViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
@@ -34,6 +35,8 @@ class SearchResultAdapter(
         fun bind(friend: User) {
             binding.userNameTextview.text = friend.name
             binding.userIdTextview.text = "@${friend.displayId}"
+            binding.favoriteGenreTextview.text = friend.label.joinToString(", ")
+
             if(friend.imageId != "") {
                 binding.profileInitialImageview.visibility = View.VISIBLE
                 binding.profileInitialTextview.visibility = View.INVISIBLE
@@ -48,7 +51,10 @@ class SearchResultAdapter(
             }
 
             // 버튼 상태 초기화
-            if (isFriendRequested(friend)) {
+            if(isFriendWithMe(friend)) {
+                binding.friendRequestButton.text = "친구"
+                binding.friendRequestButton.isEnabled = false
+            } else if (isFriendRequested(friend)) {
                 binding.friendRequestButton.text = "요청됨"
                 binding.friendRequestButton.isEnabled = false
             } else {

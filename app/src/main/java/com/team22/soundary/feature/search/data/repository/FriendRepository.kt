@@ -130,16 +130,11 @@ class FriendRepository @Inject constructor(
     }
 
     // 친구 상태 업데이트 메서드 (친구 수락 시에만 적용)
-    suspend fun updateFriendStatus(friendId: String, newStatus: String): Boolean {
+    suspend fun updateFriendStatus(friendId: String): Boolean {
         return try {
-            if (newStatus == "accepted") {
-                Log.d("aaaaa","invoke")
-                val res = friendApiService.addFriend(FriendRequestDto(friendId))
-                Log.d("aaaaa",""+res.errorBody())
-                res.isSuccessful
-            } else {
-                false
-            }
+            val res = friendApiService.addFriend(FriendRequestDto(friendId))
+            Log.d("uin", "친구수락")
+            res.isSuccessful
         } catch (e: Exception) {
             e.printStackTrace()
             false

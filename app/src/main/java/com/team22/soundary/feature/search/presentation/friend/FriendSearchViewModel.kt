@@ -34,21 +34,23 @@ class FriendSearchViewModel @Inject constructor(
 
     init {
         loadFriends()
-        loadPendingFriends()
+        //loadPendingFriends()
     }
 
     // 친구 신청 메서드
     fun requestFriend(user: User) {
-        if (isFriend(user)) {
-            return
-        }
-        viewModelScope.launch {
-            val isRequested = friendRepository.addFriend(FriendRequestDto(user.displayId))
-            if (isRequested) {
-                loadPendingFriends()  // 서버의 친구 요청 목록으로 업데이트
-                Log.d("FriendSearchViewModel", "Friend request sent for: ${user.displayId}")
-            } else {
-                Log.d("FriendSearchViewModel", "Failed to send friend request for: ${user.displayId}")
+        if (!isFriend(user)) {
+            viewModelScope.launch {
+                val isRequested = friendRepository.addFriend(FriendRequestDto(user.displayId))
+                if (isRequested) {
+                    //loadPendingFriends()  // 서버의 친구 요청 목록으로 업데이트
+                    Log.d("FriendSearchViewModel", "Friend request sent for: ${user.displayId}")
+                } else {
+                    Log.d(
+                        "FriendSearchViewModel",
+                        "Failed to send friend request for: ${user.displayId}"
+                    )
+                }
             }
         }
     }
@@ -68,15 +70,15 @@ class FriendSearchViewModel @Inject constructor(
         }
     }
 
-    // 서버에서 PendingFriends 목록을 다시 불러오는 메서드
-    private fun loadPendingFriends() {
-        viewModelScope.launch {
-            friendRepository.getSentRequests().collectLatest {
-                _pendingFriends.value = it
-                Log.d("uin", "Updated pendingFriends list: $it")
-            }
-        }
-    }
+//    // 서버에서 PendingFriends 목록을 다시 불러오는 메서드
+//    private fun loadPendingFriends() {
+//        viewModelScope.launch {
+//            friendRepository.getSentRequests().collectLatest {
+//                _pendingFriends.value = it
+//                Log.d("uin", "Updated pendingFriends list: $it")
+//            }
+//        }
+//    }
 
     // 사용자가 현재 친구 목록에 포함되는지 확인하는 함수
     fun isFriend(user: User): Boolean {
@@ -84,6 +86,10 @@ class FriendSearchViewModel @Inject constructor(
         val isInPendingFriends = _pendingFriends.value.any { it.displayId == user.displayId }
         val isInNewFriends = _newFriends.value.any { it.displayId == user.displayId }
         return isInMyFriends || isInPendingFriends || isInNewFriends
+    }
+
+    fun isInMyFriend(user: User): Boolean {
+        return _myFriends.value.any { it.displayId == user.displayId }
     }
 
     fun searchUser(searchName: String) {
@@ -100,10 +106,11 @@ class FriendSearchViewModel @Inject constructor(
     // 친구 수락 메서드
     fun acceptFriend(friend: User) {
         viewModelScope.launch {
-            val isAccepted = friendRepository.updateFriendStatus(friend.displayId, "accepted")
+            val isAccepted = friendRepository.updateFriendStatus(friend.displayId)
             if (isAccepted) {
-                _newFriends.value = _newFriends.value.filter { it.id != friend.id }
-                _myFriends.value = _myFriends.value + friend.copy(status = "accepted")
+                loadFriends()
+                //_newFriends.value = _newFriends.value.filter { it.id != friend.id }
+                //_myFriends.value = _myFriends.value + friend.copy(status = "accepted")
             }
         }
     }
@@ -113,7 +120,8 @@ class FriendSearchViewModel @Inject constructor(
         viewModelScope.launch {
             val isDeclined = friendRepository.rejectReceivedRequest(friend.id)
             if (isDeclined) {
-                _newFriends.value = _newFriends.value.filter { it.id != friend.id }
+                loadFriends()
+                //_newFriends.value = _newFriends.value.filter { it.id != friend.id }
             }
         }
     }
@@ -123,7 +131,8 @@ class FriendSearchViewModel @Inject constructor(
         viewModelScope.launch {
             val isDeleted = friendRepository.removeFriend(friend.id)
             if (isDeleted) {
-                _myFriends.value = _myFriends.value.filter { it.id != friend.id }
+                loadFriends()
+                //_myFriends.value = _myFriends.value.filter { it.id != friend.id }
             }
         }
     }
