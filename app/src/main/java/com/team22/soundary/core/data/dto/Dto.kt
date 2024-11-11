@@ -148,8 +148,8 @@ data class UserUpdateRequest(
 )
 
 @Serializable
-data class LabelView(
-    @SerialName("labels") val labels: List<String>
+data class UpdateDeviceRequest(
+    @SerialName("device_token") val deviceToken: String
 )
 
 @Serializable

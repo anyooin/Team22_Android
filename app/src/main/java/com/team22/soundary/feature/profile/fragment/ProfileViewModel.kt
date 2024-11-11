@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team22.soundary.FCMService
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.core.domain.model.User
@@ -37,6 +38,9 @@ class ProfileViewModel @Inject constructor(
     val imageId : StateFlow<String> = _imageId.asStateFlow()
 
     init {
+//        viewModelScope.launch {
+//            profileRepository.setDeviceToken()
+//        }
         getProfile()
         getSentShare()
     }

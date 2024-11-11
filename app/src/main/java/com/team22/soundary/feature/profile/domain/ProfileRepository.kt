@@ -20,4 +20,6 @@ interface ProfileRepository {
     suspend fun setLabels(labels: List<String>)
 
     suspend fun deleteUserAccount()
+
+    suspend fun setDeviceToken()
 }

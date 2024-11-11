@@ -11,6 +11,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,17 +20,26 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.Constants.MessageNotificationKeys
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.feature.profile.MyWidgetProvider
+import com.team22.soundary.feature.profile.domain.ProfileRepository
 import com.team22.soundary.feature.signup.presentation.ActivitySignup2
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 
 class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         // notification 대신 data에서 메시지 가져오기
         super.onMessageReceived(message)
+
+        Log.d("uin", "알림왔음" + message.data)
 
         // 알림을 클릭했을 때 열릴 Activity 설정
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
@@ -55,6 +66,14 @@ class FCMService : FirebaseMessagingService() {
         if(code == MUSIC_SENT_CODE){
             updateWidget(message.data["body"] ?: "Error")
         }
+    }
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+
+        // 새로운 토큰을 서버로 전송하는 로직을 구현
+//        CoroutineScope(Dispatchers.IO).launch {
+//            profileRepository.setDeviceToken(token)
+//        }
     }
 
     private fun updateWidget(msg: String){
