@@ -109,8 +109,6 @@ class FriendSearchViewModel @Inject constructor(
             val isAccepted = friendRepository.updateFriendStatus(friend.displayId)
             if (isAccepted) {
                 loadFriends()
-                //_newFriends.value = _newFriends.value.filter { it.id != friend.id }
-                //_myFriends.value = _myFriends.value + friend.copy(status = "accepted")
             }
         }
     }
@@ -121,7 +119,6 @@ class FriendSearchViewModel @Inject constructor(
             val isDeclined = friendRepository.rejectReceivedRequest(friend.id)
             if (isDeclined) {
                 loadFriends()
-                //_newFriends.value = _newFriends.value.filter { it.id != friend.id }
             }
         }
     }
@@ -132,7 +129,6 @@ class FriendSearchViewModel @Inject constructor(
             val isDeleted = friendRepository.removeFriend(friend.id)
             if (isDeleted) {
                 loadFriends()
-                //_myFriends.value = _myFriends.value.filter { it.id != friend.id }
             }
         }
     }

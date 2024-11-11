@@ -287,19 +287,20 @@ class MainFragment : Fragment() {
                             binding.nextImageView.isGone = uiState.data.isLastSong
                             binding.prevImageView.isGone = uiState.data.isFirstSong
                             binding.likeButton.setImageResource(uiState.data.likeBackground)
+                            Log.d("uin", "보낸시간" + uiState.data.share.sharedDate)
                             binding.dayTextView.text =
                                 uiState.data.share.sharedDate.getDiff()
                             if(uiState.data.share.friend.imageId != "") {
                                 binding.friendPicCardview.visibility = View.VISIBLE
-                                binding.friendNameTextView.visibility = View.INVISIBLE
+                                binding.friendPicTextView.visibility = View.INVISIBLE
                                 Glide.with(requireContext())
                                     .load(uiState.data.share.friend.imageId)
                                     .circleCrop()
                                     .into(binding.friendPicImageView)
                             } else {
                                 binding.friendPicCardview.visibility = View.INVISIBLE
-                                binding.friendNameTextView.visibility = View.VISIBLE
-                                binding.friendNameTextView.text = uiState.data.share.friend.name[0].toString()
+                                binding.friendPicTextView.visibility = View.VISIBLE
+                                binding.friendPicTextView.text = uiState.data.share.friend.name[0].toString()
                             }
                             uiState.data.share.song.coverImage.let {
                                 Glide.with(requireContext())
