@@ -42,8 +42,8 @@ class FCMService : FirebaseMessagingService() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Android 8.0 이상에서는 알림 채널이 필요
-        val channel = createNotificationChannel()
-        notificationManager.createNotificationChannel(channel)
+//        val channel = createNotificationChannel()
+//        notificationManager.createNotificationChannel(channel)
 
         Log.d("uin", "알림왔음" + message.data)
         Log.d("uin", "알림왔음11" + message.data["title"])
@@ -54,7 +54,7 @@ class FCMService : FirebaseMessagingService() {
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, "default_channel_id")
             .setSmallIcon(R.drawable.all_logo_image)
             .setContentTitle(message.data["title"])
             .setContentText(message.data["body"])
