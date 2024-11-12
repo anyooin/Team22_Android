@@ -105,11 +105,18 @@ data class TrackDto(
 )
 
 @Serializable
-data class TokenDto(
+data class LoginResponse(
     @SerialName("role") val role: String?,
-    @SerialName("accessToken") val accessToken: String?,
-    @SerialName("refreshToken") val refreshToken: String?,
-    @SerialName("expiresIn") val expiresIn: Int?
+    @SerialName("access_token") val accessToken: String?,
+    @SerialName("refresh_token") val refreshToken: String?,
+    @SerialName("expires_in") val expiresIn: Int?
+)
+
+@Serializable
+data class RefreshResponse(
+    @SerialName("access_token") val accessToken: String?,
+    @SerialName("refresh_token") val refreshToken: String?,
+    @SerialName("expires_in") val expiresIn: Int?
 )
 
 @Serializable
@@ -331,7 +338,7 @@ fun FriendProfileDto.toVO(): User {
     )
 }
 
-fun TokenDto.toVO(): Token =
+fun LoginResponse.toVO(): Token =
     Token(
         this.accessToken ?: "",
         this.refreshToken ?: ""
