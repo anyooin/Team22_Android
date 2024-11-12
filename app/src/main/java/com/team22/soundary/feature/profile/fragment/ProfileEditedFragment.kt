@@ -35,7 +35,6 @@ class ProfileEditedFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by viewModels()
 
     private val selectedCategoryList = mutableSetOf<String>()
-    private var selectedImageString: String = ""
     private var selectedImageUri: Uri? = Uri.EMPTY
 
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
@@ -59,6 +58,7 @@ class ProfileEditedFragment : Fragment() {
         setGalleryLauncher()
         setPermissionLauncher()
         setupProfileImageClick()
+        setBackButton()
         popFragment()
     }
 
@@ -77,8 +77,8 @@ class ProfileEditedFragment : Fragment() {
             Glide.with(requireContext())
                 .load(image)
                 .into(binding.profileImageview)
-            selectedImageString = image
         }
+        profileViewModel.initImage(image)
     }
 
     private fun setupCategoryButtons(gridLayout: GridLayout) {
@@ -134,6 +134,12 @@ class ProfileEditedFragment : Fragment() {
                     parentFragmentManager.popBackStack()
                 }
             }
+        }
+    }
+
+    private fun setBackButton() {
+        binding.backIcon.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 
