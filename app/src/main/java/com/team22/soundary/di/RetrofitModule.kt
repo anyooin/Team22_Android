@@ -69,6 +69,15 @@ object RetrofitModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType!!))
+            .client(
+                OkHttpClient.Builder().apply {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
+                }.build()
+            )
             .build()
     }
 

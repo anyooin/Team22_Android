@@ -115,8 +115,8 @@ data class LoginResponse(
 @Serializable
 data class RefreshResponse(
     @SerialName("access_token") val accessToken: String?,
-    @SerialName("refresh_token") val refreshToken: String?,
-    @SerialName("expires_in") val expiresIn: Int?
+    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("expires_in") val expiresIn: Int? = null
 )
 
 @Serializable

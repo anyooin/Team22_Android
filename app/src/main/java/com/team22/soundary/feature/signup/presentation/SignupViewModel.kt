@@ -9,11 +9,13 @@ import com.team22.soundary.feature.signup.domain.CheckTokenUseCase
 import com.team22.soundary.feature.signup.domain.LoginUseCase
 import com.team22.soundary.feature.signup.domain.UserDetailUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import java.io.IOException
 import javax.inject.Inject
@@ -61,12 +63,8 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(token:String, user: User) : Boolean {
-        var result = true
-        viewModelScope.launch {
-            result = userDetailUpdateUseCase.updateUserInfo(token,user)
-        }
-        return result
+    suspend fun updateUserInfo(token:String, user: User) : Boolean = withContext(Dispatchers.IO){
+        return@withContext userDetailUpdateUseCase.updateUserInfo(token,user)
     }
 
     fun checkTokenValidity() {

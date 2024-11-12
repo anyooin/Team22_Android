@@ -115,7 +115,6 @@ class ActivitySignup2 : AppCompatActivity() {
 
     private fun setSignupButton(nickname: String, displayId: String, label: List<String>) {
         binding.signupButtonSubmit.setOnClickListener {
-            var success = true
             var imageKey = ""
             lifecycleScope.launch {
                 // 가입 완료 처리 후 MainActivity로 이동
@@ -123,27 +122,31 @@ class ActivitySignup2 : AppCompatActivity() {
                     if (it.isSuccessful) Log.d("akuby21", it.result)
                     Log.d("uin", "수정시 이미지값" + viewModel.imageId.value)
 
-                    success = viewModel.updateUserInfo(
-                        it.result,
-                        User(
-                            label = label,
-                            displayId = displayId,
-                            name = nickname,
-                            statusMessage = binding.signupEdittextIntro.text.toString(),
-                            imageId = viewModel.imageId.value
+                    lifecycleScope.launch {
+                        val success = viewModel.updateUserInfo(
+                            it.result,
+                            User(
+                                label = label,
+                                displayId = displayId,
+                                name = nickname,
+                                statusMessage = binding.signupEdittextIntro.text.toString(),
+                                imageId = viewModel.imageId.value
+                            )
                         )
-                    )
+                        if (success) {
+                            val intent = Intent(this@ActivitySignup2, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this@ActivitySignup2, "중복된 ID값", Toast.LENGTH_SHORT)
+                                .show()
+                            val intent = Intent(this@ActivitySignup2, ActivitySignup::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
                 }
-            }
-            if (success) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "중복된 ID값", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, ActivitySignup::class.java)
-                startActivity(intent)
-                finish()
+
             }
         }
     }
