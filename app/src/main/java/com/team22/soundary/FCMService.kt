@@ -1,6 +1,5 @@
 package com.team22.soundary
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,30 +7,11 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import com.google.firebase.messaging.Constants.MessageNotificationKeys
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.feature.profile.MyWidgetProvider
-import com.team22.soundary.feature.profile.domain.ProfileRepository
-import com.team22.soundary.feature.signup.presentation.ActivitySignup2
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 
 class FCMService : FirebaseMessagingService() {
@@ -41,18 +21,13 @@ class FCMService : FirebaseMessagingService() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Android 8.0 이상에서는 알림 채널이 필요
-//        val channel = createNotificationChannel()
-//        notificationManager.createNotificationChannel(channel)
-
-        Log.d("uin", "알림왔음" + message.data)
-        Log.d("uin", "알림왔음11" + message.data["title"])
-
         // 알림을 클릭했을 때 열릴 Activity 설정
-        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+        val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, "default_channel_id")
             .setSmallIcon(R.drawable.all_logo_image)
@@ -63,17 +38,15 @@ class FCMService : FirebaseMessagingService() {
 
         notificationManager.notify(0, builder.build())
 
-//        if(this.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
-//            with(NotificationManagerCompat.from(this)) {
-//                notify(0, builder.build())
-//            }
-//        }
+        //Log.d("uin", "알림왔음" + message.data)
 
         val code = message.data["code"]
         if(code == MUSIC_SENT_CODE){
             Log.d("uin", "알림왔음22" + message.data["body"])
             updateWidget(message.data["body"] ?: "Error")
         }
+
+        Log.d("uin", "12345")
     }
     override fun onNewToken(token: String) {
         super.onNewToken(token)
