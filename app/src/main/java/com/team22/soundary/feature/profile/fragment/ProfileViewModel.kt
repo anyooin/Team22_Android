@@ -92,6 +92,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun initImage(imageId: String) {
+        _imageId.value = imageId
+    }
+
     fun editProfile(nickname: String, intro: String, imageId: String) {
         val displayId = _userInfo.value.displayId
 

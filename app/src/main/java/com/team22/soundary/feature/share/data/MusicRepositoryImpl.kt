@@ -24,7 +24,8 @@ class MusicRepositoryImpl @Inject constructor(
         if (response.isSuccessful) {
             emit(response.body()?.trackList?.map { it.toVO() } ?: emptyList())
         } else {
-            throw Exception("Error: ${response.message()}")
+            emit(emptyList())
+            //throw Exception("Error: ${response.message()}")
         }
     }
 
