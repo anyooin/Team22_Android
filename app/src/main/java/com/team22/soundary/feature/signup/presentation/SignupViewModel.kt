@@ -1,5 +1,6 @@
 package com.team22.soundary.feature.signup.presentation
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +9,14 @@ import com.team22.soundary.feature.signup.domain.CheckTokenUseCase
 import com.team22.soundary.feature.signup.domain.LoginUseCase
 import com.team22.soundary.feature.signup.domain.UserDetailUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import java.io.IOException
 import javax.inject.Inject
 
@@ -24,6 +28,9 @@ class SignupViewModel @Inject constructor(
 ) : ViewModel() {
     private val _loginUiState = MutableStateFlow<LoginUiState<User>>(LoginUiState.Initial)
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
+
+    private val _imageId = MutableStateFlow<String>("")
+    val imageId : StateFlow<String> = _imageId.asStateFlow()
 
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
@@ -45,12 +52,19 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(token:String,user: User) : Boolean {
-        var result = true
+    fun uploadImage(multipart : MultipartBody.Part) {
         viewModelScope.launch {
-            result = userDetailUpdateUseCase.updateUserInfo(token,user)
+            try {
+                _imageId.value = userDetailUpdateUseCase.uploadImage(multipart)
+                Log.d("uin", "이미지 : " + _imageId.value)
+            } catch (e: Exception) {
+                Log.e("uin", "Error uploading image: ${e.message}")
+            }
         }
-        return result
+    }
+
+    suspend fun updateUserInfo(token:String, user: User) : Boolean = withContext(Dispatchers.IO){
+        return@withContext userDetailUpdateUseCase.updateUserInfo(token,user)
     }
 
     fun checkTokenValidity() {

@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.team22.soundary.R
+import com.team22.soundary.core.domain.model.getCategoryMap
+import com.team22.soundary.core.domain.model.stringListToEnumList
 import com.team22.soundary.databinding.FragmentFriendProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -41,11 +44,15 @@ class FriendProfileFragment : Fragment() {
             viewModel.friendProfile.collectLatest { profile ->
                 profile?.let {
                     binding.userNameTextview.text = it.name
-                    binding.userEmailTextview.text = "@" + it.displayId
+                    binding.userEmailTextview.text = getString(R.string.mypage_view_displayid , it.displayId)
+                    binding.statusMessageTextview.text = getString(R.string.mypage_view_statusmessage , it.statusMessage)
                     // Glide를 사용하여 프로필 이미지 로드
-                    Glide.with(this@FriendProfileFragment)
-                        .load(it.image.toString())
-                        .into(binding.profileImageView)
+                    if(it.imageId != "") {
+                        Glide.with(this@FriendProfileFragment)
+                            .load(it.imageId)
+                            .into(binding.profileImageview)
+                    }
+                    setCategory(it.label)
                 }
             }
         }
@@ -53,6 +60,21 @@ class FriendProfileFragment : Fragment() {
         // 뒤로 가기 버튼 설정
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun setCategory(label : List<String>) {
+        val categoryList = stringListToEnumList(label)
+        val categoryMap = getCategoryMap()
+
+        for (i in 0 until binding.categoryGrid.childCount) {
+            binding.categoryGrid.getChildAt(i).visibility = View.GONE
+        }
+
+        categoryList.forEach { category ->
+            categoryMap[category]?.let { index ->
+                binding.categoryGrid.getChildAt(index).visibility = View.VISIBLE
+            }
         }
     }
 

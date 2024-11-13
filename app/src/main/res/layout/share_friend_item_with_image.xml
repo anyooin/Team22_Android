@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="50dp"
-        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,7 +19,8 @@
             android:layout_width="@dimen/item_size"
             android:layout_height="@dimen/item_size"
             android:contentDescription="@string/share_friend_image"
-            android:src="@drawable/stalker" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/app_icon" />
 
     </androidx.cardview.widget.CardView>
 

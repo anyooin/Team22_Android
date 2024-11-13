@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,25 +21,15 @@ class MusicViewModel @Inject constructor(
 
     private var sortIndex: Int = 0
 
-    // 공유한 노래 없으면 emptylist로 떠서 일단 getMusicList로 해놨음
     fun changeSongListBySort(index: Int) {
         sortIndex = index
         viewModelScope.launch {
-//            when (sortIndex) {
-//                MOST_SHARED -> repository.getMusicList("hi").collect {
-//                    _songList.value = it
-//                }
-//
-//                MOST_LIKED -> repository.getMusicList("hello").collect {
-//                    _songList.value = it
-//                }
-//            }
             when (sortIndex) {
-                MOST_SHARED -> repository.getMostSharedMusicList().collect {
+                MOST_SHARED -> repository.getMostSharedMusicList().collectLatest {
                     _songList.value = it
                 }
 
-                MOST_LIKED -> repository.getMostLikedMusicList().collect {
+                MOST_LIKED -> repository.getMostLikedMusicList().collectLatest {
                     _songList.value = it
                 }
             }
@@ -50,7 +41,7 @@ class MusicViewModel @Inject constructor(
             if (query == "") {
                 changeSongListBySort(sortIndex)
             } else {
-                repository.getMusicList(query).collect {
+                repository.getMusicList(query).collectLatest {
                     _songList.value = it
                 }
             }

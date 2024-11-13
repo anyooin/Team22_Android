@@ -2,6 +2,7 @@ package com.team22.soundary.feature.share.presentation.music
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.team22.soundary.feature.share.presentation.share.ShareFriendActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -71,7 +73,9 @@ class ShareMusicFragment : Fragment() {
         adapter = MusicListAdapter(requireContext(), object : MusicItemClickListener {
             override fun onClick(v: View, selectItem: Song) {
                 val intent = Intent(requireContext(), ShareFriendActivity::class.java)
-                intent.putExtra(ShareFriendActivity.KEY_ID, selectItem.id)
+                intent.putExtra(ShareFriendActivity.KEY_PLATFORM_TRACK_ID, selectItem.id)
+                intent.putExtra(ShareFriendActivity.KEY_TRACK_ID, selectItem.trackId)
+                //Log.d("uin", "노래"+selectItem.id)
                 intent.putExtra(ShareFriendActivity.KEY_IMAGE, selectItem.coverImage)
                 intent.putExtra(ShareFriendActivity.KEY_TITLE, selectItem.title)
                 intent.putExtra(
@@ -87,7 +91,7 @@ class ShareMusicFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         lifecycleScope.launch {
-            viewModel.songList.collect {
+            viewModel.songList.collectLatest {
                 adapter.submitList(it)
             }
         }
@@ -95,7 +99,7 @@ class ShareMusicFragment : Fragment() {
 
     private fun setEditText() {
         binding.shareSearchEdittext.addTextChangedListener {
-            val text: String = binding.shareSearchEdittext.text.toString()
+            val text: String = binding.shareSearchEdittext.text.toString().trim()
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.changeSongListBySearch(text)
             }

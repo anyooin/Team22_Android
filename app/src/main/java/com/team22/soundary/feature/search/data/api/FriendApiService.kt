@@ -37,13 +37,13 @@ interface FriendApiService {
     @DELETE("/api/v1/friends/{target-user-id}")
     suspend fun removeFriend(
         @Path("target-user-id") targetUserId: String
-    ): Response<Void>
+    ): Response<Unit>
 
     // 받은 친구 요청 거절하기
     @DELETE("/api/v1/friends/requests/received/{target-user-id}")
     suspend fun rejectReceivedRequest(
         @Path("target-user-id") targetUserId: String
-    ): Response<Void>
+    ): Response<Unit>
 
     // 사용자 검색
     @GET("/api/v1/users")

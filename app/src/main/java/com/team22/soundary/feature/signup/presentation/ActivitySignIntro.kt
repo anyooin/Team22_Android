@@ -71,10 +71,10 @@ class ActivitySignIntro : AppCompatActivity() {
                         showErrorDialog(state.message ?: UNKNOWN_ERROR)
                     }
                     is LoginUiState.Pass -> {
-                    /*    startActivity(
+                        startActivity(
                             Intent(this@ActivitySignIntro,MainActivity::class.java)
                         )
-                        finish()*/
+                        finish()
                     }
                 }
             }

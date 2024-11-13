@@ -24,6 +24,7 @@ import com.team22.soundary.R
 import com.team22.soundary.core.data.TokenRepositoryImpl
 import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.core.domain.model.createImageMultipart
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -54,21 +55,26 @@ class ActivitySignup2 : AppCompatActivity() {
     }
 
     private fun setGalleryLauncher() {
-        galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
-                selectedImageUri = result.data?.data
-                binding.signupImageviewProfileimage.setImageURI(selectedImageUri)
-            } else {
-                Toast.makeText(this, "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+        galleryLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK && result.data != null) {
+                    selectedImageUri = result.data?.data
+                    binding.signupImageviewProfileimage.setImageURI(selectedImageUri)
+                    if (selectedImageUri != Uri.EMPTY) {
+                        viewModel.uploadImage(createImageMultipart(this, selectedImageUri))
+                    }
+                } else {
+                    Toast.makeText(this, "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
     }
 
     private fun setPermissionLauncher() {
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (isGranted) {
-                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    val intent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     galleryLauncher.launch(intent) // 권한이 허용된 경우 갤러리에 접근
                 } else {
                     Toast.makeText(this, "갤러리 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
@@ -90,11 +96,16 @@ class ActivitySignup2 : AppCompatActivity() {
 
     private fun requestPermissionIfNeeded(permission: String) {
         when {
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
+            ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED -> {
                 // 권한이 이미 허용된 경우
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 galleryLauncher.launch(intent)
             }
+
             else -> {
                 // 권한 요청
                 permissionLauncher.launch(permission)
@@ -103,34 +114,39 @@ class ActivitySignup2 : AppCompatActivity() {
     }
 
     private fun setSignupButton(nickname: String, displayId: String, label: List<String>) {
-         binding.signupButtonSubmit.setOnClickListener {
-            var success = true
-            lifecycleScope.launch{
+        binding.signupButtonSubmit.setOnClickListener {
+            var imageKey = ""
+            lifecycleScope.launch {
                 // 가입 완료 처리 후 MainActivity로 이동
                 FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                    if(it.isSuccessful) Log.d("akuby21",it.result)
+                    if (it.isSuccessful) Log.d("akuby21", it.result)
+                    Log.d("uin", "수정시 이미지값" + viewModel.imageId.value)
 
-                    success = viewModel.updateUserInfo(
-                        it.result,
-                        User(
-                            label = label,
-                            displayId = displayId,
-                            name = nickname,
-                            statusMessage = binding.signupEdittextIntro.text.toString(),
-                            image = selectedImageUri ?: Uri.EMPTY
+                    lifecycleScope.launch {
+                        val success = viewModel.updateUserInfo(
+                            it.result,
+                            User(
+                                label = label,
+                                displayId = displayId,
+                                name = nickname,
+                                statusMessage = binding.signupEdittextIntro.text.toString(),
+                                imageId = viewModel.imageId.value
+                            )
                         )
-                    )
+                        if (success) {
+                            val intent = Intent(this@ActivitySignup2, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this@ActivitySignup2, "중복된 ID값", Toast.LENGTH_SHORT)
+                                .show()
+                            val intent = Intent(this@ActivitySignup2, ActivitySignup::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
                 }
-            }
-            if (success) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "중복된 ID값", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, ActivitySignup::class.java)
-                startActivity(intent)
-                finish()
+
             }
         }
     }

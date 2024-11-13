@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ShareRepository {
     suspend fun shareMusic(
         platformTrackId: String,
+        trackId: String,
         comment: String,
         userList: List<String>
     )

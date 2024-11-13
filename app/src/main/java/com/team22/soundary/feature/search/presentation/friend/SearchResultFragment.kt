@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.team22.soundary.databinding.FragmentSearchResultBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,11 +40,13 @@ class SearchResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchResultAdapter = SearchResultAdapter(
+            context = requireContext(),
             onRequestFriendClick = { user ->
                 friendSearchViewModel.requestFriend(user)
                 Toast.makeText(requireContext(), "친구 신청을 보냈습니다.", Toast.LENGTH_SHORT).show()
             },
-            isFriendRequested = { user -> friendSearchViewModel.isFriend(user) } // 이미 친구 요청 상태인지 확인
+            isFriendRequested = { user -> friendSearchViewModel.isFriend(user) }, // 이미 친구 요청 상태인지 확인
+            isFriendWithMe = { user -> friendSearchViewModel.isInMyFriend(user) }
         )
 
         binding.searchResultsRecyclerView.apply {
@@ -49,17 +54,12 @@ class SearchResultFragment : Fragment() {
             adapter = searchResultAdapter
         }
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                if (query.isNotEmpty()) {
-                    friendSearchViewModel.searchUser(query)
-                }
+        binding.searchEditText.addTextChangedListener {
+            val query: String = binding.searchEditText.text.toString()
+            CoroutineScope(Dispatchers.IO).launch {
+                friendSearchViewModel.searchUser(query)
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             friendSearchViewModel.searchResultList.collectLatest { searchResults ->

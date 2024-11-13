@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.getCategoryMap
@@ -26,6 +27,7 @@ import com.team22.soundary.feature.signup.presentation.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -61,7 +63,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 profileViewModel.userInfo.collectLatest { user ->
-                    setProfileImage(user.image)
+                    setProfileImage(user.imageId)
                     binding.profileTextviewName.text = user.name
                     binding.profileTextviewDisplayid.text = getString(R.string.mypage_view_displayid , user.displayId)
                     binding.profileTextviewIntro.text = getString(R.string.mypage_view_statusmessage , user.statusMessage)
@@ -72,8 +74,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun setProfileImage(image : Uri) {
-        if(image != Uri.EMPTY) {
+    private fun setProfileImage(image : String) {
+        if(image != "") {
             Glide.with(requireContext())
                 .load(image)
                 .into(binding.profileImageview)
@@ -140,6 +142,7 @@ class ProfileFragment : Fragment() {
             try {
                 profileViewModel.deleteUserAccount()
                 profileViewModel.clearToken()
+                FirebaseMessaging.getInstance().deleteToken().await()
                 // 탈퇴 성공 시 메인 화면으로 이동하거나 로그아웃 처리
                 navigateToLoginScreen()
             } catch (e: Exception) {

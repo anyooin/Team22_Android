@@ -47,7 +47,6 @@ class ShareViewModel @Inject constructor(
     }
 
     private suspend fun initFriendList() {
-
         friendRepository.getFriends().collectLatest {
             _userList.value = it
         }
@@ -82,7 +81,12 @@ class ShareViewModel @Inject constructor(
     }
 
     fun isAllFriendsSelected(): Boolean {
-        return _selectedFriendIds.value.isNotEmpty() && _selectedFriendIds.value.size == _filteredUserList.value.size
+        for (element in _filteredUserList.value) {
+            if (element.id !in _selectedFriendIds.value) {
+                return false
+            }
+        }
+        return true
     }
 
     fun getButtonText(): String {
@@ -97,9 +101,9 @@ class ShareViewModel @Inject constructor(
         return _selectedFriendIds.value.isNotEmpty()
     }
 
-    fun shareSongToFriends(songId: String) {
+    fun shareSongToFriends(platformTrackId: String, trackId: String) {
         viewModelScope.launch {
-            shareRepository.shareMusic(songId, _comment.value, _selectedFriendIds.value.toList())
+            shareRepository.shareMusic(platformTrackId, trackId, _comment.value, _selectedFriendIds.value.toList())
         }
     }
 }

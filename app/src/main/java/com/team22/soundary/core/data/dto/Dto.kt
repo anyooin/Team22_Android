@@ -13,7 +13,7 @@ import java.util.Date
 // 친구 목록 응답 DTO
 @Serializable
 data class FriendsResponse(
-    @SerialName("friends") val friends: List<FriendInfoDto>?
+    @SerialName("friends") val friends: List<FriendProfileDto>?
 )
 
 // 받은 친구 요청 목록 응답 DTO
@@ -43,9 +43,17 @@ data class FriendInfoDto(
     @SerialName("id") val id: String?,
     @SerialName("display_id") val displayId: String?,
     @SerialName("nickname") val name: String?,
-    @SerialName("profile_image_url") val profile: String?,
+    @SerialName("profile_image_url") val profile: String?
 )
 
+@Serializable
+data class FriendProfileDto(
+    @SerialName("id") val id: String?,
+    @SerialName("display_id") val displayId: String?,
+    @SerialName("nickname") val name: String?,
+    @SerialName("profile_image_url") val profile: String?,
+    @SerialName("labels") val labels: List<String>?
+)
 @Serializable
 data class ReceivedShareListDto(
     @SerialName("total") val total: Int?,
@@ -87,14 +95,8 @@ data class FromUserResponse(
 )
 
 @Serializable
-data class TrackListDto(
-    @SerialName("tracks") val trackList: List<TrackDto>?
-)
-
-@Serializable
 data class TrackDto(
-    @SerialName("platform") val platform: String? = "SPOTIFY",
-    @SerialName("platform_track_id") val platformTrackId: String? = null,
+    @SerialName("track_id") val trackId: String? = null,
     @SerialName("title") val title: String? = null,
     @SerialName("artists") val artist: List<String>? = null,
     @SerialName("duration") val duration: Int? = null,
@@ -103,11 +105,18 @@ data class TrackDto(
 )
 
 @Serializable
-data class TokenDto(
+data class LoginResponse(
     @SerialName("role") val role: String?,
-    @SerialName("accessToken") val accessToken: String?,
-    @SerialName("refreshToken") val refreshToken: String?,
-    @SerialName("expiresIn") val expiresIn: Int?
+    @SerialName("access_token") val accessToken: String?,
+    @SerialName("refresh_token") val refreshToken: String?,
+    @SerialName("expires_in") val expiresIn: Int?
+)
+
+@Serializable
+data class RefreshResponse(
+    @SerialName("access_token") val accessToken: String?,
+    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("expires_in") val expiresIn: Int? = null
 )
 
 @Serializable
@@ -142,12 +151,12 @@ data class UserUpdateRequest(
     @SerialName("display_id") val displayId: String,
     @SerialName("nickname") val nickname: String,
     @SerialName("description") val description: String? = "",
-    @SerialName("profile_image_url") val profileImage: String = Uri.EMPTY.toString()
+    @SerialName("profile_image_url") val profileImage: String = ""
 )
 
 @Serializable
-data class LabelView(
-    @SerialName("labels") val labels: List<String>
+data class UpdateDeviceRequest(
+    @SerialName("device_token") val deviceToken: String
 )
 
 @Serializable
@@ -155,20 +164,71 @@ data class LabelAddRequest(
     @SerialName("labels") val labels: List<String>
 )
 
+// share 부분
+
 @Serializable
-data class ShareMusicRequest(
-    @SerialName("track") val track: TrackIdentifierDto,
-    @SerialName("comment") val comment: String,
-    @SerialName("target_user_ids") val userList: List<String>
+data class SearchTrackResponse(
+    @SerialName("tracks") val trackList: List<SearchTrackResponseDto>?,
 )
 
+@Serializable
+data class SearchTrackResponseDto(
+    @SerialName("platform") val platform: String? = "SPOTIFY",
+    @SerialName("platform_track_id") val platformTrackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("duration") val duration: Int? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null
+)
+
+
+@Serializable
+data class MostSharedTracksResponse(
+    @SerialName("tracks") val trackList: List<MostSharedTrackResponseDto>?,
+)
+
+@Serializable
+data class MostSharedTrackResponseDto(
+    @SerialName("track_id") val trackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null,
+    @SerialName("duration_in_seconds") val duration: Int? = null
+)
+
+@Serializable
+data class MostLikedTracksResponse(
+    @SerialName("tracks") val trackList: List<MostLikedTrackResponseDto>?,
+)
+
+@Serializable
+data class MostLikedTrackResponseDto(
+    @SerialName("track_id") val trackId: String? = null,
+    @SerialName("title") val title: String? = null,
+    @SerialName("artists") val artist: List<String>? = null,
+    @SerialName("album_cover_url") val albumCoverUrl: String? = null,
+    @SerialName("preview_mp3_url") val previewMp3Url: String? = null,
+    @SerialName("duration_in_seconds") val duration: Int? = null
+)
+
+@Serializable
+data class ShareMusicRequest(
+    @SerialName("track") val track: PlatformTrackIdentifierDto? = null,
+    @SerialName("comment") val comment: String,
+    @SerialName("target_user_ids") val userList: List<String>,
+    @SerialName("track_id") val trackId: String? = null,
+)
+
+// friend 부분
 @Serializable
 data class FriendRequestDto(
     @SerialName("target_display_id") val displayId: String
 )
 
 @Serializable
-data class TrackIdentifierDto(
+data class PlatformTrackIdentifierDto(
     @SerialName("platform") val platform: String = "SPOTIFY",
     @SerialName("platform_track_id") val platformTrackId: String
 )
@@ -176,6 +236,11 @@ data class TrackIdentifierDto(
 @Serializable
 data class ShareMusicResponse(
     @SerialName("shared_music_id") val platformTrackId: String?
+)
+
+@Serializable
+data class ImageUpLoadResponse(
+    @SerialName("uploaded_image_url") val imageId: String?
 )
 
 fun SentShareDto.toVO(): Share {
@@ -202,17 +267,45 @@ fun ReceivedShareDto.toVO(): Share {
 
 fun TrackDto.toVO(): Song =
     Song(
-        this.platformTrackId ?: "",
-        this.title ?: "",
-        this.artist ?: emptyList(),
-        Uri.parse(this.previewMp3Url ?: ""),
-        Uri.parse(this.albumCoverUrl ?: "")
+        id = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun SearchTrackResponseDto.toVO(): Song =
+    Song(
+        id = this.platformTrackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun MostSharedTrackResponseDto.toVO(): Song =
+    Song(
+        trackId = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
+    )
+
+fun MostLikedTrackResponseDto.toVO(): Song =
+    Song(
+        trackId = this.trackId ?: "",
+        title = this.title ?: "",
+        artist = this.artist ?: emptyList(),
+        preview = Uri.parse(this.previewMp3Url ?: ""),
+        coverImage = Uri.parse(this.albumCoverUrl ?: "")
     )
 
 fun FromUserResponse.toVO(): User =
     User(
-        name = this.displayName ?: "",
-        image = Uri.parse(this.profileImageUrl ?: "")
+        displayId = this.displayName ?: "",
+        name = this.name ?: "",
+        imageId = this.profileImageUrl ?: ""
     )
 
 
@@ -220,7 +313,7 @@ fun UserInfoDto.toVO(): User {
     return User(
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: ""),
+        imageId = this.profile ?: "",
         statusMessage = this.description ?: "",
         role = this.roles ?: emptyList(),
         label = this.labels ?: emptyList()
@@ -232,12 +325,20 @@ fun FriendInfoDto.toVO(): User {
         id = this.id ?: "",
         displayId = this.displayId ?: "",
         name = this.name ?: "",
-        image = Uri.parse(this.profile ?: ""),
+        imageId = this.profile ?: ""
+    )
+}
+fun FriendProfileDto.toVO(): User {
+    return User(
+        id = this.id ?: "",
+        displayId = this.displayId ?: "",
+        name = this.name ?: "",
+        imageId = this.profile ?: "",
+        label = this.labels ?: emptyList()
     )
 }
 
-
-fun TokenDto.toVO(): Token =
+fun LoginResponse.toVO(): Token =
     Token(
         this.accessToken ?: "",
         this.refreshToken ?: ""

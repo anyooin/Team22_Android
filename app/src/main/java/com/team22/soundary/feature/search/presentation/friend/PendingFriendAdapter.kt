@@ -1,24 +1,24 @@
 package com.team22.soundary.feature.search.presentation.friend
 
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.team22.soundary.R
+import com.bumptech.glide.Glide
 import com.team22.soundary.core.domain.model.User
+import com.team22.soundary.databinding.FriendItemPendingBinding
 import com.team22.soundary.feature.search.FriendDiffCallback
 
 class PendingFriendAdapter(
+    private val context: Context,
     private val onItemClick: (User) -> Unit
 ) : ListAdapter<User, PendingFriendAdapter.PendingFriendViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingFriendViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.friend_item_pending, parent, false)
-        return PendingFriendViewHolder(view, onItemClick)
+        val binding = FriendItemPendingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PendingFriendViewHolder(context, binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: PendingFriendViewHolder, position: Int) {
@@ -27,13 +27,10 @@ class PendingFriendAdapter(
     }
 
     class PendingFriendViewHolder(
-        itemView: View,
+        private val context: Context,
+        private val binding: FriendItemPendingBinding,
         private val onItemClick: (User) -> Unit
-    ) : RecyclerView.ViewHolder(itemView) {
-
-        private val profileInitialTextView: TextView = itemView.findViewById(R.id.profile_initial_textview)
-        private val userNameTextView: TextView = itemView.findViewById(R.id.user_name_textview)
-
+    ) : RecyclerView.ViewHolder(binding.root) {
         private var currentFriend: User? = null
 
         init {
@@ -47,8 +44,19 @@ class PendingFriendAdapter(
 
         fun bind(friend: User) {
             currentFriend = friend // 현재 friend 객체를 저장하여 클릭 리스너에서 사용
-            profileInitialTextView.text = friend.name.first().toString()
-            userNameTextView.text = friend.name
+            if(friend.imageId != "") {
+                binding.profileInitialImageview.visibility = View.VISIBLE
+                binding.profileInitialTextview.visibility = View.INVISIBLE
+                Glide.with(context)
+                    .load(friend.imageId)
+                    .circleCrop()
+                    .into(binding.profileInitialImageview)
+            } else {
+                binding.profileInitialImageview.visibility = View.INVISIBLE
+                binding.profileInitialTextview.visibility = View.VISIBLE
+                binding.profileInitialTextview.text = friend.name[0].toString()
+            }
+            binding.userNameTextview.text = friend.name
         }
     }
 }

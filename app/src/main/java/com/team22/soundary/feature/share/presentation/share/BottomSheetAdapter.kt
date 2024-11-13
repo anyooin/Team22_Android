@@ -1,17 +1,22 @@
 package com.team22.soundary.feature.share.presentation.share
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.ShareFriendItemNoImageBinding
 import com.team22.soundary.databinding.ShareFriendItemWithImageBinding
 
 class BottomSheetAdapter(
+    private val context: Context,
     private val listener: FriendItemClickListener
 ) : ListAdapter<User, RecyclerView.ViewHolder>(FriendItemDiffCallback()) {
 
@@ -43,11 +48,14 @@ class BottomSheetAdapter(
     }
 
     class ViewHolderWithImage(
+        private val context: Context,
         private val binding: ShareFriendItemWithImageBinding,
         listener: FriendItemClickListener
     ) : BaseViewHolder(binding.root, listener) {
         override fun bind(userItem: User, isSelected: Boolean) {
-            binding.shareFriendImage.setImageResource(R.drawable.stalker)
+                Glide.with(context)
+                    .load(userItem.imageId)
+                    .into(binding.shareFriendImage)
             binding.shareFriendTextview.text = userItem.name
             binding.shareGrayBackground.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
             setClickListener(userItem)
@@ -70,7 +78,7 @@ class BottomSheetAdapter(
                     parent,
                     false
                 )
-                ViewHolderWithImage(binding, listener)
+                ViewHolderWithImage(context,binding, listener)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -84,7 +92,7 @@ class BottomSheetAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).image == Uri.EMPTY) NO_IMAGE else WITH_IMAGE
+        return if (getItem(position).imageId == "") NO_IMAGE else WITH_IMAGE
     }
 
 

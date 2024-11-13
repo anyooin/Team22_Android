@@ -53,11 +53,11 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
         return BottomSheetDialog(requireActivity(), R.style.bottomSheetBackground)
     }
 
-    private fun setMainSendButton(songId: String) {
+    private fun setMainSendButton(trackId: String) {
         binding.bottomSheetSendButton.setOnClickListener {
             if(viewModel.isAnyFriendSelected()) {
                 viewModel.setComment(binding.shareCommentEdittext.text.toString())
-                viewModel.shareSongToFriends(songId)
+                viewModel.shareSongToFriends("", trackId)
                 dismiss()
             } else {
                 Toast.makeText(requireContext(), "친구를 1명 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
@@ -78,7 +78,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
     }
 
     private fun setRecyclerView(view: View) {
-        adapter = BottomSheetAdapter(object : FriendItemClickListener {
+        adapter = BottomSheetAdapter(requireContext(), object : FriendItemClickListener {
             override fun onClick(v: View, selectItem: User) {
                 viewModel.toggleFriendSelection(selectItem.id)
             }

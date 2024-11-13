@@ -37,6 +37,7 @@ class MainViewModel @Inject constructor(
                     else _uiState.value = UiState.Empty
                 }
             } catch(e : Exception){
+                e.printStackTrace()
                 _uiState.value = UiState.Error(e.message)
             }
         }

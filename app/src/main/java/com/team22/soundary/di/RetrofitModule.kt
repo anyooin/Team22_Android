@@ -1,5 +1,6 @@
 package com.team22.soundary.di
 
+import com.team22.soundary.BuildConfig.BASE_URL
 import com.team22.soundary.core.auth.TokenInterceptor
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.util.DateAsStringSerializer
@@ -10,6 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,7 +31,7 @@ annotation class OtherRetrofit
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private val contentType = MediaType.parse("application/json")
+    private val contentType = "application/json".toMediaTypeOrNull()
     private val json = Json {
         encodeDefaults = true
         ignoreUnknownKeys = true
@@ -38,7 +40,6 @@ object RetrofitModule {
         }
     }
 
-    private const val BASE_URL = "http://103.124.101.43:8080/"
     @OtherRetrofit
     @Provides
     @Singleton
@@ -68,6 +69,15 @@ object RetrofitModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory(contentType!!))
+            .client(
+                OkHttpClient.Builder().apply {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
+                    )
+                }.build()
+            )
             .build()
     }
 

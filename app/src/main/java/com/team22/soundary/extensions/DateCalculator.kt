@@ -1,14 +1,21 @@
 package com.team22.soundary.extensions
 
+import android.util.Log
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import kotlin.math.abs
 
 
 fun Date.getDiff() : String{
+
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.HOUR, 9)  // 9시간 추가
+
     val cur = Calendar.getInstance().time
-    val diff = abs(cur.time - this.time)
-    val suffix = if(cur.time >= this.time) "전" else "후"
+    val diff = abs(cur.time - calendar.time.time)
+    val suffix = if(cur.time >= calendar.time.time) "전" else "후"
 
     val second = (diff / 1000).toInt()
     val minute = second / 60
