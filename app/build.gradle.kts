@@ -97,6 +97,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //unit test dependencies
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.robolectric:robolectric:4.7.3")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
 }
 buildscript{
     dependencies{
