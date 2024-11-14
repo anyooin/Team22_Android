@@ -105,6 +105,8 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.7.3")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.0")
 }
 buildscript{
     dependencies{
