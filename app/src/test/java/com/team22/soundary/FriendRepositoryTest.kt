@@ -1,5 +1,6 @@
 package com.team22.soundary
 
+import com.team22.soundary.core.data.dto.FriendInfoDto
 import com.team22.soundary.core.data.dto.FriendProfileDto
 import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.data.dto.FriendsResponse
@@ -48,8 +49,6 @@ class FriendRepositoryTest {
                 labels = listOf("label2")
             )
         )
-
-        // FriendsResponse로 감싸기
         val response = Response.success(FriendsResponse(friends = mockFriendList))
 
         whenever(friendApiService.getFriends()).thenReturn(response)
@@ -75,17 +74,14 @@ class FriendRepositoryTest {
     @Test
     fun `getSentRequests emits sent friend requests from service response`() = runTest {
         val mockSentRequests = listOf(
-            UserInfoDto(
-                displayId = "user3",
+            FriendInfoDto(
+                id = "user3",
+                displayId = "user3_display",
                 name = "Sent Friend 1",
-                description = "Description 3",
-                profile = "https://example.com/profile3.jpg",
-                roles = listOf("role3"),
-                labels = listOf("label3")
+                profile = "https://example.com/profile3.jpg"
             )
         )
 
-        // SentRequestsResponse로 감싸기
         val response = Response.success(SentRequestsResponse(sentRequests = mockSentRequests))
 
         whenever(friendApiService.getSentRequests()).thenReturn(response)
@@ -98,17 +94,14 @@ class FriendRepositoryTest {
     @Test
     fun `getReceivedRequests emits received friend requests from service response`() = runTest {
         val mockReceivedRequests = listOf(
-            UserInfoDto(
-                displayId = "user4",
+            FriendInfoDto(
+                id = "user4",
+                displayId = "user4_display",
                 name = "Received Friend 1",
-                description = "Description 4",
-                profile = "https://example.com/profile4.jpg",
-                roles = listOf("role4"),
-                labels = listOf("label4")
+                profile = "https://example.com/profile4.jpg"
             )
         )
 
-        // ReceivedRequestsResponse로 감싸기
         val response = Response.success(ReceivedRequestsResponse(receivedRequests = mockReceivedRequests))
 
         whenever(friendApiService.getReceivedRequests()).thenReturn(response)
@@ -117,7 +110,6 @@ class FriendRepositoryTest {
 
         assertEquals(mockReceivedRequests.map { it.toVO() }, result)
     }
-
     @Test
     fun `getFriendById returns user when successful`() = runTest {
         val mockUserInfo = UserInfoDto(
