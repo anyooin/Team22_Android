@@ -14,7 +14,7 @@ import javax.inject.Inject
 class MusicRepositoryImpl @Inject constructor(
     @IODispatcher private val dispatcher: CoroutineDispatcher,
     private val retrofitService: MusicService
-): MusicRepository {
+) : MusicRepository {
 
     override suspend fun getMusicList(query: String): Flow<List<Song>> = flow {
         val response = withContext(dispatcher) {

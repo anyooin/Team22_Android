@@ -6,18 +6,14 @@ import android.util.Log
 import android.widget.GridLayout
 import android.widget.Toast
 import android.widget.ToggleButton
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.databinding.ActivitySignupBinding
 import dagger.hilt.android.AndroidEntryPoint
 import android.app.AlertDialog
 import android.view.LayoutInflater
-import android.widget.CheckBox
-import android.widget.ImageButton
 import android.widget.TextView
 import com.team22.soundary.R
-import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.ScrollView
 
@@ -26,7 +22,6 @@ class ActivitySignup : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
     private val selectedCategoryList = mutableSetOf<String>()
-    //private val viewModel: SignupViewModel by viewModels() // ViewModel 초기화
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +102,7 @@ class ActivitySignup : AppCompatActivity() {
             }
         }
     }
+
     private fun showTermsPopup(title: String, content: String) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_terms, null)
         val dialog = AlertDialog.Builder(this)
@@ -136,7 +132,6 @@ class ActivitySignup : AppCompatActivity() {
 
         dialog.show()
     }
-
 
 
     private fun setNextSignupButton() {

@@ -1,7 +1,5 @@
 package com.team22.soundary.feature.search.presentation.friend
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.core.data.dto.FriendRequestDto
@@ -34,23 +32,13 @@ class FriendSearchViewModel @Inject constructor(
 
     init {
         loadFriends()
-        //loadPendingFriends()
     }
 
     // 친구 신청 메서드
     fun requestFriend(user: User) {
         if (!isFriend(user)) {
             viewModelScope.launch {
-                val isRequested = friendRepository.addFriend(FriendRequestDto(user.displayId))
-                if (isRequested) {
-                    //loadPendingFriends()  // 서버의 친구 요청 목록으로 업데이트
-                    Log.d("FriendSearchViewModel", "Friend request sent for: ${user.displayId}")
-                } else {
-                    Log.d(
-                        "FriendSearchViewModel",
-                        "Failed to send friend request for: ${user.displayId}"
-                    )
-                }
+                friendRepository.addFriend(FriendRequestDto(user.displayId))
             }
         }
     }
@@ -69,16 +57,6 @@ class FriendSearchViewModel @Inject constructor(
             }
         }
     }
-
-//    // 서버에서 PendingFriends 목록을 다시 불러오는 메서드
-//    private fun loadPendingFriends() {
-//        viewModelScope.launch {
-//            friendRepository.getSentRequests().collectLatest {
-//                _pendingFriends.value = it
-//                Log.d("uin", "Updated pendingFriends list: $it")
-//            }
-//        }
-//    }
 
     // 사용자가 현재 친구 목록에 포함되는지 확인하는 함수
     fun isFriend(user: User): Boolean {

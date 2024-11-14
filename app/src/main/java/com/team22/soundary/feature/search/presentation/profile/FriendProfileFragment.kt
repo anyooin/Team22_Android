@@ -44,10 +44,12 @@ class FriendProfileFragment : Fragment() {
             viewModel.friendProfile.collectLatest { profile ->
                 profile?.let {
                     binding.userNameTextview.text = it.name
-                    binding.userEmailTextview.text = getString(R.string.mypage_view_displayid , it.displayId)
-                    binding.statusMessageTextview.text = getString(R.string.mypage_view_statusmessage , it.statusMessage)
+                    binding.userEmailTextview.text =
+                        getString(R.string.mypage_view_displayid, it.displayId)
+                    binding.statusMessageTextview.text =
+                        getString(R.string.mypage_view_statusmessage, it.statusMessage)
                     // Glide를 사용하여 프로필 이미지 로드
-                    if(it.imageId != "") {
+                    if (it.imageId != "") {
                         Glide.with(this@FriendProfileFragment)
                             .load(it.imageId)
                             .into(binding.profileImageview)
@@ -63,7 +65,7 @@ class FriendProfileFragment : Fragment() {
         }
     }
 
-    private fun setCategory(label : List<String>) {
+    private fun setCategory(label: List<String>) {
         val categoryList = stringListToEnumList(label)
         val categoryMap = getCategoryMap()
 

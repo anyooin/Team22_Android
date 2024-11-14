@@ -7,22 +7,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.messaging.FirebaseMessaging
 import com.team22.soundary.databinding.ActivitySignup2Binding
-import com.team22.soundary.extensions.checkAndRequestPermissions
 import com.team22.soundary.MainActivity  // MainActivity를 import
-import com.team22.soundary.R
-import com.team22.soundary.core.data.TokenRepositoryImpl
-import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.core.domain.model.createImageMultipart
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,13 +109,9 @@ class ActivitySignup2 : AppCompatActivity() {
 
     private fun setSignupButton(nickname: String, displayId: String, label: List<String>) {
         binding.signupButtonSubmit.setOnClickListener {
-            var imageKey = ""
             lifecycleScope.launch {
                 // 가입 완료 처리 후 MainActivity로 이동
                 FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                    if (it.isSuccessful) Log.d("akuby21", it.result)
-                    Log.d("uin", "수정시 이미지값" + viewModel.imageId.value)
-
                     lifecycleScope.launch {
                         val success = viewModel.updateUserInfo(
                             it.result,

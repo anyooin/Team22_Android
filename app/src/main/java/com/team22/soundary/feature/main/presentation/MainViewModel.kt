@@ -25,18 +25,18 @@ class MainViewModel @Inject constructor(
     private var _groupedShares: Map<String, List<Share>> = emptyMap()
     private val _uiState = MutableStateFlow<UiState<MainUiState>>(UiState.Loading)
     val uiState: StateFlow<UiState<MainUiState>> = _uiState.asStateFlow()
+
     init {
         viewModelScope.launch {
-            try{
+            try {
                 getShareUseCase.invoke().collect { result ->
                     _groupedShares = result
                     _uiState.value = UiState.Success(MainUiState())
-                    if (result.isNotEmpty()){
+                    if (result.isNotEmpty()) {
                         updateUiState(result.entries.first().value.first(), 0)
-                    }
-                    else _uiState.value = UiState.Empty
+                    } else _uiState.value = UiState.Empty
                 }
-            } catch(e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.value = UiState.Error(e.message)
             }
@@ -75,19 +75,22 @@ class MainViewModel @Inject constructor(
     fun likeMusic() {
         val data = _uiState.value as? UiState.Success
         viewModelScope.launch {
-            data?.let{
+            data?.let {
                 try {
-                    if(data.data.share.isLike){
+                    if (data.data.share.isLike) {
                         likeSongUseCase.dislike(data.data.share.id)
-                        updateUiState(data.data.share.copy(
-                            isLike = false
-                        ),getCurrentShareIndex())
-                    }
-                    else{
+                        updateUiState(
+                            data.data.share.copy(
+                                isLike = false
+                            ), getCurrentShareIndex()
+                        )
+                    } else {
                         likeSongUseCase.like(data.data.share.id)
-                        updateUiState(data.data.share.copy(
-                            isLike = true
-                        ),getCurrentShareIndex())
+                        updateUiState(
+                            data.data.share.copy(
+                                isLike = true
+                            ), getCurrentShareIndex()
+                        )
                     }
                 } catch (e: Exception) {
                     Log.e("akuby21", "좋아요 실패 : ${e.message} ${e.cause}")
@@ -96,7 +99,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun isReceivedShare():Boolean{
+    fun isReceivedShare(): Boolean {
         val data = _uiState.value as? UiState.Success
         return (data?.data?.share?.isReceived == true)
     }
@@ -122,14 +125,14 @@ class MainViewModel @Inject constructor(
                         1
                     ),
                     isFirstSong = shareIndex == 0,
-                    likeBackground = if(targetShare.isReceived){
-                        if(targetShare.isLike){
+                    likeBackground = if (targetShare.isReceived) {
+                        if (targetShare.isLike) {
                             R.drawable.main_like_background_pressed
                         } else {
                             R.drawable.main_like_background
                         }
                     } else {
-                        if(targetShare.isLike){
+                        if (targetShare.isLike) {
                             R.drawable.main_like_background_sent_pressed
                         } else {
                             R.drawable.main_like_background_sent

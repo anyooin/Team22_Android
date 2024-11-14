@@ -17,7 +17,8 @@ class PendingFriendAdapter(
 ) : ListAdapter<User, PendingFriendAdapter.PendingFriendViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingFriendViewHolder {
-        val binding = FriendItemPendingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            FriendItemPendingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PendingFriendViewHolder(context, binding, onItemClick)
     }
 
@@ -44,7 +45,7 @@ class PendingFriendAdapter(
 
         fun bind(friend: User) {
             currentFriend = friend // 현재 friend 객체를 저장하여 클릭 리스너에서 사용
-            if(friend.imageId != "") {
+            if (friend.imageId != "") {
                 binding.profileInitialImageview.visibility = View.VISIBLE
                 binding.profileInitialTextview.visibility = View.INVISIBLE
                 Glide.with(context)

@@ -1,10 +1,7 @@
 package com.team22.soundary.feature.share.presentation.share
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team22.soundary.core.domain.model.Category
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.search.data.repository.FriendRepository
 import com.team22.soundary.feature.share.domain.ShareRepository
@@ -103,7 +100,12 @@ class ShareViewModel @Inject constructor(
 
     fun shareSongToFriends(platformTrackId: String, trackId: String) {
         viewModelScope.launch {
-            shareRepository.shareMusic(platformTrackId, trackId, _comment.value, _selectedFriendIds.value.toList())
+            shareRepository.shareMusic(
+                platformTrackId,
+                trackId,
+                _comment.value,
+                _selectedFriendIds.value.toList()
+            )
         }
     }
 }

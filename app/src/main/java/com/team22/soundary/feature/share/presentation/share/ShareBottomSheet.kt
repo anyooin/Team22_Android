@@ -12,7 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
-import com.team22.soundary.core.domain.model.stringToCategory
 import com.team22.soundary.databinding.BottomSheetBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,6 +35,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
             MAIN_BOTTOM_SHEET -> {
                 setMainSendButton(arguments?.getString(KEY_ID) ?: "")
             }
+
             SHARE_BOTTOM_SHEET -> {
                 setShareSendButton()
                 setComment()
@@ -55,7 +55,7 @@ class ShareBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet) {
 
     private fun setMainSendButton(trackId: String) {
         binding.bottomSheetSendButton.setOnClickListener {
-            if(viewModel.isAnyFriendSelected()) {
+            if (viewModel.isAnyFriendSelected()) {
                 viewModel.setComment(binding.shareCommentEdittext.text.toString())
                 viewModel.shareSongToFriends("", trackId)
                 dismiss()

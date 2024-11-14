@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -94,7 +93,7 @@ class ShareFriendActivity : AppCompatActivity() {
         val trackId = intent.extras?.getString(KEY_TRACK_ID) ?: ""
         binding.shareSendButton.text = viewModel.getButtonText()
         binding.shareSendButton.setOnClickListener {
-            if(viewModel.isAnyFriendSelected()) {
+            if (viewModel.isAnyFriendSelected()) {
                 viewModel.setComment(binding.shareCommentEdittext.text.toString())
                 viewModel.shareSongToFriends(platformTrackId, trackId)
                 val intent = Intent(this, MainActivity::class.java)

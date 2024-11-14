@@ -1,6 +1,5 @@
 package com.team22.soundary.feature.signup.presentation
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,7 +29,7 @@ class SignupViewModel @Inject constructor(
     val loginUiState: StateFlow<LoginUiState<User>> = _loginUiState.asStateFlow()
 
     private val _imageId = MutableStateFlow<String>("")
-    val imageId : StateFlow<String> = _imageId.asStateFlow()
+    val imageId: StateFlow<String> = _imageId.asStateFlow()
 
     fun login(kakaoToken: String) {
         _loginUiState.value = LoginUiState.Loading
@@ -52,19 +51,18 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun uploadImage(multipart : MultipartBody.Part) {
+    fun uploadImage(multipart: MultipartBody.Part) {
         viewModelScope.launch {
             try {
                 _imageId.value = userDetailUpdateUseCase.uploadImage(multipart)
-                Log.d("uin", "이미지 : " + _imageId.value)
             } catch (e: Exception) {
                 Log.e("uin", "Error uploading image: ${e.message}")
             }
         }
     }
 
-    suspend fun updateUserInfo(token:String, user: User) : Boolean = withContext(Dispatchers.IO){
-        return@withContext userDetailUpdateUseCase.updateUserInfo(token,user)
+    suspend fun updateUserInfo(token: String, user: User): Boolean = withContext(Dispatchers.IO) {
+        return@withContext userDetailUpdateUseCase.updateUserInfo(token, user)
     }
 
     fun checkTokenValidity() {

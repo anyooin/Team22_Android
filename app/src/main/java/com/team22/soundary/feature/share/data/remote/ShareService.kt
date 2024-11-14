@@ -9,6 +9,6 @@ import retrofit2.http.POST
 interface ShareService {
     @POST("/api/v1/shared-musics")
     suspend fun requestShareMusic(
-        @Body shareMusicRequest : ShareMusicRequest
-    ) : Response<ShareMusicResponse>
+        @Body shareMusicRequest: ShareMusicRequest
+    ): Response<ShareMusicResponse>
 }

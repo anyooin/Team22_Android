@@ -4,18 +4,13 @@ import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.LoginRequestDto
 import com.team22.soundary.core.data.dto.RefreshRequestDto
-import com.team22.soundary.core.data.dto.UserInfoInitRequestDto
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.core.domain.model.Token
-import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.feature.signup.data.remote.LoginService
-import com.team22.soundary.feature.signup.data.remote.UserService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.lang.IllegalStateException
@@ -27,7 +22,7 @@ internal class TokenRepositoryImpl @Inject constructor(
     private val loginService: LoginService
 ) : TokenRepository {
     override suspend fun getAccessToken(): Flow<Result<String>> {
-        Log.d("akuby21",""+tokenDataStore.getAccessToken().first().getOrNull())
+        //Log.d("akuby21", "" + tokenDataStore.getAccessToken().first().getOrNull())
         return tokenDataStore.getAccessToken()
     }
 
@@ -54,32 +49,28 @@ internal class TokenRepositoryImpl @Inject constructor(
                 }
 
                 else -> {
-                    Log.e("akuby21",""+response.code()+response.message())
+                    Log.e("akuby21", "" + response.code() + response.message())
                     throw IllegalStateException("login request failed")
                 }
             }
         )
     }
 
-    override suspend fun refresh(){
+    override suspend fun refresh() {
         val refreshToken = getRefreshToken().first()
 
-        val response = withContext(dispatcher){
+        val response = withContext(dispatcher) {
             loginService.requestRefresh(
                 RefreshRequestDto(refreshToken.getOrThrow())
             )
         }
 
-        Log.d("aaasdf",""+response)
-
-        if(response.isSuccessful){
-
-            Log.d("akuby21","sadsadfsdaf sadf sa: "+response)
-            response.body()?.accessToken?.let{
+        if (response.isSuccessful) {
+            response.body()?.accessToken?.let {
                 saveAccessToken(it)
             }
 
-            response.body()?.refreshToken?.let{
+            response.body()?.refreshToken?.let {
                 saveRefreshToken(it)
             }
         }

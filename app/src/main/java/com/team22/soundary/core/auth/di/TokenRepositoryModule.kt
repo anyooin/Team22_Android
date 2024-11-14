@@ -14,5 +14,5 @@ internal abstract class TokenRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTokenRepository(impl: TokenRepositoryImpl) : TokenRepository
+    abstract fun bindTokenRepository(impl: TokenRepositoryImpl): TokenRepository
 }

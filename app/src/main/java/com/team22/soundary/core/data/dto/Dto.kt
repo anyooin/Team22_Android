@@ -54,6 +54,7 @@ data class FriendProfileDto(
     @SerialName("profile_image_url") val profile: String?,
     @SerialName("labels") val labels: List<String>?
 )
+
 @Serializable
 data class ReceivedShareListDto(
     @SerialName("total") val total: Int?,
@@ -328,6 +329,7 @@ fun FriendInfoDto.toVO(): User {
         imageId = this.profile ?: ""
     )
 }
+
 fun FriendProfileDto.toVO(): User {
     return User(
         id = this.id ?: "",

@@ -9,7 +9,7 @@ class LikeSongUseCase @Inject constructor(
         receivedShareRepository.likeMusic(musicId)
     }
 
-    suspend fun dislike(musicId: String){
+    suspend fun dislike(musicId: String) {
         receivedShareRepository.deleteLikeMusic(musicId)
     }
 }

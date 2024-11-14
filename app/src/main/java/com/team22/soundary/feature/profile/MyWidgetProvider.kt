@@ -6,34 +6,20 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.team22.soundary.R
-import com.team22.soundary.feature.main.data.ReceivedShareRepositoryImpl
 import com.team22.soundary.feature.main.domain.ReceivedShareRepository
 import com.team22.soundary.feature.profile.util.ImageUtil
 import com.team22.soundary.feature.signup.presentation.ActivitySignIntro
-import com.team22.soundary.feature.signup.presentation.ActivitySignup
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-import javax.inject.Inject
 
 class MyWidgetProvider : AppWidgetProvider() {
 
@@ -89,7 +75,9 @@ class MyWidgetProvider : AppWidgetProvider() {
                 val friendImageBitmap = null
 
                 val bitmap =
-                    ImageUtil().getBitmapFromUri(receivedShare?.first()?.song?.coverImage ?: Uri.EMPTY)
+                    ImageUtil().getBitmapFromUri(
+                        receivedShare?.first()?.song?.coverImage ?: Uri.EMPTY
+                    )
 
                 withContext(Dispatchers.Main) {
                     // 위젯 업데이트
@@ -99,7 +87,7 @@ class MyWidgetProvider : AppWidgetProvider() {
                             R.layout.widget_main
                         ).apply {
                             this.setImageViewBitmap(R.id.profile_frame, bitmap)
-                            if(friendImageBitmap == null) {
+                            if (friendImageBitmap == null) {
                                 this.setViewVisibility(R.id.text_circle_background, View.VISIBLE)
                                 this.setViewVisibility(R.id.friend_image, View.INVISIBLE)
                                 this.setTextViewText(
@@ -109,7 +97,10 @@ class MyWidgetProvider : AppWidgetProvider() {
                             } else {
                                 this.setViewVisibility(R.id.text_circle_background, View.INVISIBLE)
                                 this.setViewVisibility(R.id.friend_image, View.VISIBLE)
-                                this.setImageViewBitmap(R.id.friend_image, friendImageBitmap) // 이부분이 오류인듯
+                                this.setImageViewBitmap(
+                                    R.id.friend_image,
+                                    friendImageBitmap
+                                ) // 이부분이 오류인듯
                             }
                         }
 

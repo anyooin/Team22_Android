@@ -1,6 +1,5 @@
 package com.team22.soundary.feature.main.data
 
-import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.Share
@@ -29,14 +28,14 @@ internal class ReceivedShareRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun likeMusic(musicId: String){
+    override suspend fun likeMusic(musicId: String) {
         val response = shareService.requestMusicLike(musicId)
-        if(!response.isSuccessful) throw Exception("Error: ${response.message()}")
+        if (!response.isSuccessful) throw Exception("Error: ${response.message()}")
     }
 
     override suspend fun deleteLikeMusic(musicId: String) {
         val response = shareService.deleteMusicLike(musicId)
-        if(!response.isSuccessful) throw Exception("Error: ${response.message()}")
+        if (!response.isSuccessful) throw Exception("Error: ${response.message()}")
     }
 
 }

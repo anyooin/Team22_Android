@@ -1,6 +1,5 @@
 package com.team22.soundary.feature.profile.util
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas

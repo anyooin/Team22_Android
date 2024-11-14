@@ -20,7 +20,8 @@ class NewFriendAdapter(
 ) : ListAdapter<User, NewFriendViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewFriendViewHolder {
-        val binding = FriendItemNewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            FriendItemNewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return NewFriendViewHolder(context, binding, onItemClick, onAcceptClick, onDeclineClick)
     }
 
@@ -63,7 +64,7 @@ class NewFriendViewHolder(
     fun bind(friend: User) {
         currentFriend = friend
         binding.userNameTextview.text = friend.name
-        if(friend.imageId != "") {
+        if (friend.imageId != "") {
             binding.profileInitialImageview.visibility = View.VISIBLE
             binding.profileInitialTextview.visibility = View.INVISIBLE
             Glide.with(context)

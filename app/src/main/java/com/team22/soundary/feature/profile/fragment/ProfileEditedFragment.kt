@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,15 +113,12 @@ class ProfileEditedFragment : Fragment() {
             } else if (selectedCategoryList.isEmpty()) {
                 Toast.makeText(requireContext(), "카테고리를 하나 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("uin", "수정시 이미지값" + profileViewModel.imageId.value)
                 profileViewModel.editProfile(
                     nickname = binding.profileNameEdit.text.toString(),
                     intro = binding.profileIntroEdit.text.toString(),
                     imageId = profileViewModel.imageId.value
                 )
                 profileViewModel.setLabel(selectedCategoryList.toList())
-                //parentFragmentManager.popBackStack()
-
             }
         }
     }
@@ -150,7 +146,12 @@ class ProfileEditedFragment : Fragment() {
                     selectedImageUri = result.data?.data
                     binding.profileImageview.setImageURI(selectedImageUri)
                     if (selectedImageUri != Uri.EMPTY) {
-                        profileViewModel.uploadImage(createImageMultipart(requireContext(), selectedImageUri))
+                        profileViewModel.uploadImage(
+                            createImageMultipart(
+                                requireContext(),
+                                selectedImageUri
+                            )
+                        )
                     }
                 } else {
                     Toast.makeText(requireContext(), "이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT)

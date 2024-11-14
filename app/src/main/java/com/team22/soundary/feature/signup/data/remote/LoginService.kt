@@ -12,11 +12,11 @@ interface LoginService {
     @POST("/api/login")
     suspend fun requestLogin(
         @Body loginRequestDto: LoginRequestDto
-    ) : Response<LoginResponse>
+    ): Response<LoginResponse>
 
 
     @POST("/api/refresh")
     suspend fun requestRefresh(
         @Body refreshRequestDto: RefreshRequestDto
-    ) : Response<RefreshResponse>
+    ): Response<RefreshResponse>
 }

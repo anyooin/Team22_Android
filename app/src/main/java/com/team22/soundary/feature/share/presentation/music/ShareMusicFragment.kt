@@ -2,7 +2,6 @@ package com.team22.soundary.feature.share.presentation.music
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +74,6 @@ class ShareMusicFragment : Fragment() {
                 val intent = Intent(requireContext(), ShareFriendActivity::class.java)
                 intent.putExtra(ShareFriendActivity.KEY_PLATFORM_TRACK_ID, selectItem.id)
                 intent.putExtra(ShareFriendActivity.KEY_TRACK_ID, selectItem.trackId)
-                //Log.d("uin", "노래"+selectItem.id)
                 intent.putExtra(ShareFriendActivity.KEY_IMAGE, selectItem.coverImage)
                 intent.putExtra(ShareFriendActivity.KEY_TITLE, selectItem.title)
                 intent.putExtra(

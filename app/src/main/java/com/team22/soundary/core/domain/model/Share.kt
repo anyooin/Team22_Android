@@ -9,5 +9,5 @@ data class Share(
     val friend: User = User(),
     val isLike: Boolean = false,
     val sharedDate: Date = Date(),
-    val isReceived : Boolean = true
+    val isReceived: Boolean = true
 )
