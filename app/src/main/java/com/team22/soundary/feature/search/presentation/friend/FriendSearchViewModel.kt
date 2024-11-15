@@ -38,7 +38,7 @@ class FriendSearchViewModel @Inject constructor(
     fun requestFriend(user: User) {
         if (!isFriend(user)) {
             viewModelScope.launch {
-                friendRepository.addFriend(FriendRequestDto(user.displayId))
+                val result = friendRepository.addFriend(FriendRequestDto(user.displayId))
             }
         }
     }

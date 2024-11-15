@@ -8,11 +8,13 @@ import com.team22.soundary.core.data.dto.ReceivedRequestsResponse
 import com.team22.soundary.core.data.dto.SentRequestsResponse
 import com.team22.soundary.core.data.dto.UserInfoDto
 import com.team22.soundary.core.data.dto.toVO
-import com.team22.soundary.feature.search.data.api.FriendApiService
+import com.team22.soundary.feature.search.data.remote.FriendApiService
 import com.team22.soundary.feature.search.data.repository.FriendRepository
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -53,7 +55,7 @@ class FriendRepositoryTest {
 
         whenever(friendApiService.getFriends()).thenReturn(response)
 
-        val result = repository.getFriends().first()
+        val result = repository.getFriends().take(1).toList().first()
 
         assertEquals(mockFriendList.map { it.toVO() }, result)
     }
@@ -86,7 +88,7 @@ class FriendRepositoryTest {
 
         whenever(friendApiService.getSentRequests()).thenReturn(response)
 
-        val result = repository.getSentRequests().first()
+        val result = repository.getSentRequests().take(1).toList().first()
 
         assertEquals(mockSentRequests.map { it.toVO() }, result)
     }
@@ -106,7 +108,7 @@ class FriendRepositoryTest {
 
         whenever(friendApiService.getReceivedRequests()).thenReturn(response)
 
-        val result = repository.getReceivedRequests().first()
+        val result = repository.getReceivedRequests().take(1).toList().first()
 
         assertEquals(mockReceivedRequests.map { it.toVO() }, result)
     }

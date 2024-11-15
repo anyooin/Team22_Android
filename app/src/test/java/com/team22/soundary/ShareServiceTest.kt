@@ -9,6 +9,9 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 class ShareServiceTest {
 
@@ -21,7 +24,7 @@ class ShareServiceTest {
         mockWebServer.start()
         shareService = Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaTypeOrNull()!!))
             .build()
             .create(ShareService::class.java)
     }

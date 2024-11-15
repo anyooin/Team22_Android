@@ -31,15 +31,14 @@ class FriendRepository @Inject constructor(
     }
 
     // 친구 추가 요청 보내기
-    suspend fun addFriend(targetDisplayId: FriendRequestDto) {
-        try {
+    suspend fun addFriend(targetDisplayId: FriendRequestDto): Boolean {
+        return try {
             // API 호출 시, 전달된 FriendRequestDto 객체를 그대로 사용
             val response = friendApiService.addFriend(targetDisplayId)
-            if (response.isSuccessful) {
-                notifyDataChange()
-            }
+            response.isSuccessful
         } catch (e: Exception) {
             e.printStackTrace()
+            false
         }
     }
 

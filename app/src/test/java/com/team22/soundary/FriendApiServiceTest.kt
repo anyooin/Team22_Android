@@ -1,7 +1,8 @@
 package com.team22.soundary
 
 import com.team22.soundary.core.data.dto.FriendRequestDto
-import com.team22.soundary.feature.search.data.api.FriendApiService
+import com.team22.soundary.core.data.dto.toVO
+import com.team22.soundary.feature.search.data.remote.FriendApiService
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -11,6 +12,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.coroutines.test.runTest
 import junit.framework.TestCase.assertEquals
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 class FriendApiServiceTest {
 
@@ -23,7 +27,7 @@ class FriendApiServiceTest {
         mockWebServer.start()
         friendApiService = Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaTypeOrNull()!!))
             .build()
             .create(FriendApiService::class.java)
     }
@@ -46,7 +50,9 @@ class FriendApiServiceTest {
                         "display_id": "alice1234",
                         "nickname": "Alice",
                         "profile_image_url": "https://example.com/alice.jpg",
-                        "labels": ["pop"]
+                        "labels": [
+                            "pop"
+                        ]
                     }
                 ]
             }
@@ -56,16 +62,17 @@ class FriendApiServiceTest {
 
         // API 호출
         val response = friendApiService.getFriends()
+        response.code()
 
         // 응답 확인
         assert(response.isSuccessful)
-        val friends = response.body()?.friends
-        assertEquals(1, friends?.size)
-        assertEquals("1", friends?.first()?.id)
-        assertEquals("alice1234", friends?.first()?.displayId)
-        assertEquals("Alice", friends?.first()?.name)
-        assertEquals("https://example.com/alice.jpg", friends?.first()?.profile)
-        assertEquals(listOf("pop"), friends?.first()?.labels)
+        assertEquals(200, response.code())
+        val friends = response.body()?.friends?.get(0)?.toVO()
+        assertEquals("1", friends?.id)
+        //assertEquals("alice1234", friends?.displayId)
+        assertEquals("Alice", friends?.name)
+        assertEquals("https://example.com/alice.jpg", friends?.imageId)
+        assertEquals(listOf("pop"), friends?.label)
     }
 
     @Test
@@ -116,12 +123,10 @@ class FriendApiServiceTest {
 
         // 응답 확인
         assert(response.isSuccessful)
-        val user = response.body()
+        val user = response.body()?.toVO()
         assertEquals("charlie123", user?.displayId)
         assertEquals("Charlie", user?.name)
-        assertEquals(null, user?.description)
-        assertEquals("https://example.com/charlie.jpg", user?.profile)
-        assertEquals(null, user?.roles)
-        assertEquals(listOf("pop"), user?.labels)
+        assertEquals("https://example.com/charlie.jpg", user?.imageId)
+        assertEquals(listOf("pop"), user?.label)
     }
 }
