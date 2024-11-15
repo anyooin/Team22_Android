@@ -1,5 +1,25 @@
 package com.team22.soundary.core.domain.model
 
 enum class Category {
-    RnB, Hiphop, Pop, Rock, Jpop, Dance
+    RNB, HIPHOP, POP, ROCK, JPOP, KPOP
 }
+
+fun stringListToEnumList(stringList: List<String>): List<Category> {
+    return stringList.mapNotNull { string ->
+        try {
+            Category.valueOf(string.uppercase()) // 문자열을 Enum으로 변환, 대소문자 무시
+        } catch (e: IllegalArgumentException) {
+            null // 매칭되지 않는 문자열은 무시
+        }
+    }
+}
+
+fun getCategoryMap(): Map<Category, Int> = mapOf(
+    Pair(Category.RNB, 0),
+    Pair(Category.HIPHOP, 1),
+    Pair(Category.POP, 2),
+    Pair(Category.ROCK, 3),
+    Pair(Category.JPOP, 4),
+    Pair(Category.KPOP, 5)
+)
+

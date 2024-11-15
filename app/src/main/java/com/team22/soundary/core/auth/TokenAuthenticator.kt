@@ -14,14 +14,14 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        val token : String = runBlocking {
+        val token: String = runBlocking {
             tokenRepository.getRefreshToken().first().getOrNull()
         } ?: return null
 
         return Request.Builder().addHeader(AUTH, "$TOKEN_PREFIX$token").build()
     }
 
-    companion object{
+    companion object {
         const val AUTH = "Authorization"
         const val TOKEN_PREFIX = "Bearer "
     }

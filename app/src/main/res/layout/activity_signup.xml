@@ -1,79 +1,55 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     android:background="@android:color/white"
-    android:padding="16dp"
+    android:padding="@dimen/signup_padding"
     tools:ignore="ExtraText">
-
 
     <!-- 상단 안내 텍스트 -->
     <TextView
         android:id="@+id/signup_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        style="@style/SignupTitle"
         android:text="@string/signup_necessary_info"
-        android:textColor="@color/black"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintHorizontal_bias="0.5"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 앱의 고유 아이디 입력 필드 -->
     <TextView
         android:id="@+id/signup_email_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SignupQuestion"
+        android:layout_marginTop="40dp"
         android:text="@string/signup_nick_intro_info"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_title" />
 
     <EditText
         android:id="@+id/signup_edittext_email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_normal"
+        style="@style/SignupEditText"
+        android:enabled="false"
         android:hint="@string/signup_ID_hint"
-
         android:inputType="textEmailAddress"
-
-        android:textColor="@color/black"
-        android:textColorHint="@color/gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@id/signup_email_label"
-        android:enabled="false" />
-
+        app:layout_constraintTop_toBottomOf="@id/signup_email_label" />
 
     <!-- 닉네임 입력 필드 -->
     <TextView
         android:id="@+id/signup_nickname_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SignupQuestion"
+        android:layout_marginTop="@dimen/margin_normal"
         android:text="@string/mypage_nickname"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_edittext_email" />
 
     <EditText
         android:id="@+id/signup_edittext_nickname"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_normal"
+        style="@style/SignupEditText"
         android:hint="@string/signup_nickname_hint"
         android:maxLength="8"
-        android:textColor="@color/black"
-        android:textColorHint="@color/gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_nickname_label" />
@@ -81,118 +57,89 @@
     <!-- 카테고리 설정 타이틀 -->
     <TextView
         android:id="@+id/signup_category_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SignupQuestion"
+        android:layout_marginTop="@dimen/margin_normal"
         android:text="@string/signup_category_title"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_edittext_nickname" />
 
     <!-- 카테고리 선택 버튼들 -->
     <GridLayout
         android:id="@+id/signup_category_grid"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
         android:layout_marginTop="@dimen/margin_half"
-        android:layout_marginBottom="@dimen/margin_normal"
         android:columnCount="4"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_category_title">
 
         <ToggleButton
+            android:id="@+id/signup_togglebutton_category_rnb"
+            style="@style/SignupCategory"
+            android:textOff="@string/category_rnb"
+            android:textOn="@string/category_rnb" />
+
+        <ToggleButton
             android:id="@+id/signup_togglebutton_category_hiphop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
+            style="@style/SignupCategory"
             android:textOff="@string/category_hiphop"
             android:textOn="@string/category_hiphop" />
 
-
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_rock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
-            android:textOff="@string/category_rock"
-            android:textOn="@string/category_rock" />
-
         <ToggleButton
             android:id="@+id/signup_togglebutton_category_pop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
+            style="@style/SignupCategory"
             android:textOff="@string/category_pop"
             android:textOn="@string/category_pop" />
 
         <ToggleButton
+            android:id="@+id/signup_togglebutton_category_rock"
+            style="@style/SignupCategory"
+            android:textOff="@string/category_rock"
+            android:textOn="@string/category_rock" />
+
+        <ToggleButton
             android:id="@+id/signup_togglebutton_category_jpop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
+            style="@style/SignupCategory"
             android:textOff="@string/category_jpop"
             android:textOn="@string/category_jpop" />
 
         <ToggleButton
-            android:id="@+id/signup_togglebutton_category_ballad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
-            android:textOff="@string/category_ballad"
-            android:textOn="@string/category_ballad" />
+            android:id="@+id/signup_togglebutton_category_kpop"
+            style="@style/SignupCategory"
+            android:textOff="@string/category_kpop"
+            android:textOn="@string/category_kpop" />
 
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_dance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
-            android:textOff="@string/category_dance"
-            android:textOn="@string/category_dance" />
-
-        <ToggleButton
-            android:id="@+id/signup_togglebutton_category_rnb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/all_rounded_toggle_button"
-            android:textOff="@string/category_rnb"
-            android:textOn="@string/category_rnb" />
     </GridLayout>
 
     <!-- 약관 동의 체크박스 -->
     <CheckBox
-        android:id="@+id/signup_checkbox_service"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_terms_agreement"
-        android:textColor="@drawable/signup_color_selector"
-        app:layout_constraintTop_toBottomOf="@id/signup_category_grid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/signup_checkbox_privacy"
+        style="@style/SignupCheckBox"
+        android:text="@string/signup_privacy_agreement"
+        app:layout_constraintBottom_toTopOf="@+id/signup_checkbox_service"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/signup_checkbox_privacy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_privacy_agreement"
-        android:textColor="@drawable/signup_color_selector"
-        app:layout_constraintTop_toBottomOf="@id/signup_checkbox_service"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/signup_checkbox_service"
+        style="@style/SignupCheckBox"
+        android:layout_marginBottom="15dp"
+        android:text="@string/signup_terms_agreement"
+        app:layout_constraintBottom_toTopOf="@id/signup_button_continue"
+        app:layout_constraintStart_toStartOf="@+id/signup_checkbox_privacy" />
 
     <!-- 계속 가입하기 버튼 -->
     <Button
         android:id="@+id/signup_button_continue"
         style="@style/SignupButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/all_rounded_button"
         android:text="@string/signup_continue_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

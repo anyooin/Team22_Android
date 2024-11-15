@@ -1,0 +1,57 @@
+package com.team22.soundary.feature.share.presentation.music
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.team22.soundary.core.domain.model.Song
+import com.team22.soundary.databinding.ShareMusicItemBinding
+
+class MusicListAdapter(
+    private val context: Context,
+    private val listener: MusicItemClickListener
+) : ListAdapter<Song, MusicListAdapter.ViewHolder>(MusicItemDiffCallback()) {
+    class ViewHolder(
+        private val context: Context,
+        private val binding: ShareMusicItemBinding,
+        private val listener: MusicItemClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
+        lateinit var item: Song
+
+        init {
+            binding.root.setOnClickListener {
+                listener.onClick(it, item)
+            }
+        }
+
+        fun bind(songItem: Song) {
+            Glide.with(context)
+                .load(songItem.coverImage)
+                .into(binding.shareMusicImageview)
+            binding.shareMusicTextview.text = songItem.title
+            binding.shareMusicTextview.text = songItem.title
+            binding.shareSingerTextview.text = songItem.artist.joinToString(", ")
+            item = songItem
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ShareMusicItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(context, binding, listener)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}
+
+interface MusicItemClickListener {
+    fun onClick(v: View, selectItem: Song)
+}

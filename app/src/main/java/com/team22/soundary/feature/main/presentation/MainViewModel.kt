@@ -1,12 +1,14 @@
 package com.team22.soundary.feature.main.presentation
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team22.soundary.R
 import com.team22.soundary.core.UiState
 import com.team22.soundary.core.domain.model.Share
 import com.team22.soundary.feature.main.domain.GetShareUseCase
+import com.team22.soundary.feature.main.domain.LikeSongUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getShareUseCase: GetShareUseCase
+    private val getShareUseCase: GetShareUseCase,
+    private val likeSongUseCase: LikeSongUseCase
 ) : ViewModel() {
     private var _groupedShares: Map<String, List<Share>> = emptyMap()
     private val _uiState = MutableStateFlow<UiState<MainUiState>>(UiState.Loading)
@@ -25,17 +28,26 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getShareUseCase.invoke().collect { result ->
-                _groupedShares = result
-                if(result.isNotEmpty()) updateUiState(result.entries.first().value.first(),0)
+            try {
+                getShareUseCase.invoke().collect { result ->
+                    _groupedShares = result
+                    _uiState.value = UiState.Success(MainUiState())
+                    if (result.isNotEmpty()) {
+                        updateUiState(result.entries.first().value.first(), 0)
+                    } else _uiState.value = UiState.Empty
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiState.value = UiState.Error(e.message)
             }
         }
     }
 
-
     fun onFriendChanged(index: Int) {
         val targetFriendName = _groupedShares.keys.toList()[index]
-        _groupedShares[targetFriendName]?.first()?.let { updateUiState(it, 0) }
+        _groupedShares[targetFriendName]?.first()?.let {
+            updateUiState(it, 0)
+        }
     }
 
     fun onNextClicked() {
@@ -60,6 +72,38 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun likeMusic() {
+        val data = _uiState.value as? UiState.Success
+        viewModelScope.launch {
+            data?.let {
+                try {
+                    if (data.data.share.isLike) {
+                        likeSongUseCase.dislike(data.data.share.id)
+                        updateUiState(
+                            data.data.share.copy(
+                                isLike = false
+                            ), getCurrentShareIndex()
+                        )
+                    } else {
+                        likeSongUseCase.like(data.data.share.id)
+                        updateUiState(
+                            data.data.share.copy(
+                                isLike = true
+                            ), getCurrentShareIndex()
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e("akuby21", "좋아요 실패 : ${e.message} ${e.cause}")
+                }
+            }
+        }
+    }
+
+    fun isReceivedShare(): Boolean {
+        val data = _uiState.value as? UiState.Success
+        return (data?.data?.share?.isReceived == true)
+    }
+
     fun getSongUri(): Uri? = (_uiState.value as? UiState.Success)?.data?.share?.song?.preview
 
     private fun getCurrentShares(): List<Share>? =
@@ -81,10 +125,28 @@ class MainViewModel @Inject constructor(
                         1
                     ),
                     isFirstSong = shareIndex == 0,
-                    likeBackground = if (targetShare.isLike) R.drawable.main_like_background_pressed else R.drawable.main_like_background,
+                    likeBackground = if (targetShare.isReceived) {
+                        if (targetShare.isLike) {
+                            R.drawable.main_like_background_pressed
+                        } else {
+                            R.drawable.main_like_background
+                        }
+                    } else {
+                        if (targetShare.isLike) {
+                            R.drawable.main_like_background_sent_pressed
+                        } else {
+                            R.drawable.main_like_background_sent
+                        }
+                    }
+
                 )
             )
         }
+    }
+
+    fun getSongId(): String {
+        val data = _uiState.value as UiState.Success<MainUiState>
+        return data.data.share.song.id
     }
 
     companion object {

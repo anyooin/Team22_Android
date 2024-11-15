@@ -5,9 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface TokenRepository {
 
-    suspend fun getAccessToken() : Flow<Result<String>>
-    suspend fun getRefreshToken() : Flow<Result<String>>
+    suspend fun getAccessToken(): Flow<Result<String>>
+    suspend fun getRefreshToken(): Flow<Result<String>>
     suspend fun saveAccessToken(token: String)
     suspend fun saveRefreshToken(token: String)
-    suspend fun loginWithKakao(kakaoToken: String) : Flow<Result<Token>>
+    suspend fun loginWithKakao(kakaoToken: String): Flow<Token>
+
+    suspend fun refresh()
+
+    suspend fun clear()
+
 }

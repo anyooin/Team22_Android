@@ -7,18 +7,18 @@ import com.team22.soundary.feature.main.domain.SentShareRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 internal abstract class ShareRepositoryModule {
 
     @Binds
-    @ViewModelScoped
-    abstract fun bindSentShareRepository(impl: SentShareRepositoryImpl) : SentShareRepository
+    @Singleton
+    abstract fun bindSentShareRepository(impl: SentShareRepositoryImpl): SentShareRepository
 
     @Binds
-    @ViewModelScoped
-    abstract fun bindReceivedShareRepository(impl: ReceivedShareRepositoryImpl) : ReceivedShareRepository
+    @Singleton
+    abstract fun bindReceivedShareRepository(impl: ReceivedShareRepositoryImpl): ReceivedShareRepository
 }

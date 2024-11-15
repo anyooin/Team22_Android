@@ -25,6 +25,7 @@
     <!-- login, mypage -->
     <!-- Margin -->
     <dimen name="margin_large">24dp</dimen>
+    <dimen name="signup_padding">25dp</dimen>
 
     <!-- Textsize -->
     <dimen name="text_size_large">24sp</dimen>

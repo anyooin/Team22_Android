@@ -2,6 +2,7 @@
     <string name="app_name">Soundary</string>
     <string name="main_not_enough_listen">%1$d초 더 들어 친구의 메시지를 확인해보세요.</string>
     <string name="main_enough_listen">추천이 마음에 드신다면 좋아요를 눌러주세요</string>
+    <string name="main_empty_share">아직 공유 하거나 받은 노래가 없어요.\n 친구에게 노래를 공유해보세요!</string>
 
     <!-- 공유 페이지 - 노래 선택 -->
     <string name="share_search_music_hint">검색할 노래를 입력해 주세요.</string>
@@ -36,9 +37,11 @@
 
     <!--sign intro-->
     <string name="sign_intro_start">카카오톡으로 시작하기</string>
+    <string name="sign_loading">로딩중...</string>
 
     <!-- signup -->
     <string name="signup_necessary_info">필수 정보를 입력해주세요.</string>
+    <string name="signup_optional_info">선택 정보를 입력해주세요.</string>
     <string name="signup_nick_intro_info">앱의 고유 아이디는 카카오 아이디의 앞 부분입니다.</string>
     <string name="signup_ID_hint">아이디를 입력하세요</string>
     <string name="signup_nickname_hint">앱에서 사용할 닉네임 (최대 8자)</string>  <!-- 닉네임 입력 힌트 -->
@@ -63,23 +66,28 @@
     <string name="mypage_ID">아이디</string>
     <string name="mypage_save">저장하기</string>
 
-
     <!--category-->
-    <string name="mypage_category_setting">카테고리 설정</string>
-    <string name="category_hiphop">힙합</string>
-    <string name="category_rock">Rock</string>
+    <string name="mypage_category_setting">카테고리</string>
+    <string name="category_rnb">RNB</string>
+    <string name="category_hiphop">HIPHOP</string>
     <string name="category_pop">POP</string>
+    <string name="category_rock">ROCK</string>
     <string name="category_jpop">JPOP</string>
-    <string name="category_ballad">발라드</string>
-    <string name="category_dance">댄스</string>
-    <string name="category_rnb">RnB</string>
+    <string name="category_kpop">KPOP</string>
+    <string name="category_ballad">BALLADE</string>
 
     <!--profile-->
+    <string name ="profile_name">쿠</string>
+    <string name="profile_title">마이페이지</string>
+    <string name="profile_edit_title">내 정보 수정</string>
     <string name="user_name">쿠키즈</string>
     <string name="user_id">\@kookoo</string>
     <string name="user_email">\kookoo@naver.com</string>
-
+    <string name="user_introduce">\"한 줄 소개글\"</string>
     <string name="state_message">안녕? 나 쿠키즈!</string>
+
+    <string name="mypage_view_displayid">\@%1$s</string>
+    <string name="mypage_view_statusmessage">\" %1$s \"</string>
 
     <string name="category">선호 카테고리</string>
     <string name="genre_pop">POP</string>
@@ -89,7 +97,27 @@
     <string name="genre_Jpop">JPOP</string>
 
     <string name="add_friend">친구 추가</string>
+    <string name = "request">신청</string>
+    <string name="delete_friend">삭제 </string>
+    <string name ="accept_request">수락</string>
+    <string name="reject_request">거절</string>
+    <string name="search">검색</string>
+
+    <string name="new_friend">내게 온 친구 신청</string>
+    <string name="pending_friend_open">대기 중인 친구 열기</string>
+    <string name="pending_friend_close">대기 중인 친구 닫기</string>
+    <string name="friend_label">ROCK, HIPHOP, JPOP</string>
+
+    <string name = "my_friend_with_count">내 친구 (x/20)</string>
+    <string name = "friend_info">친구 정보</string>
+
+    <string name ="init_search_text">친구의 id값을 입력해주세요.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--약관동의-->
+    <string name="privacy_policy_title">개인 정보 이용 약관 동의</string>
+    <string name="service_policy_title">서비스 이용 약관 동의</string>
 </resources>
+
 

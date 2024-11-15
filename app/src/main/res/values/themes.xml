@@ -13,28 +13,107 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
-
     </style>
 
-    <!-- category_button_styles -->
-    <style name="CategoryButton">
+    <style name="Theme.Soundary.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.Soundary</item>
+    </style>
+
+    <!-- profile  -->
+    <style name="CategoryEditButton">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/all_rounded_toggle_button</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@drawable/all_rounded_toggle_text</item>
         <item name="android:layout_margin">@dimen/category_margin</item>
     </style>
 
-    <!--signup button-->
+    <style name="CategoryButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/all_rounded_toggle_button</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_margin">@dimen/category_margin</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ProfileSharedAlbum">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ProfileImageCardView">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="cardCornerRadius">75dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <!--signup-->
     <style name="SignupButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/all_rounded_button</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginHorizontal">10dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
+    <style name="SignupTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
+    <style name="SignupQuestion">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="SignupEditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/gray_500</item>
+    </style>
+
+    <style name="SignupCategory">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">37dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/all_rounded_toggle_button</item>
+        <item name="android:textColor">@drawable/all_rounded_toggle_text</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_marginHorizontal">10dp</item>
+    </style>
+
+    <style name="SignupCheckBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@drawable/signup_color_selector</item>
+        <item name="android:buttonTint">@color/yellow_500</item>
+    </style>
+
+    <!-- share -->
     <style name="shareTopTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -53,6 +132,7 @@
         <item name="android:layout_marginStart">10dp</item>
     </style>
 
+    <!--bottomSheet -->
     <style name="bottomSheetCategory">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -65,27 +145,32 @@
         <item name="android:layout_marginHorizontal">3dp</item>
     </style>
 
-    <style name="bottomSheetBackground">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:colorBackground">@android:color/transparent</item>
+    <style name="bottomSheetBackground" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
         <item name="android:windowSoftInputMode">adjustPan</item>
+        <item name="behavior_draggable">false</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
 
     <style name="shareGrayBackground">
         <item name="android:layout_width">@dimen/item_size</item>
         <item name="android:layout_height">@dimen/item_size</item>
         <item name="android:visibility">invisible</item>
+        <item name="android:elevation">4dp</item>
         <item name="android:src">@drawable/share_gray_circle</item>
     </style>
 
-    <!-- profile -->
-    <style name="profile_category_style">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/all_rounded_button</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_marginHorizontal">8dp</item>
-        <item name="android:layout_weight">1</item>
+    <!--friend-->
+    <style name="friendButton">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">37dp</item>
+        <item name="android:background">@drawable/friend_rounded_button</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:padding">4dp</item>
     </style>
 
 </resources>

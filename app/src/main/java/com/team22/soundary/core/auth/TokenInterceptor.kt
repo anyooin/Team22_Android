@@ -12,16 +12,16 @@ class TokenInterceptor @Inject constructor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token : String = runBlocking {
+        val token: String = runBlocking {
             tokenRepository.getAccessToken().first().getOrNull()
         } ?: ""
 
-        val request = chain.request().newBuilder().addHeader(AUTH, TOKEN_PREFIX+token).build()
+        val request = chain.request().newBuilder().addHeader(AUTH, TOKEN_PREFIX + token).build()
 
         return chain.proceed(request)
     }
 
-    companion object{
+    companion object {
         const val AUTH = "Authorization"
         const val TOKEN_PREFIX = "Bearer "
     }

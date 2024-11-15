@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class TokenRepositoryModule {
+internal abstract class TokenRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTokenRepository(impl: TokenRepositoryImpl) : TokenRepository
+    abstract fun bindTokenRepository(impl: TokenRepositoryImpl): TokenRepository
 }
