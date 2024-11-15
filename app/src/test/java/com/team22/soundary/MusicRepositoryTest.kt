@@ -1,5 +1,7 @@
 package com.team22.soundary
 
+import com.team22.soundary.core.data.dto.MostSharedTrackResponseDto
+import com.team22.soundary.core.data.dto.MostSharedTracksResponse
 import com.team22.soundary.core.data.dto.SearchTrackResponse
 import com.team22.soundary.core.data.dto.SearchTrackResponseDto
 import com.team22.soundary.core.data.dto.toVO
@@ -54,7 +56,33 @@ class MusicRepositoryTest {
 
         // result가 기대하는 값으로 변환되었는지 확인
         TestCase.assertEquals(mockMusicList.map { it.toVO() }, result)
-        TestCase.assertEquals(mockMusicList.map { it.toVO() }, result)
+    }
+
+    @Test
+    fun `getMostSharedMusicList emits music list from service response`() = runTest {
+        // Mock된 User 및 TrackDto 생성
+        val mockTrackDto = MostSharedTrackResponseDto(
+            trackId = "track1",
+            title = "Test Track",
+            artist = listOf("Artist"),
+            duration = 180,
+            albumCoverUrl = "https://example.com/cover.jpg",
+            previewMp3Url = "https://example.com/preview.mp3"
+        )
+
+        val mockMusicList = listOf(mockTrackDto)
+        val musicListDto = MostSharedTracksResponse(
+            trackList = mockMusicList
+        )
+
+        val response = Response.success(musicListDto)
+
+        // whenever 사용하여 mock 설정
+        whenever(retrofitService.requestMostSharedMusicList()).thenReturn(response)
+
+        val result = repository.getMostSharedMusicList().first()
+
+        // result가 기대하는 값으로 변환되었는지 확인
         TestCase.assertEquals(mockMusicList.map { it.toVO() }, result)
     }
 }

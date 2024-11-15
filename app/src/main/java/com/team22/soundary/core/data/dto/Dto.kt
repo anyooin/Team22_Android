@@ -33,7 +33,7 @@ data class UserInfoDto(
     @SerialName("display_id") val displayId: String?,
     @SerialName("nickname") val name: String?,
     @SerialName("description") val description: String?,
-    @SerialName("profile_image_url") val profile: String? = Uri.EMPTY.toString(),
+    @SerialName("profile_image_url") val profile: String? = "",
     @SerialName("roles") val roles: List<String>?,
     @SerialName("labels") val labels: List<String>?
 )
