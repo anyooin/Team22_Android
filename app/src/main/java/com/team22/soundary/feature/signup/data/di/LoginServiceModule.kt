@@ -15,6 +15,6 @@ object LoginServiceModule {
 
     @Provides
     @Singleton
-    fun provideLoginService(@AuthRetrofit retrofit: Retrofit) : LoginService =
+    fun provideLoginService(@AuthRetrofit retrofit: Retrofit): LoginService =
         retrofit.create(LoginService::class.java)
 }

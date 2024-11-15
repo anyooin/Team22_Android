@@ -14,5 +14,5 @@ internal abstract class TokenDatasourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindTokenDatasource(impl: TokenDatasourceImpl) : TokenDatasource
+    abstract fun bindTokenDatasource(impl: TokenDatasourceImpl): TokenDatasource
 }

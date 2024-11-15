@@ -1,7 +1,5 @@
 package com.team22.soundary.feature.profile.data
 
-import android.net.Uri
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.LabelAddRequest
@@ -33,12 +31,6 @@ class ProfileRepositoryImpl @Inject constructor(
 
         if (response.isSuccessful) {
             emit(response.body()?.toVO() ?: User())
-            if (response.body() == null) {
-                Log.d("uin", "error")
-            } else {
-                Log.d("uin", "ok" + response.body()!!.description)
-            }
-
         } else {
             throw Exception("Error: ${response.message()}")
         }
@@ -51,16 +43,10 @@ class ProfileRepositoryImpl @Inject constructor(
 
         return when {
             response.isSuccessful -> {
-                if (response.body() == null) {
-                    Log.d("uin", "성공 : 바디가 비어있음" + response.body()?.imageId)
-                } else {
-                    Log.d("uin", "성공 : 바디값" + response.body()?.imageId)
-                }
                 response.body()?.imageId ?: ""
             }
 
             else -> {
-                Log.d("uin", "취소")
                 ""
             }
         }
@@ -83,8 +69,6 @@ class ProfileRepositoryImpl @Inject constructor(
         val response = withContext(dispatcher) {
             apiService.putProfile(userUpdateRequest)
         }
-
-        Log.d("uin", "수정한 이미지 : " + imageId)
 
         if (!response.isSuccessful) {
             throw Exception("Error: ${response.message()}")
@@ -138,7 +122,6 @@ class ProfileRepositoryImpl @Inject constructor(
             }
 
             if (!response.isSuccessful) {
-                Log.d("uin", "레포실패" + response.message())
                 throw Exception("Error: ${response.message()}")
             }
 

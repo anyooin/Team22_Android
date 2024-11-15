@@ -20,14 +20,16 @@ internal object TokenModule {
 
     @Provides
     @Singleton
-    fun provideTokenDataStore(@ApplicationContext context: Context) : DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        produceFile = {
-            context.preferencesDataStoreFile(TOKEN_PREFERENCES_NAME)
-        }
-    )
+    fun provideTokenDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile(TOKEN_PREFERENCES_NAME)
+            }
+        )
 
     @Provides
     @Singleton
-    fun provideTokenDatasource(tokenDataStore: DataStore<Preferences>) : TokenDatasourceImpl = TokenDatasourceImpl(tokenDataStore)
+    fun provideTokenDatasource(tokenDataStore: DataStore<Preferences>): TokenDatasourceImpl =
+        TokenDatasourceImpl(tokenDataStore)
 
 }

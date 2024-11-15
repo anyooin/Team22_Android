@@ -1,6 +1,5 @@
 package com.team22.soundary.core.data
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -12,14 +11,13 @@ import javax.inject.Inject
 
 internal class TokenDatasourceImpl @Inject constructor(
     private val tokenDataStore: DataStore<Preferences>
-): TokenDatasource {
+) : TokenDatasource {
     private val accessTokenKey = stringPreferencesKey(ACCESS_TOKEN)
     private val refreshTokenKey = stringPreferencesKey(REFRESH_TOKEN)
 
-    override fun getAccessToken() : Flow<Result<String>> {
+    override fun getAccessToken(): Flow<Result<String>> {
         return tokenDataStore.data.map {
             it[accessTokenKey]?.let { token ->
-                Log.d("testtttt",""+token)
                 Result.success(token)
             } ?: Result.failure(IllegalStateException("Refresh token not found"))
         }.catch { exception ->
@@ -29,22 +27,22 @@ internal class TokenDatasourceImpl @Inject constructor(
 
 
     override fun getRefreshToken(): Flow<Result<String>> =
-        tokenDataStore.data.map{
-            it[refreshTokenKey]?.let{ token ->
+        tokenDataStore.data.map {
+            it[refreshTokenKey]?.let { token ->
                 Result.success(token)
             } ?: Result.failure(IllegalStateException("Refresh token not found"))
-        }.catch{exception ->
+        }.catch { exception ->
             emit(Result.failure(exception))
         }
 
-    override suspend fun saveAccessToken(token : String) {
-        tokenDataStore.edit{
+    override suspend fun saveAccessToken(token: String) {
+        tokenDataStore.edit {
             it[accessTokenKey] = token
         }
     }
 
     override suspend fun saveRefreshToken(token: String) {
-        tokenDataStore.edit{
+        tokenDataStore.edit {
             it[refreshTokenKey] = token
         }
     }
@@ -55,7 +53,7 @@ internal class TokenDatasourceImpl @Inject constructor(
         }
     }
 
-    companion object{
+    companion object {
         private const val ACCESS_TOKEN = "access"
         private const val REFRESH_TOKEN = "refresh"
     }

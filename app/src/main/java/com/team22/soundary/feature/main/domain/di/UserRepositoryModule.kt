@@ -14,5 +14,5 @@ internal abstract class UserRepositoryModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindUserRepository(impl: UserRepositoryImpl) : UserRepository
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 }

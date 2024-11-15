@@ -1,8 +1,6 @@
 package com.team22.soundary.feature.signup.data.di
 
-import com.team22.soundary.di.AuthRetrofit
 import com.team22.soundary.di.OtherRetrofit
-import com.team22.soundary.feature.signup.data.remote.LoginService
 import com.team22.soundary.feature.signup.data.remote.UserService
 import dagger.Module
 import dagger.Provides
@@ -17,7 +15,7 @@ object UserServiceModule {
 
     @Provides
     @Singleton
-    fun provideUserService(@OtherRetrofit retrofit: Retrofit) : UserService =
+    fun provideUserService(@OtherRetrofit retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
 
 

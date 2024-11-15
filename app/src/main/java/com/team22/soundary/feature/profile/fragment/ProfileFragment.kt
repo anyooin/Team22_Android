@@ -2,7 +2,6 @@ package com.team22.soundary.feature.profile.fragment
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,13 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.google.firebase.messaging.FirebaseMessaging
-import com.kakao.sdk.user.UserApiClient
 import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.getCategoryMap
 import com.team22.soundary.core.domain.model.stringListToEnumList
 import com.team22.soundary.databinding.FragmentMypageBinding
 import com.team22.soundary.feature.signup.presentation.ActivitySignIntro
-import com.team22.soundary.feature.signup.presentation.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -65,8 +62,10 @@ class ProfileFragment : Fragment() {
                 profileViewModel.userInfo.collectLatest { user ->
                     setProfileImage(user.imageId)
                     binding.profileTextviewName.text = user.name
-                    binding.profileTextviewDisplayid.text = getString(R.string.mypage_view_displayid , user.displayId)
-                    binding.profileTextviewIntro.text = getString(R.string.mypage_view_statusmessage , user.statusMessage)
+                    binding.profileTextviewDisplayid.text =
+                        getString(R.string.mypage_view_displayid, user.displayId)
+                    binding.profileTextviewIntro.text =
+                        getString(R.string.mypage_view_statusmessage, user.statusMessage)
 
                     setCategory(user.label)
                 }
@@ -74,15 +73,15 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun setProfileImage(image : String) {
-        if(image != "") {
+    private fun setProfileImage(image: String) {
+        if (image != "") {
             Glide.with(requireContext())
                 .load(image)
                 .into(binding.profileImageview)
         }
     }
 
-    private fun setCategory(label : List<String>) {
+    private fun setCategory(label: List<String>) {
         val categoryList = stringListToEnumList(label)
         val categoryMap = getCategoryMap()
 

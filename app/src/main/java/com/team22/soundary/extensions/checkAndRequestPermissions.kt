@@ -6,7 +6,10 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 
 // Activity에 대한 확장 함수 정의
-fun AppCompatActivity.checkAndRequestPermissions(permissions: Array<String>, requestCode: Int): Boolean {
+fun AppCompatActivity.checkAndRequestPermissions(
+    permissions: Array<String>,
+    requestCode: Int
+): Boolean {
     val permissionsNeeded = mutableListOf<String>()
 
     // 요청할 권한을 순회하며 필요한 권한만 추가

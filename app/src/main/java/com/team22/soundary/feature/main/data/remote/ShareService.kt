@@ -17,12 +17,12 @@ interface ShareService {
 
     @POST("/api/v1/shared-musics/received/{shared-music-id}/likes")
     suspend fun requestMusicLike(
-        @Path("shared-music-id") musicId : String
-    ) : Response<Unit>
+        @Path("shared-music-id") musicId: String
+    ): Response<Unit>
 
     @DELETE("/api/v1/shared-musics/received/{shared-music-id}/likes")
     suspend fun deleteMusicLike(
-        @Path("shared-music-id") musicId : String
-    ) : Response<Unit>
+        @Path("shared-music-id") musicId: String
+    ): Response<Unit>
 
 }

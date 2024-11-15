@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,7 +17,8 @@ class FriendAdapter(
 ) : ListAdapter<User, BasicFriendViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasicFriendViewHolder {
-        val binding = FriendItemBasicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            FriendItemBasicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BasicFriendViewHolder(context, binding, onItemClick, onDeleteClick)
     }
 
@@ -56,7 +56,7 @@ class BasicFriendViewHolder(
         binding.userIdTextview.text = "@${friend.displayId}"
         binding.favoriteGenreTextview.text = friend.label.joinToString(", ")
 
-        if(friend.imageId != "") {
+        if (friend.imageId != "") {
             binding.profileInitialImageview.visibility = View.VISIBLE
             binding.profileInitialTextview.visibility = View.INVISIBLE
             Glide.with(context)

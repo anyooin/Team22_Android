@@ -19,7 +19,8 @@ class SearchResultAdapter(
 ) : ListAdapter<User, SearchResultAdapter.SearchResultViewHolder>(FriendDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val binding = ItemSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemSearchResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SearchResultViewHolder(context, binding)
     }
 
@@ -37,7 +38,7 @@ class SearchResultAdapter(
             binding.userIdTextview.text = "@${friend.displayId}"
             binding.favoriteGenreTextview.text = friend.label.joinToString(", ")
 
-            if(friend.imageId != "") {
+            if (friend.imageId != "") {
                 binding.profileInitialImageview.visibility = View.VISIBLE
                 binding.profileInitialTextview.visibility = View.INVISIBLE
                 Glide.with(context)
@@ -51,7 +52,7 @@ class SearchResultAdapter(
             }
 
             // 버튼 상태 초기화
-            if(isFriendWithMe(friend)) {
+            if (isFriendWithMe(friend)) {
                 binding.friendRequestButton.text = "친구"
                 binding.friendRequestButton.isEnabled = false
             } else if (isFriendRequested(friend)) {

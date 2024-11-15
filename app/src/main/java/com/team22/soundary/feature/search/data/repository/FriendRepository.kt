@@ -1,10 +1,9 @@
 package com.team22.soundary.feature.search.data.repository
 
-import android.util.Log
 import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.data.dto.toVO
 import com.team22.soundary.core.domain.model.User
-import com.team22.soundary.feature.search.data.api.FriendApiService
+import com.team22.soundary.feature.search.data.remote.FriendApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,35 +22,24 @@ class FriendRepository @Inject constructor(
             try {
                 val response = friendApiService.getFriends()
                 if (response.isSuccessful) {
-                    Log.d("testt", "response.body()" + response.body()?.friends?.size)
                     emit(response.body()?.friends?.map { it.toVO() } ?: emptyList())
-                } else {
-                    Log.d("testt", "response fail")
                 }
             } catch (e: Exception) {
-                Log.d("testt", "response fail")
                 e.printStackTrace()
             }
         }
     }
 
     // 친구 추가 요청 보내기
-    suspend fun addFriend(targetDisplayId: FriendRequestDto): Boolean {
-        return try {
+    suspend fun addFriend(targetDisplayId: FriendRequestDto) {
+        try {
             // API 호출 시, 전달된 FriendRequestDto 객체를 그대로 사용
             val response = friendApiService.addFriend(targetDisplayId)
             if (response.isSuccessful) {
                 notifyDataChange()
-                Log.d("testt", "success")
-                true
-            } else {
-                Log.d("testt", "error: ${response.code()} - ${response.message()}")
-                false
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("testt", "error on addFriend: $e")
-            false
         }
     }
 
@@ -61,10 +49,8 @@ class FriendRepository @Inject constructor(
         return flow {
             try {
                 val response = friendApiService.getSentRequests()
-                Log.d("testt","getSentResponse:"+response.code()+" "+response.message())
-                Log.d("testt","getSent2" + response.body()?.sentRequests)
                 if (response.isSuccessful) {
-                    emit(response.body()?.sentRequests?.map { it.toVO() }?: emptyList())
+                    emit(response.body()?.sentRequests?.map { it.toVO() } ?: emptyList())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -78,7 +64,7 @@ class FriendRepository @Inject constructor(
             try {
                 val response = friendApiService.getReceivedRequests()
                 if (response.isSuccessful) {
-                    emit(response.body()?.receivedRequests?.map {it.toVO() } ?: emptyList())
+                    emit(response.body()?.receivedRequests?.map { it.toVO() } ?: emptyList())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -116,15 +102,12 @@ class FriendRepository @Inject constructor(
         return try {
             val response = friendApiService.rejectReceivedRequest(targetUserId)
             if (response.isSuccessful) {
-                Log.d("uin", "Request rejected for user: $targetUserId")
                 true
             } else {
-                Log.d("uin", "Failed to reject request: ${response.code()} - ${response.message()}")
                 false
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("uin", "Exception in rejectReceivedRequest: $e")
             false
         }
     }
@@ -133,13 +116,13 @@ class FriendRepository @Inject constructor(
     suspend fun updateFriendStatus(friendId: String): Boolean {
         return try {
             val res = friendApiService.addFriend(FriendRequestDto(friendId))
-            Log.d("uin", "친구수락")
             res.isSuccessful
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
     }
+
     // 사용자 검색
     suspend fun searchUserByDisplayId(displayId: String): User? {
         return try {

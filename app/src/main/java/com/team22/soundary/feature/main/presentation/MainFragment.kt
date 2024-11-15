@@ -6,7 +6,6 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +48,7 @@ class MainFragment : Fragment() {
     private lateinit var player: ExoPlayer
     private var shouldPreparePlayer: Boolean = true
     private var pausedPosition: Long = 0
-    private lateinit var spinnerAdapter : ArrayAdapter<String>
+    private lateinit var spinnerAdapter: ArrayAdapter<String>
     private lateinit var loadingDialog: LoadingDialog
 
     private var isInit = false
@@ -84,17 +83,22 @@ class MainFragment : Fragment() {
         setMediaPlayer()
         setShareButton()
         binding.likeButton.setOnClickListener {
-            if(viewModel.isReceivedShare()){
+            if (viewModel.isReceivedShare()) {
                 viewModel.likeMusic()
-            } else{
-                Snackbar.make(requireContext(), binding.main, "내가 공유한 노래는 좋아요를 누를 수 없습니다.", Snackbar.LENGTH_SHORT)
+            } else {
+                Snackbar.make(
+                    requireContext(),
+                    binding.main,
+                    "내가 공유한 노래는 좋아요를 누를 수 없습니다.",
+                    Snackbar.LENGTH_SHORT
+                )
                     .show()
             }
 
         }
     }
 
-    private fun setShareButton(){
+    private fun setShareButton() {
         binding.shareImageButton.setOnClickListener {
             val modal = ShareBottomSheet.newInstance(viewModel.getSongId())
             modal.show(parentFragmentManager, ShareBottomSheet.MAIN_BOTTOM_SHEET)
@@ -116,7 +120,7 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun setSpinner(friendNameList : List<String>) {
+    private fun setSpinner(friendNameList: List<String>) {
         spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, friendNameList)
         binding.sortSpinner.adapter = spinnerAdapter
         binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -169,20 +173,21 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setPlayDrawable(){
-        binding.playStateImageView.setImageResource(if(player.isPlaying) R.drawable.main_play_to_pause else R.drawable.main_pause_to_play)
-        when(val drawable = binding.playStateImageView.drawable){
-            is AnimatedVectorDrawable ->{
+    private fun setPlayDrawable() {
+        binding.playStateImageView.setImageResource(if (player.isPlaying) R.drawable.main_play_to_pause else R.drawable.main_pause_to_play)
+        when (val drawable = binding.playStateImageView.drawable) {
+            is AnimatedVectorDrawable -> {
                 drawable.start()
             }
-            is AnimatedVectorDrawableCompat ->{
+
+            is AnimatedVectorDrawableCompat -> {
                 drawable.start()
             }
         }
     }
 
 
-    private fun setPlayerListener(){
+    private fun setPlayerListener() {
         player.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
@@ -258,7 +263,12 @@ class MainFragment : Fragment() {
         } catch (e: Exception) {
             when (e) {
                 is IOException, is IllegalArgumentException -> {
-                    Snackbar.make(requireContext(), binding.main, "에러 발생 : " + e.message, Snackbar.LENGTH_LONG)
+                    Snackbar.make(
+                        requireContext(),
+                        binding.main,
+                        "에러 발생 : " + e.message,
+                        Snackbar.LENGTH_LONG
+                    )
                         .show()
                 }
 
@@ -271,26 +281,25 @@ class MainFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collectLatest { uiState ->
-                    when(uiState){
+                    when (uiState) {
                         is UiState.Success -> {
-                            Log.d("dataa",""+uiState.data)
-                            if(!isInit){
-                                if(uiState.data.friendNameList.isNotEmpty()){
+                            if (!isInit) {
+                                if (uiState.data.friendNameList.isNotEmpty()) {
                                     setSpinner(uiState.data.friendNameList)
                                     isInit = !isInit
                                 }
                             }
                             binding.friendNameTextView.text = uiState.data.share.friend.name
                             binding.musicNameTextView.text = uiState.data.share.song.title
-                            binding.singerTextView.text = uiState.data.share.song.artist.joinToString()
+                            binding.singerTextView.text =
+                                uiState.data.share.song.artist.joinToString()
                             binding.messageTextView.text = uiState.data.share.message
                             binding.nextImageView.isGone = uiState.data.isLastSong
                             binding.prevImageView.isGone = uiState.data.isFirstSong
                             binding.likeButton.setImageResource(uiState.data.likeBackground)
-                            Log.d("uin", "보낸시간" + uiState.data.share.sharedDate)
                             binding.dayTextView.text =
                                 uiState.data.share.sharedDate.getDiff()
-                            if(uiState.data.share.friend.imageId != "") {
+                            if (uiState.data.share.friend.imageId != "") {
                                 binding.friendPicCardview.visibility = View.VISIBLE
                                 binding.friendPicTextView.visibility = View.INVISIBLE
                                 Glide.with(requireContext())
@@ -300,7 +309,8 @@ class MainFragment : Fragment() {
                             } else {
                                 binding.friendPicCardview.visibility = View.INVISIBLE
                                 binding.friendPicTextView.visibility = View.VISIBLE
-                                binding.friendPicTextView.text = uiState.data.share.friend.name[0].toString()
+                                binding.friendPicTextView.text =
+                                    uiState.data.share.friend.name[0].toString()
                             }
                             uiState.data.share.song.coverImage.let {
                                 Glide.with(requireContext())
@@ -308,18 +318,30 @@ class MainFragment : Fragment() {
                                     .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
                                     .into(binding.currentImageView)
                             }
-                            spinnerAdapter = ArrayAdapter(requireContext(), R.layout.main_spinner_item, uiState.data.friendNameList)
+                            spinnerAdapter = ArrayAdapter(
+                                requireContext(),
+                                R.layout.main_spinner_item,
+                                uiState.data.friendNameList
+                            )
                             loadingDialog.dismiss()
                         }
+
                         is UiState.Loading -> {
                             loadingDialog = LoadingDialog(requireContext())
                             loadingDialog.show()
                         }
+
                         is UiState.Error -> {
                             loadingDialog.dismiss()
-                            Snackbar.make(requireContext(), binding.main, "에러 발생 : " + uiState.message, Snackbar.LENGTH_LONG)
+                            Snackbar.make(
+                                requireContext(),
+                                binding.main,
+                                "에러 발생 : " + uiState.message,
+                                Snackbar.LENGTH_LONG
+                            )
                                 .show()
                         }
+
                         is UiState.Empty -> {
                             loadingDialog.dismiss()
                             toggleUi()
@@ -331,7 +353,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun toggleUi(){
+    private fun toggleUi() {
         binding.emptyShareTextView.isGone = !binding.emptyShareTextView.isGone
         binding.controlImageView.isGone = !binding.controlImageView.isGone
         binding.currentImageView.isGone = !binding.currentImageView.isGone

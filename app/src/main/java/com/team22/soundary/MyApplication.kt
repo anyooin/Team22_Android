@@ -4,22 +4,20 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.util.Utility
 import com.team22.soundary.BuildConfig.NATIVE_KEY
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApplication : Application(){
+class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        KakaoSdk.init(this,NATIVE_KEY)
+        KakaoSdk.init(this, NATIVE_KEY)
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            if(it.isSuccessful) Log.d("akuby21",it.result)
+            if (it.isSuccessful) Log.d("akuby21", it.result)
         }
         createNotificationChannel(this)
     }

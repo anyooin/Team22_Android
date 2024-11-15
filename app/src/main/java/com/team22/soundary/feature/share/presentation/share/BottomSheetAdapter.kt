@@ -1,16 +1,12 @@
 package com.team22.soundary.feature.share.presentation.share
 
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.team22.soundary.R
 import com.team22.soundary.core.domain.model.User
 import com.team22.soundary.databinding.ShareFriendItemNoImageBinding
 import com.team22.soundary.databinding.ShareFriendItemWithImageBinding
@@ -42,7 +38,8 @@ class BottomSheetAdapter(
         override fun bind(userItem: User, isSelected: Boolean) {
             binding.shareFriendImage.text = userItem.name[0].toString()
             binding.shareFriendTextview.text = userItem.name
-            binding.shareGrayBackground.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+            binding.shareGrayBackground.visibility =
+                if (isSelected) View.VISIBLE else View.INVISIBLE
             setClickListener(userItem)
         }
     }
@@ -53,11 +50,12 @@ class BottomSheetAdapter(
         listener: FriendItemClickListener
     ) : BaseViewHolder(binding.root, listener) {
         override fun bind(userItem: User, isSelected: Boolean) {
-                Glide.with(context)
-                    .load(userItem.imageId)
-                    .into(binding.shareFriendImage)
+            Glide.with(context)
+                .load(userItem.imageId)
+                .into(binding.shareFriendImage)
             binding.shareFriendTextview.text = userItem.name
-            binding.shareGrayBackground.visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+            binding.shareGrayBackground.visibility =
+                if (isSelected) View.VISIBLE else View.INVISIBLE
             setClickListener(userItem)
         }
     }
@@ -72,14 +70,16 @@ class BottomSheetAdapter(
                 )
                 ViewHolderNoImage(binding, listener)
             }
+
             WITH_IMAGE -> {
                 val binding = ShareFriendItemWithImageBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
-                ViewHolderWithImage(context,binding, listener)
+                ViewHolderWithImage(context, binding, listener)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }

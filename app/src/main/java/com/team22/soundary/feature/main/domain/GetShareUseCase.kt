@@ -17,16 +17,10 @@ class GetShareUseCase @Inject constructor(
             receivedShareRepository.getShareList(),
             userRepository.getMyInfo()
         ) { sent, receive, me ->
-            val modifiedSent : MutableList<Share> = mutableListOf()
-            sent.forEach{
+            val modifiedSent: MutableList<Share> = mutableListOf()
+            sent.forEach {
                 modifiedSent.add(
-                    it.copy(
-                        friend = me.copy(
-                            name = "나"
-                        ),
-                        isReceived = false,
-
-                    )
+                    it.copy(friend = me.copy(name = "나"), isReceived = false)
                 )
             }
 

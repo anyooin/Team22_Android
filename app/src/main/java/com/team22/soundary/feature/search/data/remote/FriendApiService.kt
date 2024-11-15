@@ -1,6 +1,5 @@
-package com.team22.soundary.feature.search.data.api
+package com.team22.soundary.feature.search.data.remote
 
-import com.team22.soundary.core.data.dto.FriendInfoDto
 import com.team22.soundary.core.data.dto.FriendRequestDto
 import com.team22.soundary.core.data.dto.FriendsResponse
 import com.team22.soundary.core.data.dto.ReceivedRequestsResponse

@@ -16,5 +16,5 @@ object DispatcherModule {
     @IODispatcher
     @Provides
     @Singleton
-    fun provideDispatcher() : CoroutineDispatcher = Dispatchers.IO
+    fun provideDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

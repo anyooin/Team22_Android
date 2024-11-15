@@ -1,15 +1,9 @@
 package com.team22.soundary.feature.signup.domain
 
-import android.util.Log
 import com.team22.soundary.core.domain.TokenRepository
 import com.team22.soundary.feature.main.domain.SentShareRepository
-import com.team22.soundary.feature.main.domain.UserRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Base64
 import javax.inject.Inject
@@ -18,7 +12,7 @@ class CheckTokenUseCase @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val sentShareRepository: SentShareRepository
 ) {
-    suspend fun invoke(){
+    suspend fun invoke() {
         val token = tokenRepository.getAccessToken().firstOrNull()
             ?: throw Exception("token was null")
 
@@ -53,7 +47,7 @@ class CheckTokenUseCase @Inject constructor(
         }
     }
 
-    companion object{
+    companion object {
         const val TOKEN_TYPE = "Bearer "
     }
 }

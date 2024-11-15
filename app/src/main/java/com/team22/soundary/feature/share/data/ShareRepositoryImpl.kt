@@ -1,6 +1,5 @@
 package com.team22.soundary.feature.share.data
 
-import android.util.Log
 import com.team22.soundary.core.IODispatcher
 import com.team22.soundary.core.data.dto.ShareMusicRequest
 import com.team22.soundary.core.data.dto.PlatformTrackIdentifierDto
@@ -16,10 +15,7 @@ class ShareRepositoryImpl @Inject constructor(
     private val retrofitService: ShareService
 ) : ShareRepository {
     override suspend fun shareMusic(
-        platformTrackId: String,
-        trackId: String,
-        comment: String,
-        userList: List<String>
+        platformTrackId: String, trackId: String, comment: String, userList: List<String>
     ) {
         val response = withContext(dispatcher) {
             if (platformTrackId != "") {
@@ -33,9 +29,7 @@ class ShareRepositoryImpl @Inject constructor(
             } else {
                 retrofitService.requestShareMusic(
                     ShareMusicRequest(
-                        trackId = trackId,
-                        comment = comment,
-                        userList = userList
+                        trackId = trackId, comment = comment, userList = userList
                     )
                 )
             }
@@ -43,12 +37,10 @@ class ShareRepositoryImpl @Inject constructor(
 
         when {
             response.isSuccessful -> {
-                Log.d("uin", "노래공유성공!")
                 response.body() ?: throw IllegalStateException("share music failed")
             }
 
             else -> {
-                Log.d("uin", "노래공유실패!")
                 throw IllegalStateException("share music failed")
             }
         }
